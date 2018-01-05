@@ -1,6 +1,6 @@
 name: "kolnes-website"
 navbar:
-  title: " "
+  title: "Menuu"
   left:
     - text: "Kodu"
       href: index.html
