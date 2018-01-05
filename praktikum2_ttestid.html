@@ -279,7 +279,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Menuu</a>
+      <a class="navbar-brand" href="index.html"></a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -297,15 +297,24 @@ div.tocify {
       <a href="praktikum1.html">1 - sissejuhatus</a>
     </li>
     <li>
+      <a href="praktikum1_korrelatsioon.html">1.2 - korrelatsioon</a>
+    </li>
+    <li>
+      <a href="praktikum1_subsetting.html">1.3 - andmete eraldamine</a>
+    </li>
+    <li>
       <a href="praktikum2.html">2 - joonised</a>
     </li>
     <li>
-      <a href="praktikum3_ttestid.html">3 - keskmiste vÄ†Āµrdlemine</a>
+      <a href="praktikum2_ttestid.html">2.1. keskmiste vordlemine</a>
+    </li>
+    <li>
+      <a href="praktikum3.html">3. praktikum</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="about.html">Kirjandus</a>
+  <a href="lugemist.html">Kirjandus</a>
 </li>
 <li>
   <a href="about.html">Kontakt</a>
@@ -324,7 +333,6 @@ div.tocify {
 
 <h1 class="title toc-ignore">Keskmiste võrdlemine</h1>
 <h4 class="author"><em>Martin Kolnes</em></h4>
-<h4 class="date"><em>30/08/2017</em></h4>
 
 </div>
 
@@ -380,9 +388,9 @@ describe(subset(test11$tekst, test11$Sugu == 1))#meeste andmed</code></pre>
 ## X1    1 742 3.28 1.65      3    3.22 1.48   0   9     9  0.3    -0.16 0.06</code></pre>
 <p>Teeme ka histogrammi, et saada jaotusest parem mulje.</p>
 <pre class="r"><code>hist(subset(test11$tekst, test11$Sugu == 1))</code></pre>
-<p><img src="praktikum3_ttestid_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="praktikum2_ttestid_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <pre class="r"><code>hist(subset(test11$tekst, test11$Sugu == 2))</code></pre>
-<p><img src="praktikum3_ttestid_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="praktikum2_ttestid_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 <div id="kas-ruhmade-dispersioonid-on-homogeensed" class="section level3">
 <h3>Kas rühmade dispersioonid on homogeensed?</h3>

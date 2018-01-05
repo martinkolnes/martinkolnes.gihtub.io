@@ -1,7 +1,6 @@
 ---
 title: "Keskmiste võrdlemine"
 author: "Martin Kolnes"
-date: "30/08/2017"
 output:
   html_document:
     css: style.css
@@ -12,7 +11,7 @@ output:
 ---
 
 ```{r, echo = F, message=F, warning=F}
-load("KMKT/3praktikum/ttest_andmed.RData")
+load("KMKT/2praktikum_ttest/ttest_andmed.RData")
 ```
 
 Selle praktikumi eesmärkideks on läbi teha järgmised tegevused:  

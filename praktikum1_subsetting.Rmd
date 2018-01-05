@@ -1,0 +1,83 @@
+---
+title: "Andmete eraldamine"
+author: "Martin Kolnes"
+output:
+  html_document:
+    css: style.css
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+```{r, echo = FALSE}
+load("KMKT/1praktikum/praktikum1.RData")  #laeb tabeli aktiivsest töökeskkonnast
+```
+
+**Veergude valimine**   
+---------------------
+Tavaline lähenemine. Saame kasutada valimiseks ridade ja veergude numbreid.   
+```{r, eval = FALSE}
+# veeru eraldamine
+tabel[,1]#kõik read, aga ainult esimesest veerust
+tabel[,"ekstravertsus"]#saab teha ka veeru nime alusel
+```
+
+Kui ei taha järjestikkuseid veerge eraldada:  
+```{r, eval = FALSE}
+data.frame(tabel$ekstravertsus,tabel$neurootilisus)
+```
+
+Veergude valimine dplyr paketis oleva select() funktsiooniga:  
+```{r, warning = FALSE, message= FALSE}
+library(dplyr) #pakett tuleb enne installeerida (vt. slaididelt)
+#uus_tabel <- select(tabel, sotsiaalsus, ekstravertsus) #teeme uue tabeli, kus on 2 veergud: sotsiaalsus ja ekstravertsus
+```
+
+**Loogikaavaldiste kasutamine**  
+------------------------------
+```{r}
+# Loogikaavaldise kasutamine. Andmetest kindlate väärtuste eraldamine.
+tabel[(tabel$vanus <= 30 & tabel$ekstravertsus > 100),] #jäävad osalejad, kelle vanus on väikesm või võrdne 30'ga. Nendest omakorda jäetakse osalejad, kelle ekstravertsuse skoor on üle 100.
+#kandilised sulud tähistavad eraldamist
+```
+
+```{r, echo =  FALSE, eval = FALSE}
+tabel[which(tabel$vanus < 20),]
+tabel[(tabel$vanus < 20),]
+```
+
+**Andmete sorteerimine ja järjestamine**   
+-------------------------------------------
+```{r, eval = FALSE}
+#sorteerimine
+sort(tabel$ekstravertsus)
+```
+
+```{r, eval = FALSE}
+# Järjestab tabeli vanus alusel:
+tabel[order(tabel$vanus),]
+
+#juhul kui vanused on võrdsed, siis järjestab sotsiaalsuse alusel
+tabel[order(tabel$vanus, tabel$sotsiaalsus),]
+```
+
+```{r, eval =FALSE}
+# Tabeli järjestamine arrange() funktsiooniga
+library(plyr)
+arrange(tabel,vanus)
+arrange(tabel,desc(vanus))
+```
+
+
+```{r, echo =FALSE, eval =FALSE}
+table(tabel$vanus %in% c(25))
+```
+
+**NA väärtused**
+-------------------------
+```{r}
+# Mitu NA väärtust on andmetes
+sum(is.na(tabel))
+```
+

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Martin Kolnes" />
+
+
+<title>Andmete eraldamine</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Kodu</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Kvantitatiivsed mudelid kaitumisteadustes (SHPH.00.004)
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="praktikum1.html">1 - sissejuhatus</a>
+    </li>
+    <li>
+      <a href="praktikum1_korrelatsioon.html">1.2 - korrelatsioon</a>
+    </li>
+    <li>
+      <a href="praktikum1_subsetting.html">1.3 - andmete eraldamine</a>
+    </li>
+    <li>
+      <a href="praktikum2.html">2 - joonised</a>
+    </li>
+    <li>
+      <a href="praktikum2_ttestid.html">2.1. keskmiste vordlemine</a>
+    </li>
+    <li>
+      <a href="praktikum3.html">3. praktikum</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="lugemist.html">Kirjandus</a>
+</li>
+<li>
+  <a href="about.html">Kontakt</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Andmete eraldamine</h1>
+<h4 class="author"><em>Martin Kolnes</em></h4>
+
+</div>
+
+
+<div id="veergude-valimine" class="section level2">
+<h2><strong>Veergude valimine</strong></h2>
+<p>Tavaline lähenemine. Saame kasutada valimiseks ridade ja veergude numbreid.</p>
+<pre class="r"><code># veeru eraldamine
+tabel[,1]#kõik read, aga ainult esimesest veerust
+tabel[,&quot;ekstravertsus&quot;]#saab teha ka veeru nime alusel</code></pre>
+<p>Kui ei taha järjestikkuseid veerge eraldada:</p>
+<pre class="r"><code>data.frame(tabel$ekstravertsus,tabel$neurootilisus)</code></pre>
+<p>Veergude valimine dplyr paketis oleva select() funktsiooniga:</p>
+<pre class="r"><code>library(dplyr) #pakett tuleb enne installeerida (vt. slaididelt)
+#uus_tabel &lt;- select(tabel, sotsiaalsus, ekstravertsus) #teeme uue tabeli, kus on 2 veergud: sotsiaalsus ja ekstravertsus</code></pre>
+</div>
+<div id="loogikaavaldiste-kasutamine" class="section level2">
+<h2><strong>Loogikaavaldiste kasutamine</strong></h2>
+<pre class="r"><code># Loogikaavaldise kasutamine. Andmetest kindlate väärtuste eraldamine.
+tabel[(tabel$vanus &lt;= 30 &amp; tabel$ekstravertsus &gt; 100),] #jäävad osalejad, kelle vanus on väikesm või võrdne 30&#39;ga. Nendest omakorda jäetakse osalejad, kelle ekstravertsuse skoor on üle 100.</code></pre>
+<pre><code>##     vanus elukoht sotsiaalsus meelekindlus ekstravertsus neurootilisus
+## 4      27     maa         153          114           123            58
+## 9      23     maa         100           97           131            67
+## 16     23     maa         132          126           131            72
+## 20     25     maa         155          132           129           104
+## 26     27    linn         130          127           107           112
+## 34     21    linn         138          129           116            52
+## 61     24     maa         124          108           105            69
+## 62     30    linn         142          112           107            98
+## 68     24     maa         133          141           105           109
+## 82     30    linn         122           88           118           114
+## 85     28     maa         106          131           127            52
+## 89     19     maa         135          114           107            70
+## 101    23    linn         150          178           150           100
+## 104    28     maa         137          126           144            64
+## 112    18    linn         128           88           103           107
+## 119    30    linn         145          119           149            42
+## 120    22     maa         101           99           107           116
+## 126    29    linn         126          124           107            85
+## 137    26     maa         116          108           110            76
+## 143    26    linn         145           87           136            68
+## 151    24     maa         131          134           112           111
+## 152    20    linn         124           97           113           130
+## 154    23    linn         159          136           117            93
+## 165    25    linn         136          111           124            82
+## 175    29     maa         112          125           116            87
+## 198    19    linn         135          112           103           110
+##     avatus depressioon traitanx stateanx
+## 4      138           3       29       29
+## 9      121           3       27       38
+## 16     131           7       39       44
+## 20     157          13       46       48
+## 26      88          18       37       59
+## 34     125           4       27       24
+## 61     101           5       33       33
+## 62     173           6       34       23
+## 68     152           5       40       31
+## 82     118          14       46       54
+## 85     135           1       23       40
+## 89     121           5       29       32
+## 101    158           6       30       33
+## 104    108           7       31       28
+## 112    115           6       42       35
+## 119    142           0       25       27
+## 120    132           7       41       40
+## 126    132           4       37       45
+## 137    125           5       39       38
+## 143    116           2       29       26
+## 151    128          11       34       34
+## 152    122          22       44       52
+## 154    124           8       46       38
+## 165    104          22       52       55
+## 175    116           1       43       43
+## 198    143           4       39       39</code></pre>
+<pre class="r"><code>#kandilised sulud tähistavad eraldamist</code></pre>
+</div>
+<div id="andmete-sorteerimine-ja-jarjestamine" class="section level2">
+<h2><strong>Andmete sorteerimine ja järjestamine</strong></h2>
+<pre class="r"><code>#sorteerimine
+sort(tabel$ekstravertsus)</code></pre>
+<pre class="r"><code># Järjestab tabeli vanus alusel:
+tabel[order(tabel$vanus),]
+
+#juhul kui vanused on võrdsed, siis järjestab sotsiaalsuse alusel
+tabel[order(tabel$vanus, tabel$sotsiaalsus),]</code></pre>
+<pre class="r"><code># Tabeli järjestamine arrange() funktsiooniga
+library(plyr)
+arrange(tabel,vanus)
+arrange(tabel,desc(vanus))</code></pre>
+</div>
+<div id="na-vaartused" class="section level2">
+<h2><strong>NA väärtused</strong></h2>
+<pre class="r"><code># Mitu NA väärtust on andmetes
+sum(is.na(tabel))</code></pre>
+<pre><code>## [1] 4</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

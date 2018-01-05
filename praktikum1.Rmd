@@ -1,7 +1,6 @@
 ---
 title: '1. praktikum: RStudio kasutamine, kirjeldav statistika, korrelatsioon, t-test'
 author: "Martin Kolnes, Karin Täht"
-date: "30/08/2017"
 output:
   html_document:
     css: style.css

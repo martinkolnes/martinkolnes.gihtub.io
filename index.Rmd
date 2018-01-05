@@ -1,4 +1,4 @@
 ---
-title: "Martini lehekülg"
+title: "Andmeanalüüs R'iga"
 output: html_document
 ---

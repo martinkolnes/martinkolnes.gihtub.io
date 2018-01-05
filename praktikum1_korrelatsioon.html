@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Martin Kolnes" />
+
+
+<title>Korrelatsioon R-is</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Kodu</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Kvantitatiivsed mudelid kaitumisteadustes (SHPH.00.004)
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="praktikum1.html">1 - sissejuhatus</a>
+    </li>
+    <li>
+      <a href="praktikum1_korrelatsioon.html">1.2 - korrelatsioon</a>
+    </li>
+    <li>
+      <a href="praktikum1_subsetting.html">1.3 - andmete eraldamine</a>
+    </li>
+    <li>
+      <a href="praktikum2.html">2 - joonised</a>
+    </li>
+    <li>
+      <a href="praktikum2_ttestid.html">2.1. keskmiste vordlemine</a>
+    </li>
+    <li>
+      <a href="praktikum3.html">3. praktikum</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="lugemist.html">Kirjandus</a>
+</li>
+<li>
+  <a href="about.html">Kontakt</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Korrelatsioon R-is</h1>
+<h4 class="author"><em>Martin Kolnes</em></h4>
+
+</div>
+
+
+<div id="cor" class="section level2">
+<h2><strong>cor()</strong></h2>
+<p>Funktsioonile cor() saame anda sisendiks terve tabeli. Allolevas näites olen sisendi määramisel kasutanud funktsiooni data.frame(). Selle abil saame muuta vektorid ühtseks andmestikuks (nt. võtame teisest tabelist muutujad ja teeme neist uue andmestiku). See lähenemine võimaldab arvutada korrelatsioone mitme muutuja vahel, mis asuvad tabelis üksteisest kaugel.<br />
+<strong>Järk-järgult</strong></p>
+<pre class="r"><code>tabel_cor &lt;- data.frame(tabel$avatus, tabel$ekstravertsus, tabel$neurootilisus) </code></pre>
+<p>Nüüd on töökeskkonnas olemas objekt nimega tabel_cor. Selle objekti sisuks on tabel, millel on kolm veergu: avatus, ekstravertsus, neurootilisus.<br />
+Kasutan tabelil funktsiooni cor():</p>
+<pre class="r"><code>cor(tabel_cor)</code></pre>
+<pre><code>##                     tabel.avatus tabel.ekstravertsus tabel.neurootilisus
+## tabel.avatus           1.0000000          0.46325180          0.28952552
+## tabel.ekstravertsus    0.4632518          1.00000000          0.00672297
+## tabel.neurootilisus    0.2895255          0.00672297          1.00000000</code></pre>
+<p><strong>Kõik ühel real</strong><br />
+Saab kirjutada ka lühemalt:</p>
+<pre class="r"><code>cor(data.frame(tabel$avatus, tabel$ekstravertsus, tabel$neurootilisus)) # andsin funktsioonile cor() argumendiks uue andmestiku. data.frame(tabel$avatus, tabel$ekstravertsus, tabel$neurootilisus) - genereerib uue andmestiku, kus on 3 veergu: avatus, ekstravertsus, neurootilisus.</code></pre>
+<pre><code>##                     tabel.avatus tabel.ekstravertsus tabel.neurootilisus
+## tabel.avatus           1.0000000          0.46325180          0.28952552
+## tabel.ekstravertsus    0.4632518          1.00000000          0.00672297
+## tabel.neurootilisus    0.2895255          0.00672297          1.00000000</code></pre>
+</div>
+<div id="cor.test-ja-corr.test" class="section level2">
+<h2><strong>cor.test() ja corr.test()</strong></h2>
+<p>Funktsioon corr.test() psych paketis. See võimaldab võtta korrelatsiooni mitme muutuja vahel korraga. Seejuures annab ka infomratsiooni korrelatsioonide olulisuse kohta.</p>
+<pre class="r"><code>cor.test(tabel$sotsiaalsus, tabel$ekstravertsus)# saab kasutada kahete muutujat</code></pre>
+<pre><code>## 
+##  Pearson&#39;s product-moment correlation
+## 
+## data:  tabel$sotsiaalsus and tabel$ekstravertsus
+## t = 7.4918, df = 197, p-value = 2.239e-12
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.3550503 0.5724810
+## sample estimates:
+##      cor 
+## 0.470886</code></pre>
+<pre class="r"><code># install.packages(&quot;psych&quot;)
+library(&quot;psych&quot;) #nüüd saame kasutada paketi funktsioone
+corr.test(tabel[,7:9])</code></pre>
+<pre><code>## Call:corr.test(x = tabel[, 7:9])
+## Correlation matrix 
+##             avatus depressioon traitanx
+## avatus        1.00       -0.06    -0.08
+## depressioon  -0.06        1.00     0.66
+## traitanx     -0.08        0.66     1.00
+## Sample Size 
+## [1] 200
+## Probability values (Entries above the diagonal are adjusted for multiple tests.) 
+##             avatus depressioon traitanx
+## avatus        0.00        0.48     0.48
+## depressioon   0.40        0.00     0.00
+## traitanx      0.24        0.00     0.00
+## 
+##  To see confidence intervals of the correlations, print with the short=FALSE option</code></pre>
+<p>Saame anda ka sisendiks uue andmetabeli:</p>
+<pre class="r"><code>corr.test(data.frame(tabel$ekstravertsus,tabel$sotsiaalsus, tabel$avatus)) #teebe korrelatsioonitabeli</code></pre>
+<pre><code>## Call:corr.test(x = data.frame(tabel$ekstravertsus, tabel$sotsiaalsus, 
+##     tabel$avatus))
+## Correlation matrix 
+##                     tabel.ekstravertsus tabel.sotsiaalsus tabel.avatus
+## tabel.ekstravertsus                1.00              0.47         0.46
+## tabel.sotsiaalsus                  0.47              1.00         0.42
+## tabel.avatus                       0.46              0.42         1.00
+## Sample Size 
+##                     tabel.ekstravertsus tabel.sotsiaalsus tabel.avatus
+## tabel.ekstravertsus                 200               199          200
+## tabel.sotsiaalsus                   199               199          199
+## tabel.avatus                        200               199          200
+## Probability values (Entries above the diagonal are adjusted for multiple tests.) 
+##                     tabel.ekstravertsus tabel.sotsiaalsus tabel.avatus
+## tabel.ekstravertsus                   0                 0            0
+## tabel.sotsiaalsus                     0                 0            0
+## tabel.avatus                          0                 0            0
+## 
+##  To see confidence intervals of the correlations, print with the short=FALSE option</code></pre>
+</div>
+<div id="joonis" class="section level2">
+<h2><strong>Joonis</strong></h2>
+<p>Üks lihtne viis, kuidas illustreerida seost kahe muutuja vahel:</p>
+<pre class="r"><code>plot(x = tabel$sotsiaalsus, y = tabel$ekstravertsus)
+reg1 &lt;- lm(tabel$ekstravertsus~tabel$sotsiaalsus)#arvutab regressioonisirge
+abline(reg1)#lisme regressioonisirge eelnevale joonisele</code></pre>
+<p><img src="praktikum1_korrelatsioon_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Teeme joonise ilusamaks:</p>
+<pre class="r"><code>plot(x = tabel$sotsiaalsus, y = tabel$ekstravertsus, main =&quot;Korrelatsioon&quot;, ylab = &quot;ekstravertsus&quot;, xlab =&quot;sotsiaalsus&quot;)
+abline(reg1, col = &quot;blue&quot;, lwd = 2)#lisme regressioonisirge eelnevale joonisele</code></pre>
+<p><img src="praktikum1_korrelatsioon_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

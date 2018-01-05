@@ -1,0 +1,109 @@
+---
+title: "Korrelatsioon R-is"
+author: "Martin Kolnes"
+output:
+  html_document:
+    css: style.css
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+```{r, echo = FALSE}
+load("KMKT/1praktikum/praktikum1.RData")
+```
+
+**cor()**
+----------------------
+Funktsioonile cor() saame anda sisendiks terve tabeli. Allolevas näites olen sisendi määramisel kasutanud funktsiooni data.frame(). Selle abil saame muuta vektorid ühtseks andmestikuks (nt. võtame teisest tabelist muutujad ja teeme neist uue andmestiku). See lähenemine võimaldab arvutada korrelatsioone mitme muutuja vahel, mis asuvad tabelis üksteisest kaugel.   
+**Järk-järgult** 
+```{r}
+tabel_cor <- data.frame(tabel$avatus, tabel$ekstravertsus, tabel$neurootilisus) 
+```
+Nüüd on töökeskkonnas olemas objekt nimega tabel_cor. Selle objekti sisuks on tabel, millel on kolm veergu: avatus, ekstravertsus, neurootilisus.  
+Kasutan tabelil funktsiooni cor():  
+```{r}
+cor(tabel_cor)
+```
+
+
+**Kõik ühel real**  
+Saab kirjutada ka lühemalt:  
+```{r}
+cor(data.frame(tabel$avatus, tabel$ekstravertsus, tabel$neurootilisus)) # andsin funktsioonile cor() argumendiks uue andmestiku. data.frame(tabel$avatus, tabel$ekstravertsus, tabel$neurootilisus) - genereerib uue andmestiku, kus on 3 veergu: avatus, ekstravertsus, neurootilisus.
+
+```
+
+**cor.test() ja corr.test()**
+-----------------------------
+Funktsioon corr.test() psych paketis. See võimaldab võtta korrelatsiooni mitme muutuja vahel korraga. Seejuures annab ka infomratsiooni korrelatsioonide olulisuse kohta.  
+```{r}
+cor.test(tabel$sotsiaalsus, tabel$ekstravertsus)# saab kasutada kahete muutujat
+```
+
+```{r}
+# install.packages("psych")
+library("psych") #nüüd saame kasutada paketi funktsioone
+corr.test(tabel[,7:9])
+```
+
+Saame anda ka sisendiks uue andmetabeli:  
+```{r}
+corr.test(data.frame(tabel$ekstravertsus,tabel$sotsiaalsus, tabel$avatus)) #teebe korrelatsioonitabeli
+```
+
+**Joonis**
+-------------
+Üks lihtne viis, kuidas illustreerida seost kahe muutuja vahel:  
+```{r}
+plot(x = tabel$sotsiaalsus, y = tabel$ekstravertsus)
+reg1 <- lm(tabel$ekstravertsus~tabel$sotsiaalsus)#arvutab regressioonisirge
+abline(reg1)#lisme regressioonisirge eelnevale joonisele
+```
+
+Teeme joonise ilusamaks:  
+```{r}
+plot(x = tabel$sotsiaalsus, y = tabel$ekstravertsus, main ="Korrelatsioon", ylab = "ekstravertsus", xlab ="sotsiaalsus")
+abline(reg1, col = "blue", lwd = 2)#lisme regressioonisirge eelnevale joonisele
+```
+
+```{r, echo = FALSE, eval = FALSE}
+corstar <- function(x, y = NULL, use = "pairwise", method = "pearson", round = 3, row.labels, col.labels, ...) {
+  
+  require(psych)
+
+  ct <- corr.test(x, y, use, method)    # calculate correlation
+  r <- ct$r                             # get correlation coefs
+  p <- ct$p                             # get p-values
+
+  stars <- ifelse(p < .001, "***", ifelse(p < .01, "** ", ifelse(p < .05, "*  ", "   "))) # generate significance stars
+  
+  m <- matrix(NA, nrow = nrow(r) * 2, ncol = ncol(r) + 1) # create empty matrix
+
+  rlab <- if(missing(row.labels)) rownames(r) else row.labels # add row labels
+  clab <- if(missing(col.labels)) {
+    if(is.null(colnames(r)))
+      deparse(substitute(y))
+    else
+      colnames(r)
+  } else {
+    col.labels # add column labels
+  }
+  
+  rows <- 1:nrow(m)                     # row indices
+  cols <- 2:ncol(m)                     # column indices
+  
+  odd <- rows %% 2 == 1                 # odd rows
+  even <- rows %% 2 == 0                # even rows
+  m[odd, 1] <- rlab                     # add variable names
+  m[even, 1] <- rep("", sum(even))      # add blank
+  
+  m[odd, cols] <- paste(format(round(r, round), nsmall = round, ...), stars, sep = "")     # add r coefs
+  m[even, cols] <- paste("(", format(round(p, round), nsmall = round, ...), ")", sep = "") # add p-values
+  
+  colnames(m) <- c(" ", clab)           # add colnames
+  m                                     # return matrix
+}
+```
+
