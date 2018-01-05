@@ -1,0 +1,23 @@
+name: "kolnes-website"
+navbar:
+  title: " "
+  left:
+    - text: "Kodu"
+      href: index.html
+    - text: "Kvantitatiivsed mudelid kaitumisteadustes (SHPH.00.004)"
+      menu:
+        - text: "1 - sissejuhatus"
+          href: 1praktikum.html
+        - text: "2 - joonised"
+          href: 2praktikum.html
+        - text: "3 - keskmiste võrdlemine"
+          href: 3praktikum_ttestid.html
+    - text: "Kirjandus"
+      href: about.html    
+    - text: "Kontakt"
+      href: about.html          
+output:
+  html_document:
+    theme: cosmo
+    highlight: textmate
+output_dir: "."

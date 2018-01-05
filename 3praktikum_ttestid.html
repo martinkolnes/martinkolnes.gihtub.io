@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Martin Kolnes" />
+
+
+<title>Keskmiste võrdlemine</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"> </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Kodu</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Kvantitatiivsed mudelid kaitumisteadustes (SHPH.00.004)
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="1praktikum.html">1 - sissejuhatus</a>
+    </li>
+    <li>
+      <a href="2praktikum.html">2 - joonised</a>
+    </li>
+    <li>
+      <a href="3praktikum_ttestid.html">3 - keskmiste vĆµrdlemine</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="about.html">Kirjandus</a>
+</li>
+<li>
+  <a href="about.html">Kontakt</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Keskmiste võrdlemine</h1>
+<h4 class="author"><em>Martin Kolnes</em></h4>
+<h4 class="date"><em>13 oktoober 2017</em></h4>
+
+</div>
+
+
+<p>Selle praktikumi eesmärkideks on läbi teha järgmised tegevused:<br />
+(1) kahe sõltumatu grupi keskmiste võrdlemine parameetrilise ja mitteparameetrilise testiga (t test),<br />
+(2) kahe sõltuva grupi keskmiste võrdlemine parameetrilise ja mitteparameetrilise testiga,<br />
+<img src="testid.png" alt="Joonis 1. Keskmiste võrdlemine kahe grupi korral." /> (3) rohkem kui kahe grupiga keskmiste võrdlemine parameetrilise (ANOVA) ja mitteparameetrilise (Kurskal-Wallis) testiga.</p>
+<div id="kordamine" class="section level2">
+<h2>Kordamine</h2>
+<p>Laadige andmestik <strong>test11.csv</strong> RStudiosse.<br />
+<strong>Ülesanne 1.</strong> Leidke meeste ja naiste keskmised teksti mõistmise ja matemaatika ülesannetes (1 = M, 2 = N).<br />
+<strong>NB!</strong> Kasutage subset() funktsiooni ainult ühe kategooria andmete valimiseks. Esimene argument on meid huvitav tunnus, teise argumendiga määrame kategooria väärtuse:</p>
+<pre class="r"><code>#subset(tunnus, kategooria == väärtus) # topelt võrdusmärk tähedab, otsime täpselt antud väärtusega andmeid
+subset(test11$tekst, test11$Sugu == 1)# see annab meile teksti mõistmise tulemused kategooria 1 kohta ehk meeste teksti mõistmise tulemsued.
+subset(test11$tekst, test11$Sugu == 2)# see annab meile teksti mõistmise tulemused kategooria 2 kohta ehk naiste teksti mõistmise tulemsued.</code></pre>
+</div>
+<div id="t-testi-eeldused" class="section level2">
+<h2>T-testi eeldused</h2>
+<p>Tuletame meelde t-testi eeldused:<br />
+1.Andmed on vähemalt intervall skaalal.<br />
+1.1 Sõltuvate rühmade t-testi puhul peab olema normaaljaotusega jaotus, mis on moodustatud järgmiselt: ühel korral mõõdetud tulemustest on lahutatud teisel korral mõõdetud tulemused.<br />
+1.2 Sõltumatu t-testi puhul peab tunnus rühmade lõikes olema normaaljaotusega, samuti peavad rühmade dispersioonide olema homogeensed (ning valimid peavad olema sõltumatud).</p>
+<p>Selle praktikumi jooksul me ei jõu kahjuks iga ülesande puhul eeldusi kontrollida. Toon siia t-testi eelduste kontrolli, mida tuleks teha ülesande 2 puhul. Selles ülesandes vaatame teksti mõistmise tulemusi sugude lõikes.</p>
+<div id="kas-uuritav-tunnus-on-ruhmade-loikes-normaaljaotusega" class="section level3">
+<h3>Kas uuritav tunnus on rühmade lõikes normaaljaotusega?</h3>
+<p>Shapiro Wilki test üks levinumaid statistilisi meetodeid normaaljaotuse kontrollimiseks. Väljundist tuleb vaadata <em>p-value</em>-t. Kui <em>p-value</em> on väiksem kui 0.05, siis ei ole andmed selle testi kohaselt normaaljaotuslikud.</p>
+<pre class="r"><code># Kontrollime meest(1) puhul tunnuse &quot;tekst&quot; normaaljaotust:
+shapiro.test(subset(test11$tekst, test11$Sugu == 1))</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  subset(test11$tekst, test11$Sugu == 1)
+## W = 0.9577, p-value = 3.288e-12</code></pre>
+<pre class="r"><code># Kontrollime naiste(2) puhul tunnuse &quot;tekst&quot; normaaljaotust:
+shapiro.test(subset(test11$tekst, test11$Sugu == 2))</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  subset(test11$tekst, test11$Sugu == 2)
+## W = 0.96074, p-value = 3.349e-13</code></pre>
+<p>Praktikas on omajagu harv normaaljaotustestide põhjal leida normaaljaotuslikkust – levinud on asümmeetriakordaja (<em>skewness</em>) ning ekstsessi (<em>kurtosis</em>) vaatamine. Andmeid peetakse normaaljaotuslikult siis, kui nii asümmeetriakordaja kui ka järsakusaste/ekstsess on vahemikus (-0.5;0.5); liberaalsemalt on aga levinud ka vahemike (-1; 1) kasutamine (Fieldi õpiku näide).</p>
+<p>Vaatame, kuidas asümmeetrijakordajat (<em>skew</em>) ja ekstsessi (<em>kurtosis</em>) arvutada.<br />
+Selleks kasutame funktsiooni <em>describe()</em>, mis on paketi <em>psych</em> funktsioonide komplektis. Esmalt peame selle paketi enda arvutisse installeerima. See käib läbi RStudio konsooli:</p>
+<pre class="r"><code>install.packages(&quot;psych&quot;)#kirjutage see rida RStudio konsoolile. Paketi installeerimise peale võib minna natuke aega.</code></pre>
+<p>Nüüd saame kasutada funktsiooni <em>describe</em>. Sellele funktsioonile anname argumendiks ühe grupi andmed.</p>
+<pre class="r"><code>library(psych)#selle käsuga teeme antud paketi funktsioonide aktiivseks
+describe(subset(test11$tekst, test11$Sugu == 1))#meeste andmed</code></pre>
+<pre><code>##    vars   n mean   sd median trimmed  mad min max range skew kurtosis   se
+## X1    1 608 3.12 1.66      3    3.05 1.48   0   8     8 0.31    -0.34 0.07</code></pre>
+<pre class="r"><code>describe(subset(test11$tekst, test11$Sugu == 2))#naiste andmed</code></pre>
+<pre><code>##    vars   n mean   sd median trimmed  mad min max range skew kurtosis   se
+## X1    1 742 3.28 1.65      3    3.22 1.48   0   9     9  0.3    -0.16 0.06</code></pre>
+<p>Teeme ka histogrammi, et saada jaotusest parem mulje.</p>
+<pre class="r"><code>hist(subset(test11$tekst, test11$Sugu == 1))</code></pre>
+<p><img src="3praktikum_ttestid_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>hist(subset(test11$tekst, test11$Sugu == 2))</code></pre>
+<p><img src="3praktikum_ttestid_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="kas-ruhmade-dispersioonid-on-homogeensed" class="section level3">
+<h3>Kas rühmade dispersioonid on homogeensed?</h3>
+<p>Selle eelduse testimiseks kasutame funktsiooni <em>leveneTest()</em>, mis on paketi <em>car</em> funktsioonide komplektis. Esmalt peame selle paketi enda arvutisse installeerima. See käib läbi RStudio konsooli:</p>
+<pre class="r"><code>install.packages(&quot;car&quot;)</code></pre>
+<p>Nüüd saame kasutada funktsiooni <em>leveneTest</em>. Esimeseks argumendiks paneme sõltuva muutuja ja teiseks kategoriseeriva tunnuse.</p>
+<pre class="r"><code>library(car)
+leveneTest(test11$tekst, test11$Sugu)</code></pre>
+<pre><code>## Levene&#39;s Test for Homogeneity of Variance (center = median)
+##         Df F value Pr(&gt;F)
+## group    1  0.0857 0.7697
+##       1348</code></pre>
+</div>
+</div>
+<div id="soltumatute-gruppidega-t-test" class="section level2">
+<h2>Sõltumatute gruppidega t-test</h2>
+<div id="parameetriline" class="section level3">
+<h3>Parameetriline</h3>
+<p>Avage andmefail <strong>test11</strong>.<br />
+<strong>Ülesanne 2.</strong> Uurige hüpoteesi: naiste teksti mõistmise testi tulemus on statistiliselt oluliselt parem kui meeste oma.<br />
+Selle testi tegemiseks kasutame funktsiooni t.test():<br />
+<em>t.test(y~x)</em>, kus y on numbriline tunnus ja x on kategooria (binaarne).</p>
+<pre class="r"><code># kahe sõltumatu grupiga t-test
+t.test(test11$tekst ~ test11$Sugu) </code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  test11$tekst by test11$Sugu
+## t = -1.8692, df = 1293.9, p-value = 0.06182
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.346850887  0.008380891
+## sample estimates:
+## mean in group 1 mean in group 2 
+##        3.115132        3.284367</code></pre>
+<p><strong>Ülesanne 3.</strong> Uurige hüpoteesi: meeste ja naiste keskmised tulemused matemaatika testis on erinevad.</p>
+<pre class="r"><code># kahe sõltumatu grupiga t-test
+t.test(test11$matemaatika ~ test11$Sugu) </code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  test11$matemaatika by test11$Sugu
+## t = 9.1097, df = 1198.4, p-value &lt; 2.2e-16
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  1.654612 2.562937
+## sample estimates:
+## mean in group 1 mean in group 2 
+##        9.460526        7.351752</code></pre>
+</div>
+<div id="mitteparameetriline" class="section level3">
+<h3>Mitteparameetriline</h3>
+<p>Avage andmefail <strong>koolid.csv</strong>.<br />
+<strong>Ülesanne 4.</strong> Kas antisotsiaalsuse (tunnus “antisotsiaalsus2”“) keskmised tulemused erinevad sugude lõikes?<br />
+Selle testi tegemiseks kasutame Mann-Whitney U testi. R-is saame seda teha funktsiooniga wilcox.test():<br />
+<em>wilcox.test(y ~ x)</em>, kus y on numbriline tunnus ja x on kategooria (binaarne).</p>
+<pre class="r"><code># kahe sõltumatu grupiga Mann-Whitney U Test 
+wilcox.test(koolid$antisots2 ~ koolid$sugu) </code></pre>
+<pre><code>## 
+##  Wilcoxon rank sum test with continuity correction
+## 
+## data:  koolid$antisots2 by koolid$sugu
+## W = 8970.5, p-value = 2.673e-06
+## alternative hypothesis: true location shift is not equal to 0</code></pre>
+</div>
+</div>
+<div id="soltuvate-gruppidega-t-test---auhinnangud" class="section level2">
+<h2>Sõltuvate gruppidega t-test - AUhinnangud</h2>
+<p>Avage andmefail <strong>AUhinnangud.csv</strong>.<br />
+Tegemist on ühe koolitöö raames kogutud andmestikuga, milles näidati naisterahvastele 10 mehe pilte, mida paluti atraktiivsuse (A) ja usaldusväärsuse (U) 10-palli-skaalal hinnata. Igast pildist oli 2 versiooni: (1) ühel juhul vaatas isik otse, (2) teisel juhul oli pilti töödeldud nii, et pilk oli suunatud kõrvale (andmestikus on märge a, mis tuleneb ingliskeelsest sõnast averted). Hüpoteesideks oli, et otsepilguga pilte hinnati keskmiselt (H1) atraktiivsemaks ning (H2) usaldusväärsemaks. Kas need hüpoteesid leidsid kinnitust ka andmestikust?<br />
+Katsetingimuste keskmised tulemused on juba välja arvutatud:<br />
+1) U_kesk - usaldusväärsuse hinnang, isik pildil vaatas otse</p>
+<pre class="r"><code># Arvutuskäigu näide:  
+# loob andmestikku uue veeru nimega &quot;U_kesk&quot;
+AUhinnangud$U_kesk = mean(U1.1,U1.2,U1.3,U1.4,U1.5,U1.6,U1.7,U1.8, U1.9, U1.10, na.rm =TRUE) #na.rm =TRUE - arvutuskäik ignoreerib puuduvaid väärtusi</code></pre>
+<ol style="list-style-type: decimal">
+<li>U_kesk_a - usaldusväärsuse hinnang, isik pildil vaatas kõrvale<br />
+</li>
+<li>A_kesk - atraktiivsuse hinnang, isik pildil vaatas otse<br />
+</li>
+<li>A_kesk_a - atraktiivsuse hinnang, isik pildil vaatas kõrvale</li>
+</ol>
+<div id="parameetriline-1" class="section level3">
+<h3>Parameetriline</h3>
+<p><strong>Ülesanne 5.</strong> Uurige välja, kas hüpoteesid leidsid kinnitust. Esialgu võrrelge omavahel usaldusväärsuse hinnanguid erinevates katsetingimustes (pilk suunatud otse vs pilk suunatud kõrvale). Seejärel võrrelge omavahel ka atrkatiivsuse hinnanguid erinevates katsetingimustes. Nende testide tegemiseks kasutame sõltuvate valimitega t-testi.<br />
+Selle testi tegemiseks kasutame funktsiooni <em>t.test()</em>, aga seekord lisame argumendi “paired=TRUE”:<br />
+<strong>t.test(y1,y2,paired=TRUE)</strong>, kus y1 ja y2 on mõlemad numbrilised muutujad</p>
+<pre class="r"><code># sõltuvate gruppidega t-test
+t.test(AUhinnangud$U_kesk, AUhinnangud$U_kesk_a,paired=TRUE) </code></pre>
+<pre><code>## 
+##  Paired t-test
+## 
+## data:  AUhinnangud$U_kesk and AUhinnangud$U_kesk_a
+## t = 5.0326, df = 29, p-value = 2.317e-05
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  0.2235895 0.5297438
+## sample estimates:
+## mean of the differences 
+##               0.3766667</code></pre>
+<pre class="r"><code># sõltuvate gruppidega t-test
+t.test(AUhinnangud$A_kesk, AUhinnangud$A_kesk_a,paired=TRUE) </code></pre>
+<pre><code>## 
+##  Paired t-test
+## 
+## data:  AUhinnangud$A_kesk and AUhinnangud$A_kesk_a
+## t = 4.9505, df = 29, p-value = 2.911e-05
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  0.2347442 0.5652558
+## sample estimates:
+## mean of the differences 
+##                     0.4</code></pre>
+</div>
+<div id="mitteparameetriline-1" class="section level3">
+<h3>Mitteparameetriline</h3>
+<p>Kui parameetrilise testi eeldused on rikutud, siis tuleks siinkohal kasutada <em>Wilcoxon Signed Rank</em> testi.<br />
+<strong>Ülesanne 6.</strong> Võrrelge nii atraktiivsusele kui ka usaldusväärsusele antud hinnaguid ka mitteparameetriliste testidega. Mille poolest tulemused erinevad?</p>
+<p>Selle testi tegemiseks kasutame funktsiooni jälle wilcox.test(), aga seekord lisame argumendi “paired=TRUE”:<br />
+<strong>wilcox.test(y1,y2,paired=TRUE)</strong>, kus y1 ja y2 on mõlemad numbrilised muutujad</p>
+<pre class="r"><code># kahe sõltuva grupiga Wilcoxon Signed Rank Test 
+wilcox.test(AUhinnangud$U_kesk, AUhinnangud$U_kesk_a,paired=TRUE) </code></pre>
+<pre class="r"><code># kahe sõltuva grupiga  Wilcoxon Signed Rank Test 
+wilcox.test(AUhinnangud$A_kesk, AUhinnangud$A_kesk_a,paired=TRUE) </code></pre>
+</div>
+</div>
+<div id="keskmiste-vordlemine-rohkem-kui-2-ruhma-korral" class="section level2">
+<h2>Keskmiste võrdlemine rohkem kui 2 rühma korral</h2>
+<p>Sageli hõlmavad eksperimentaalsed uuringud enam kui kahe grupi või tingimuse võrdlusi. Näiteks võib ravimiuurijaid huvitada, kas (a) ravim on parem kui platseebo ning (b) kui suur doos ravimit on parima mõjuga? Tihtipeale võrreldakse sellistes olukordades nt kolme gruppi – platseebot saanud, madala ning kõrge doosiga eksperimentaalsed rühmad. Dispersioonanalüüsi saab kasutada mitme grupi võrdlemisel.<br />
+Ravimiuuringud on ilmselt üks lihtsamini näitlikustatav valdkond dispersioonanalüüsi ehk ANOVA (ANalysis Of VAriance) kasutamisest. Aga samuti on see meetod üsna laialt kasutatav erinevates mitut gruppi (st enamat kui kahte gruppi) võrdlevates uuringutes.</p>
+<div id="parameetriline-2" class="section level3">
+<h3>Parameetriline</h3>
+<p>Avage andmefail <strong>iqdata.csv</strong>.<br />
+Tegemist on simuleeritud andmestikuga tudengite kohta; muutujateks on eriala, IQ skoor ning vanus. Andmestiku allikas: <a href="http://staff.bath.ac.uk/pssiw/stats2/page16/page16.html" class="uri">http://staff.bath.ac.uk/pssiw/stats2/page16/page16.html</a></p>
+<p><strong>Ülesanne 7.</strong> Püstitage hüpotees gruppidevaheliste (eriala) erinevuste kohta ning testige hüpoteesi.<br />
+Selle testi tegemiseks kasutame funktsiooni <em>aov()</em>: <strong>aov(y ~ A, data=mydataframe)</strong>, kus y on sõltuv tunnus ja A on sõltumatu muutuja ehk erinevad grupid.</p>
+<pre class="r"><code>mudel = aov(iq~group, data = iqdata)#loome ANOVA mudeli ja salvestame selle endale objekti nimega &quot;mudel&quot;
+summary(mudel) # funktsiooniga summary saame kätte meie analüüsi tulemused</code></pre>
+<pre><code>##             Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## group        2   1529   764.7   20.02 7.84e-07 ***
+## Residuals   42   1604    38.2                     
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+<div id="mitteparameetriline-2" class="section level3">
+<h3>Mitteparameetriline</h3>
+<p>ANOVA mitteparameetriliseks analoogiks on <em>Kruskall-Wallis</em> test. <strong>Ülesanne 8.</strong> Testige hüpoteesi ka mitteparameetrilise testiga.<br />
+Selle testi tegemiseks kasutame funktsiooni <em>kurskal.test()</em>:<br />
+<strong>kruskal.test(y ~ A, data=mydataframe)</strong>, kus y on sõltuv tunnus ja A on sõltumatu muutuja ehk erinevad grupid.</p>
+<pre class="r"><code>kruskal.test(iq ~group, data = iqdata) </code></pre>
+<pre><code>## 
+##  Kruskal-Wallis rank sum test
+## 
+## data:  iq by group
+## Kruskal-Wallis chi-squared = 29.205, df = 2, p-value = 4.552e-07</code></pre>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
