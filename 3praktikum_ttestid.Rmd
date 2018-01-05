@@ -1,7 +1,6 @@
 ---
 title: "Keskmiste võrdlemine"
 author: "Martin Kolnes"
-date: "13 oktoober 2017"
 output:
   html_document:
     css: style.css

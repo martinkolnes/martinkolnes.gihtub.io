@@ -1,7 +1,6 @@
 ---
 title: '2. praktikum: Joonised'
 author: "Martin Kolnes, Karin Täht"
-date: "28 veebruar 2017"
 output:
   html_document:
     css: style.css
