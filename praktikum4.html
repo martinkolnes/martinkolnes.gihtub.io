@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Martin Kolnes, Karin Täht" />
+
+
+<title>Logistiline regressioon</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Kodu</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Praktikumide materjalid
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="praktikum1.html">1. Praktikum - sissejuhatus</a>
+    </li>
+    <li>
+      <a href="praktikum2.html">2. Pratkikum - joonised</a>
+    </li>
+    <li>
+      <a href="praktikum3.html">3. Praktikum - regressioon</a>
+    </li>
+    <li>
+      <a href="praktikum4.html">4. Praktikum - logistiline regressioon</a>
+    </li>
+    <li>
+      <a href="praktikum5.html">5. Praktikum - eksploratiivne faktoranaluus</a>
+    </li>
+    <li>
+      <a href="praktikum6.html">6. Praktikum - Struktuurvorrandite mudelid</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Lisamaterjalid
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="praktikum1_korrelatsioon.html">1.1. Korrelatsioon</a>
+    </li>
+    <li>
+      <a href="praktikum1_subsetting.html">1.2. Andmete eraldamine</a>
+    </li>
+    <li>
+      <a href="praktikum2_ttestid.html">2.1. Keskmiste vordlemine</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="lugemist.html">Kirjandus</a>
+</li>
+<li>
+  <a href="about.html">Kontakt</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Logistiline regressioon</h1>
+<h4 class="author"><em>Martin Kolnes, Karin Täht</em></h4>
+
+</div>
+
+
+<div id="praktikumi-eesmargid" class="section level1">
+<h1>Praktikumi eesmärgid</h1>
+<ul>
+<li>Eelnevate teemade kordamine: lineaarne regressioon, regressioonanalüüsi eeldused<br />
+</li>
+<li>Binaarne logistiline regressioon - funktsiooniga <em>glm()</em><br />
+</li>
+<li>Multinomiaalne logistiline regressioon - funktsiooniga <em>mlogit()</em></li>
+</ul>
+</div>
+<div id="kordamine" class="section level1">
+<h1>Kordamine</h1>
+<ol style="list-style-type: decimal">
+<li><p>Laadige andmefailid (<em>neeme.csv</em>, <em>cowles.csv</em>, <em>ESS.csv</em>, <em>pisa.csv</em>) R’i. Määrake igale andmestikule R’is iseloomulik nimi.</p></li>
+<li><p>Teeme PISA andmestiku alusel regressioonanalüüsi mudeli, kus sõltuvaks tunnuseks on matemaatika testi tulemus (PVMATH) ja prediktoriteks enese-tõhusus teaduses (SCIEEFF; <em>science self-efficacy</em>), mina-pilt loodusteadustes (SCSCIE; <em>science self-concept</em>).</p></li>
+</ol>
+</div>
+<div id="logistiline-regressioon" class="section level1">
+<h1>Logistiline regressioon</h1>
+<p>Kui lineaarse regressiooni puhul oli sõltuv tunnus numbriline, siis logistilise regressiooni puhul on sõltuv tunnus kategoriaalne. Logistiline mudel ennustab prediktorite väärtuste abil võimalust kuuluda mingisse kategooriasse. Binaarne logistiline regressioon on selline, mille puhul on sõltuval tunnusel ainult 2 taset (nt kas inimesel esineb konkreetne haigus või mitte). Multinomiaalse logistilise regressiooni puhul on sõltuva muutuja tasemeid rohkem kui 2.</p>
+</div>
+<div id="binaarne-logistiline-regressioon---uhe-prediktoriga-mudel" class="section level1">
+<h1>Binaarne logistiline regressioon - ühe prediktoriga mudel</h1>
+<p>Andmetabelis nimega <em>cowles</em> on lisamoodulist <em>car</em> pärinev näidisandmestik, mis käsitleb seost tudengite isiksuseomaduste ja psühholoogilistes uurimustes osalemise valmiduse vahel. Andmestik koosneb neljast muutujast:</p>
+<ul>
+<li><em>neuroticism</em> - Eysencki isiksuseküsimustku neurootilisuse alaskaala skoor;</li>
+<li><em>extraversion</em> - ekstravertsuse alaskaala skoor;</li>
+<li><em>sex</em> - sugu (<em>female</em>, <em>male</em>);</li>
+<li><em>volunteer</em> - kas tudeng on valmis osalema edasises uurimistöös (<em>no</em>, <em>yes</em>);</li>
+</ul>
+<p>Esmase ülevaate saamiseks andmetest kasutage funktsiooni <em>summary</em>.</p>
+<pre class="r"><code>summary(cowles)</code></pre>
+<pre><code>##   neuroticism     extraversion       sex      volunteer
+##  Min.   : 0.00   Min.   : 2.00   female:780   no :824  
+##  1st Qu.: 8.00   1st Qu.:10.00   male  :641   yes:597  
+##  Median :11.00   Median :13.00                         
+##  Mean   :11.47   Mean   :12.37                         
+##  3rd Qu.:15.00   3rd Qu.:15.00                         
+##  Max.   :24.00   Max.   :23.00</code></pre>
+<p>Teeme kõigepealt logistilise regressioonimudeli, milles sõltuvaks tunnuseks valmidus osaleda uurimistöös (tunnus <em>volunteer</em>) ja ennustame seda ekstravertsuse kaudu. Logistilise mudeli tegemiseks kasutame funktsiooni <em>glm</em> (nimetus sõnadest <em>generalized linear model</em>). Selle kasutamine on üsna sarnane funktsiooniga <em>lm</em>, mille abil koostasime lineaarseid regressioonimudeleid: kõigepealt mudelisse kaastavate muutujate nimed kujul sõltuv tunnus ~ sõltumatu tunnus ning seejärel argumendi <em>data</em> abil tabeli nimi, millest tunnused võetakse. Funktsiooni <em>glm</em> puhul lisandub argument <em>family</em>, mille abil määrame, millist tüüpi mudelit teha tahame. Logistilise mudeli puhul paneme argumendi <em>family</em> väärtuseks <em>binomial()</em>. (Kui meil juhtub esinema puuduvaid andmeid, saame need välja jätta lisades argumendi <em>na.action=na.omit</em>. Samuti saaksime argumendi <em>subset</em> abil määrata valimit kitsendava tingimuse.)</p>
+<pre class="r"><code>cowles.mudel1 &lt;- glm(volunteer ~ extraversion, data=cowles, family=binomial())</code></pre>
+<p>Uurime mudeli väljundit.</p>
+<pre class="r"><code>summary(cowles.mudel1)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = volunteer ~ extraversion, family = binomial(), 
+##     data = cowles)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.3379  -1.0584  -0.9299   1.2725   1.6243  
+## 
+## Coefficients:
+##              Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  -1.13942    0.18538  -6.146 7.93e-10 ***
+## extraversion  0.06561    0.01414   4.640 3.49e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 1933.5  on 1420  degrees of freedom
+## Residual deviance: 1911.5  on 1419  degrees of freedom
+## AIC: 1915.5
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p>Vaatame väljundi alaosa nimega <strong>Coefficients</strong>, mille tulbas <strong>Estimate</strong> on ära toodud mudeli parameetrite - vabaliikme (<em>Intercept</em>) ja regressioonikordaja - väärtused. Tulbas <strong>Std. Error</strong> on ära toodud standardviga (näitas kui suurt kordaja kõikumist võib oodata erinevates valimites). Tulbas <strong>z value</strong> on toodud z-statistiku väärtus, mis on tuntud ka <em>Waldi</em> statistiku nime all. See on saadud jagades regressioonikordaja väärtuse ja standardvea omaga. <strong>Tulbas Pr(&gt;|z|)</strong> on ära toodud z-statistiku kaudu arvutatud p-väärtus, mille abil saame hinnata, kas prediktor omab olulist seost sõltuva muutujaga. Praegusel juhul on ekstravertsuse regressioonikordajale vastav p-väärtus <span class="math inline">\(3.49e-06\)</span> ehk <span class="math inline">\(3.49 * 10^{-6}\)</span>. Antud prediktori olulisusele nivool p &lt; .001 viitavad ka rea lõpus olevad 3 tärni.</p>
+<div id="riskisuhte-arvutamine" class="section level2">
+<h2>Riskisuhte arvutamine</h2>
+<p>Logistilise regressiooni puhul on regressioonikordajad logaritmskaalal ja sellisel kujul on nende tõlgendamine üsna keeruline. Olukord läheb paremaks, kui teisendame regressioonikordaja eksponent-funktsiooni abil, mis on logaritmimise pöördfunktsioon. Selle tulemusel saadud arve nimetatakse <strong>riskisuheteks</strong> või ka <strong>ansside suheteks</strong>. Riskisuhete saamiseks kasutame funktsioone <em>coef</em> ja <em>exp</em>. Funktsioonile <em>coef</em> anname argumendiks mudeli nime, see funktsioon eraldab mudelist ainult mudeli parameetrite väärtused. Funktsioonile <em>exp</em> anname argumendiks funktsioonist <em>coef</em> saadud väärtused. R-is saame teha seda hierahriliselt:</p>
+<pre class="r"><code>exp(coef(cowles.mudel1))</code></pre>
+<pre><code>##  (Intercept) extraversion 
+##     0.320005     1.067813</code></pre>
+<p><strong>Kuidas riskisuhteid tõlgendada?</strong> 1-st suurem riskisuhte väärtus näitab, et prediktori väärtuse suurenedes ühe ühiku võrra suurenevad sündmuse esinemise šansid nii mitu korda kui on riskisuhte väärtus. 1-st väiksem riskisuhte väärtus näitab, et prediktori väärtuse suurendes ühe ühiku võrra sündmuse esinemise šansid vähenevad 1/riskisuhe arv kordi. Antud juhul on ekstravertsuse riskisuhte väärtuseks ümmardatuna 1.068. See tähendab, et kui ekstravertsuse skoor suureneb ühe punkti võrra suureneb jaatava vastuse tõenäosus 1.068 korda ehk 6.8% võrra. Kuidas me teame, et need on just jaatava (ja mitte eitava) vastuse šansid, mida numbrid näitavad? Vaikimisi käivad numbrid selle sõltuva muutuja taseme kohta, mille nimetus paikneb tähestikulises järjekorras tagapool (eespool paiknev kategooria on valitud taustakategooriaks). Antud juhul oli meie sõltuval muutujal <em>volunteer</em> 2 taset: <em>no</em> ja <em>yes</em>. Kuna <em>yes</em> algustäht paikneb tähestikus tagapool on praegusel juhul just see, mille šansse numbrid näitavad.</p>
+</div>
+<div id="riskisuhte-usaldusvahemikud" class="section level2">
+<h2>Riskisuhte usaldusvahemikud</h2>
+<p>Lineaarse regressiooni puhul nägime, et üheks täiendavaks võimaluseks hinnata prediktorite mõju usaldusväärsust olid regressioonikordajate 95% -usaldusvahemikud. Sedasama lähenemist saame kasutada ka logistilise regressiooni puhul arvutades usaldusvahemikud riskisuhete jaoks. Usaldusvahemikud saime funktsiooni <em>confint</em> abil. Logistilise regressiooni puhul paneme selle ümber veel funktsiooni <em>exp</em>.</p>
+<pre class="r"><code>exp(confint(cowles.mudel1))</code></pre>
+<pre><code>## Waiting for profiling to be done...</code></pre>
+<pre><code>##                  2.5 %    97.5 %
+## (Intercept)  0.2217862 0.4589052
+## extraversion 1.0387831 1.0980308</code></pre>
+<p>Riskisuhte usaldusintervallide puhul on oluline vaadata, kas väärtus 1 jääb usaldusintervalli sisse. Kui nii juhtub, viitab see, et prediktori mõju pole usaldusväärne: mõnedes valimites oleks mõju suund ühesugune ja teistes valimites teistsugune. Antud juhul on ekstravertsuse mõlemad usalduspiirid ühest suuremad. Seega võime olla üsna kindlad, et ekstravertsus mõjutab uurimustes osalemise valmidust positiivselt.</p>
+</div>
+<div id="hii-ruut-test" class="section level2">
+<h2>Hii-ruut test</h2>
+<p>Regressioonikordajad, riskisuhted ja nende usaldusvahemikud iseloomustavad eraldiseisvaid prediktoreid. Lisaks sellele on mudeli väljundis toodud ka mudeli sobitusastme näitajad. Mudeli jääkhälbimus (Residual deviance) iseloomustab meie koostatud mudeli logaritmilise tõepärafunktsiooni väärtust. Viimane põhineb mudeli järgi ennustatud ja tegelike väärtustega seotud tõenäosuste summeerimisel. Mida parem mudel, seda väiksem väärtus. Väljundis samuti toodud <strong>Null Deviance</strong> on sama näitaja ainult vabaliiget sisaldava mudeli jaoks, milles muutujate-vaheline seos puudub ehk niinimetatud nullmudel. Kui <strong>Residual deviance</strong> on väiksem kui <strong>Null deviance</strong>, tähendab see, et koostatud mudel on parem kui nullmudel. Selle üle, kas erinevus nullmudelist on piisavalt suur, saab otsustada <span class="math inline">\({\chi}^2 -\)</span>testi (hii-ruuttesti) abil. Mingil põhjusel funktsioon <em>glm</em> seda välja ei arvuta ja meil tuleb seda ise teha funktsiooni <em>anova</em> abil. Defneerime kõigepealt ilma prediktoriteta ainult vabaliiget sisaldava nullmudeli. Selle valem on kujul “sõltuv muutuja ~ 1”.</p>
+<pre class="r"><code>cowles.nullmudel &lt;- glm(volunteer ~ 1, data=cowles, family=binomial())</code></pre>
+<p>Nüüd anname nii nullmudeli kui eelnevalt koostatud mudeli võrdlemiseks funktsioonile <em>anova</em>, millele ütleme argumendi <em>test=“Chisq”</em> abil ka, et tahame kasutada hii-ruut testi.</p>
+<pre class="r"><code>anova(cowles.nullmudel, cowles.mudel1, test=&quot;Chisq&quot;)</code></pre>
+<pre><code>## Analysis of Deviance Table
+## 
+## Model 1: volunteer ~ 1
+## Model 2: volunteer ~ extraversion
+##   Resid. Df Resid. Dev Df Deviance  Pr(&gt;Chi)    
+## 1      1420     1933.5                          
+## 2      1419     1911.5  1   22.022 2.695e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Peaksime vaatama tabeli teise rea kahte viimast tulpa, milles on toodud hii-ruut statistik (<em>Deviance</em>), ja selle p-väärtus. Antud p-väärtuse põhjal võime öelda, et mudeli sobitusaste oli nullmudeli omast oluliselt parem (<span class="math inline">\({\chi}^2\)</span> = 22.02, p &lt; .001).</p>
+</div>
+<div id="pseudo-determinatsioonikordaja" class="section level2">
+<h2>Pseudo-determinatsioonikordaja</h2>
+<p>Lineaarse regressiooni puhul saime välja arvutada mudeli determinatsioonikordaja(<span class="math inline">\(R^2\)</span>), mis näitas kui suure osa sõltuva tunnuse hajuvusest mudel ära kirjeldas. Logistilise regressiooni puhul saame arvutada näitajaid, mida nimetatakse pseudo-determinatsioonikordajaks. Nad varieeruvad 0-st 1-ni nagu päris determinatsioonikordaja ning näitavad mudeli sobitustusastme headust, mida suurem väärtus seda parem. Aga nagu eesliitest pseudo järeldada võib, pole need päris samasugused. Nimelt ei saa neid tõlgendada sõltuva tunnuse seletusprotsendi mõttes nii nagu lineaarse regressiooni determinatsioonikordajat. Sõltuvalt arvutuskäigust on pseudo-determinatsioonikordajaid mitut tüüpi. Arvutame praegusel juhul ühe sagedamini kasutatava, mida nimetatakse Nagelkerke <span class="math inline">\(R^2\)</span>. Selle jaoks peame kõigepealt installima lisamooduli <em>fmsb</em>.</p>
+<pre class="r"><code>install.packages(&quot;fmsb&quot;)</code></pre>
+<p>Seejärel saame lisamooduli laadida ja kasutada selles olevat funktsiooni <em>NagelkerkeR2</em>, millele annamemudeli nime.</p>
+<pre class="r"><code>library(fmsb)
+NagelkerkeR2(cowles.mudel1)</code></pre>
+<pre><code>## $N
+## [1] 1421
+## 
+## $R2
+## [1] 0.02068324</code></pre>
+<p><strong>Pseudo-determinatsioonikordaja</strong> väärtused ongi tüüpiliselt üsna madalad. Kordajat kasutatakse tüüpiliselt selleks, et hinnata, kas prediktorite lisamine tegi mudelit paremaks.</p>
+</div>
+<div id="tingimuslik-tihedusfunktsiooni-joonis-conditional-density-plot" class="section level2">
+<h2>Tingimuslik tihedusfunktsiooni joonis (conditional density plot)</h2>
+<p>Kui meil on ühe numbrilise prediktoriga logistiline mudel (nagu praegu), siis saab vastavat seost kujutada tingimusliku tihedusfunktsiooni joonise abil. Selle saame funktsiooni <em>cdplot</em> kaudu.</p>
+<pre class="r"><code>cdplot(volunteer ~ extraversion, data=cowles)</code></pre>
+<p><img src="praktikum4_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>Joonisel on näha, milline on jaatavate ja eitavate vastuste osakaal valimis erinevate ekstravertsuse tasemete puhul. Heledam hall toon tähistab jaatava vastuse tõenäosust ja tumedam eitava vastuse oma.</p>
+</div>
+<div id="standardiseeritud-skooride-kasutamine" class="section level2">
+<h2>Standardiseeritud skooride kasutamine</h2>
+<p>Praegusel juhul oleme ekstravertsuse prediktorina mudelisse kaasanud toorskooride kujul. Need toorskoorid on aga suhteliselt suvalisel skaalal. See tähendab, et me ei oska eriti täpselt hinnata, kas ühe-punktiline muutus ekstravertsuse skooris on suur või väike. Seetõttu tahame vahel mõne numbrilise prediktori mudelisse kaasata standardiseerituna ehk standarhälbe ühikutesse teisendatuna. Siis saame riskisuhteid tõlgendades öelda, et prediktori muutudes ühe standardhälbe võrra muutuvad huvipakkuva sündmuse esinemise anssid nii mitu korda. Prediktori saame standardiseerida pannes funtksioonile <em>glm</em> antavas mudeli valemis prediktori ümber funktsiooni <em>scale()</em>. Teeme oma mudeli vastavalt ringi ja vaatame riskisuhteid.</p>
+<pre class="r"><code>cowles.mudel1 &lt;- glm(volunteer ~ scale(extraversion), data=cowles, family=binomial())
+exp(coef(cowles.mudel1))</code></pre>
+<pre><code>##         (Intercept) scale(extraversion) 
+##           0.7206583           1.2910767</code></pre>
+<p>Võime järeldada, et ekstravertsuse suurenedes ühe standardhälbe võrra suureneb uurimustes osalemise valmidus 1.29 korda ehk 29% võrra.</p>
+</div>
+<div id="lisa.-vastuse-tonaosus-prediktori-konkreetse-vaartuse-korral" class="section level2">
+<h2>LISA. Vastuse tõnäosus prediktori konkreetse väärtuse korral</h2>
+<p>Mudeli parameetrite abil saame välja arvutada ka, milline on jaatava vastuse tõenäosus mingil ekstravertsuse tasemel. Logistilise regressioonimudeli parameetrid on logaritmiliselt teisendatud ansside kujul ehk keerulisemalt öeldes, vastavad tõenäosused on teisendatud logit-funktsiooni abil. Defineerime kõigepealt logit-funktsiooni pöördfunktsiooni expit, mille abil saame logaritmilised anssid tagasi tõenäosusteks.</p>
+<pre class="r"><code>expit &lt;- function(x) exp(x) / (1+exp(x))</code></pre>
+<p>Seejärel küsime funktsiooni <em>coef</em> abil oma mudelist parameetrite väärtused.</p>
+<pre class="r"><code>coef(cowles.mudel1)</code></pre>
+<pre><code>##         (Intercept) scale(extraversion) 
+##          -0.3275901           0.2554766</code></pre>
+<p>Nüüd saame parameetrite väärtused anda funktsioonile <em>expit</em>. Seda tuleks teha sellisel kujul: kõigepealt vabaliikme väärtus, millele liidame otsa prediktori regressioonikordaja väärtuse korrutatuna meid huvitava prediktori taseme väärtusega. Kui sooviksime arvutada, milline on jaatava vastuse tõenäosus, kui ekstravertsuse skoor on 2 standardhälvet üle keskmise, näeks see välja nii.</p>
+<pre class="r"><code>expit(-0.3275901 + 2*0.2554766)</code></pre>
+<pre><code>## [1] 0.5457128</code></pre>
+<p>Nagu näha, ennustab meie mudel sellisel juhul jaatava vastuse tõenäosuseks umbes 55%.</p>
+</div>
+</div>
+<div id="binaarne-logistiline-regressioon---kahe-prediktoriga-mudel" class="section level1">
+<h1>Binaarne logistiline regressioon - kahe prediktoriga mudel</h1>
+<p>Mudelitesse saab prediktorina kaasata ka kategoriaalseid muutujaid. Teeme uue mudeli, lisades täiendava pretiktorina vastaja soo (tunnus <em>sex</em>) ja uurime mudeli väljundit.</p>
+<pre class="r"><code>cowles.mudel2 &lt;- glm(volunteer ~ scale(extraversion) + sex, data=cowles, family=binomial())
+summary(cowles.mudel2)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = volunteer ~ scale(extraversion) + sex, family = binomial(), 
+##     data = cowles)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.3860  -1.0499  -0.9035   1.2533   1.6853  
+## 
+## Coefficients:
+##                     Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)         -0.21765    0.07259  -2.998  0.00271 ** 
+## scale(extraversion)  0.25494    0.05519   4.619 3.85e-06 ***
+## sexmale             -0.24662    0.10929  -2.256  0.02404 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 1933.5  on 1420  degrees of freedom
+## Residual deviance: 1906.4  on 1418  degrees of freedom
+## AIC: 1912.4
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p>Tabelist <strong>Coefficients</strong> näeme p-väärtuste abil, et mõlemad prediktorid on olulised. Kategoriaalsete muutujate puhul valitakse üks kategooriatest baaskategooriaks, millega ülejäänud kategooriaid võrreldakse. Praegusel juhul on muutujal <em>sex</em> kaks taset (<em>female</em> ja <em>male</em>). Vaikimisi on baaskategooriaks valitud <em>female</em>, tulenevalt sellest, et <em>female</em> on tähestukuliselt eespool võrreldes <em>male</em>’iga. Seega näitab vastav regressioonikordaja kui erinev on kategooria <em>male</em> võrreldes kategooriaga <em>female</em>. Miinusmärgist selle kordaja ees võime järeldada, et meeste puhul on jaatava vastuse tõenäosus naistega võrreldes madalam. Kordajate arusaadavamaks tõlgendamiseks arvutame neist jällegi riskisuhted.</p>
+<pre class="r"><code>exp(coef(cowles.mudel2))</code></pre>
+<pre><code>##         (Intercept) scale(extraversion)             sexmale 
+##           0.8044055           1.2903863           0.7814391</code></pre>
+<p>Ekstravertsuse riskisuhe on jäänud samaks. Vastaja soo riskisuhtest võime järeldada, et meeste puhul on jaatava vastamise tõenäosus 78% naiste jaatava vastuse tõenäosusest. ümberpööratuna väljendudes on naiste puhul jaatava vastuse tõenäosus <span class="math inline">\(1/0.78 = 1.28\)</span> korda suurem kui meeste puhul.</p>
+<p>Hindame prediktoreid ka 95%-usaldusvahemike abil.</p>
+<pre class="r"><code>exp(confint(cowles.mudel2))</code></pre>
+<pre><code>## Waiting for profiling to be done...</code></pre>
+<pre><code>##                         2.5 %    97.5 %
+## (Intercept)         0.6974271 0.9271049
+## scale(extraversion) 1.1587831 1.4388556
+## sexmale             0.6304839 0.9678052</code></pre>
+<p>Nagu näha ei sisalda kummagi prediktori vahemikud väärtust 1 ja sellest tulenevalt võib neid lugeda usaldusväärseteks.</p>
+<p>Arvutame mudeli pseudo-determinatsioonikordaja.</p>
+<pre class="r"><code>NagelkerkeR2(cowles.mudel2)</code></pre>
+<pre><code>## $N
+## [1] 1421
+## 
+## $R2
+## [1] 0.02543564</code></pre>
+<p>See on jäänud enam-vähem samaks, nii et soo lisamine mudeli kirjeldusvõimet väga palju paremaks ei teinud.</p>
+<div id="lisa.-vastuse-tonaosus-prediktori-konkreetse-vaartuse-korral-1" class="section level2">
+<h2>LISA. Vastuse tõnäosus prediktori konkreetse väärtuse korral</h2>
+<p>Vaatame lõpetuseks veel mudeli-järgsete tõenäosuste arvutamist <em>expit</em> funktsiooni abil. Selleks pidime kõigepealt saama kätte mudeli parameetrite väärtused.</p>
+<pre class="r"><code>coef(cowles.mudel2)</code></pre>
+<pre><code>##         (Intercept) scale(extraversion)             sexmale 
+##          -0.2176518           0.2549416          -0.2466181</code></pre>
+<p>Arvutame jaatava vastuse tõenäosuse kui vastaja ekstravertsus on 2 standardhälvet üle keskmise ja sooks naine. Kuna female oli antud mudelis baaskategooriaks, siis jääb soo regressioonikordaja arvutusest välja.</p>
+<pre class="r"><code>expit(-0.2176518 + 2 * 0.2549416)</code></pre>
+<pre><code>## [1] 0.5725423</code></pre>
+<p>Arvutame jaatava vastuse tõenäosuse kui vastaja ektravertsus on 2 standardhälvet üle keskmise ja sooks mees. Sellisel juhul lisame arvutusse ka soo regressioonikordaja.</p>
+<pre class="r"><code>expit(-0.2176518 + 2 * 0.2549416 - 0.2466181)</code></pre>
+<pre><code>## [1] 0.5114013</code></pre>
+<p>Nagu näha on sellise ekstravertsuse taseme puhul naistel jaatava vastuse tõenäosus 57% ja meestel 51%.</p>
+</div>
+</div>
+<div id="multinomiaalne-logistiline-regressioon" class="section level1">
+<h1>Multinomiaalne logistiline regressioon</h1>
+<p>Vaatame põgusalt ka logistilist regressiooni sõltuva muutuja korral, millel on rohkem kui kaks taset. Multinomiaalset logistilist regressiooni on R-is võimalik teha lisamooduli <em>mlogit</em> samanimelise funktsiooni abil. Installime ja laadime selle mooduli.</p>
+<pre class="r"><code>install.packages(&quot;mlogit&quot;)</code></pre>
+<pre class="r"><code>library(mlogit)</code></pre>
+<p>Andmetabelis ESS on 4 muutujat 2008. aasta Euroopa Sotsiaaluuringu Eesti vastajaid puudutavatest andmetest. üks tunnustest puudutab seda, millise erakonna poolt hääletas vastaja viimastel valimistel (tunnus <em>partei</em>). Näitlikustamise lihtsuse huvides olen antud tabelisse alles jätnud ainult 3 valimis kõige suuremat toetust omavat parteid (IRL, Kesk ja Reform). Teeme mudeli, milles ennustame erakondlikku eelistust vastaja vanuse kaudu. Selleks kasutame funktsiooni <em>mlogit</em>, millele tuleb ette anda mudelit kirjeldav valem natuke teisel kujul kui funktsioonile <em>glm</em>: tilde järel oleva valemi parempoolse osa alguses on (1 |) ja alles seejärel prediktorid. (Keerulisem valem tuleb sellest, et funktsiooniga <em>mlogit</em> saab vajadusel teha keerulisemaid mudeleid kui funktsiooniga <em>glm</em>. Praegu jätame need võimalused lihtsalt kasutamata.) Lisaks peame lisama ka argumendi shape=“wide”, mis ütleb funktsioonile, millisel kujul meie andmed on. Funktsioon <em>mlogit</em> valib ühe sõltuva muutuja kategooria baaskategooriaks, millega ülejäänud kategooriaid võrreldakse. Vaikimisi võetakse baaskategooriaks tähestiku järjekorras kõige esimene kategooria, antud juhul oleks selleks IRL. Kui tahame baaskategooriat muuta, saab seda teha argumendi <em>reflevel</em> lisamise abil nt nii: reflevel=“Kesk”.</p>
+<pre class="r"><code>ess.mudel1 &lt;- mlogit(partei ~ 1 | vanus, data=ESS, shape=&quot;wide&quot;)</code></pre>
+<p>Uurime mudeli väljundit.</p>
+<pre class="r"><code>summary(ess.mudel1)</code></pre>
+<pre><code>## 
+## Call:
+## mlogit(formula = partei ~ 1 | vanus, data = ESS, shape = &quot;wide&quot;, 
+##     method = &quot;nr&quot;, print.level = 0)
+## 
+## Frequencies of alternatives:
+##     IRL    Kesk  Reform 
+## 0.19940 0.35801 0.44260 
+## 
+## nr method
+## 4 iterations, 0h:0m:0s 
+## g&#39;(-H)^-1g = 0.000986 
+## successive function values within tolerance limits 
+## 
+## Coefficients :
+##                      Estimate Std. Error t-value  Pr(&gt;|t|)    
+## Kesk:(intercept)   -0.6269224  0.3475545 -1.8038 0.0712611 .  
+## Reform:(intercept)  1.1064625  0.3145498  3.5176 0.0004355 ***
+## Kesk:vanus          0.0230663  0.0063845  3.6129 0.0003028 ***
+## Reform:vanus       -0.0064190  0.0061135 -1.0500 0.2937284    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Log-Likelihood: -677.75
+## McFadden R^2:  0.024981 
+## Likelihood ratio test : chisq = 34.729 (p.value = 2.8747e-08)</code></pre>
+<p>Väljundist on näha, et mudeli sobitusaste näitajad hii-ruut (Likelihood ratio test) ja pseudo- determinatsioonikordaja (McFadden R2) on juba välja arvutatud. Hii-ruut-statistiku p-väärtuse väiksuse põhjal võime öelda, et mudel on parem kui nullmudel. Regressioonikordajad on toodud kummagi partei jaoks eraldi. Nende põhjal on näha, et võrreldes IRL-iga suurendab kasvav vanus Keskerakonna poolt hääletamise tõenäosust, samas kui Reformierakonna toetamise tõenäosust see olulisel määral ei mõjuta. Vanuse mõju suurust saab hinnata riskisuhete abil.</p>
+<pre class="r"><code>data.frame(exp(coef(ess.mudel1)))</code></pre>
+<pre><code>##                    exp.coef.ess.mudel1..
+## Kesk:(intercept)               0.5342334
+## Reform:(intercept)             3.0236432
+## Kesk:vanus                     1.0233344
+## Reform:vanus                   0.9936015</code></pre>
+<p>Keskerakonna regressioonikordaja riskisuhte alusel võime järeldada, et lisanduv eluaasta suurendab Keskerakonna toetamise suhtelist tõenäosust võrreldes IRL-i toetamise tõenäosusega 1.02 korda ehk 2%.</p>
+</div>
+<div id="ulesanded" class="section level1">
+<h1>Ülesanded</h1>
+<ol style="list-style-type: decimal">
+<li>Andmetabelist nimega neeme on Marko Neeme magistritöö (Neeme, 2012) andmed, milles uuriti 50-70-aastaste meeste suhtumist eesnäärmevähi skriiningtesti. Tunnus “”valmidus“, näitab testis osalemise valmidust (tasemed pigem jah, ja pigem ei). Lisaks on tabelis ära toodud Suure Viisiku isiksuseomadused: neurootilisus (tunnus N), ekstravertsus (E), avatus kogemusele (O), sotsiaalsus (A) ja meelekindlus (C). Koostage binaarse logistilise regressiooni mudel, mis ennustab skriiningtestis osalemise valmidust Suure Viisiku isiksuseomaduste kaudu.</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Esialgu tuleks saada ülevaade andmetest. Kasutage funktsiooni <em>summary</em>, argumendiks saab sisestada terve andmestiku või lihtsalt ühe veeru. Milline on oslejate keskmine vanus? Missugune on valmiduse tulemuste jaotus?</li>
+</ol>
+<pre class="r"><code>summary(neeme)
+prop.table(table(neeme$valmidus))*100#jaotus protsentides</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Tehke ühe tunnuse tulemustest histogramm (vt. praktikum 2).</li>
+</ol>
+<pre class="r"><code>library(ggplot2)
+ggplot(neeme, aes(E))+
+        geom_histogram()+
+        theme_classic()+
+        labs(x = &quot;Ekstravertsus&quot;, y = &quot;Kogus&quot;)</code></pre>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Millised isiksusomadused omavad olulist seost valmidusega? Kas need omadused suurendavad või vähendavad testis osalemise valmidust?</li>
+</ol>
+<pre class="r"><code>mudel.yl2 &lt;- glm(valmidus~N+E+O+A+C, data = neeme, family = binomial())
+summary(mudel.yl2)</code></pre>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>Arvutage välja riskisuhted ja nende 95%-usaldusvahemikud? Milline omadus mõjutab osalemisvalmidust kõige tugevamini?</li>
+</ol>
+<pre class="r"><code>round(exp(coef(mudel.yl2)),3)
+round(exp(confint(mudel.yl2)),3)</code></pre>
+<ol start="5" style="list-style-type: lower-alpha">
+<li>Arvutage mudeli sobitusastet näitav hii-ruut-statistik ja selle p-väärtus.</li>
+</ol>
+<pre class="r"><code>#Siin võis tekkid osadel probleem hii-ruudu arvutamisega. 
+# Kui kustutate andmetest puuduvad andmed, siis peaks nende kahe mudeli võrdlus töötama:
+neeme2 &lt;- na.omit(neeme)#see rida loob uue andmestiku, kus ei ole NA&#39;sid
+#Nüüd teen mõlemad mudedlid selle uue andmestikuga:
+mudel.yl2 &lt;- glm(valmidus~N+E+O+A+C, data = neeme2, family = binomial())
+mudel.yl2.null &lt;- glm(valmidus~1, data = neeme2, family = binomial())
+anova(mudel.yl2, mudel.yl2.null, test = &quot;Chisq&quot;)</code></pre>
+<ol start="6" style="list-style-type: lower-alpha">
+<li>Leidke mudeli pseudo-determinatsioonikordja.</li>
+</ol>
+<pre class="r"><code>NagelkerkeR2(mudel.yl2)</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Tabelis ESS on lisaks tunnustele partei ja vanus veel tunnused <em>sugu</em> ja <em>aastaid_koolis</em> (vastaja kooliskäidud aastate arv). Koostage uus multinomiaalne logistiline mudel, milles on lisaks vastaja vanusele täiendavateks prediktoriteks ka sugu ja kooliskäidud aastate arv. Leidke ka riskisuhted ja nende usaldusvahemikud. Kas need muutujad seostuvad erakondlike eelistustega? Kui jah, siis millise partei puhul ja millises suunas?</li>
+</ol>
+<pre class="r"><code>ess.mudel2 &lt;- mlogit(partei ~ 1 | vanus + sugu + aastaid_koolis, data=ESS, shape=&quot;wide&quot;)
+summary(ess.mudel2 )
+# Riskisuhted
+data.frame(exp(coef(ess.mudel2)))
+# Riskisuhete usaldusvahemikud
+data.frame(exp(confint(ess.mudel2)))</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
