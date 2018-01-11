@@ -4,20 +4,22 @@ navbar:
   left:
   - text: Kodu
     href: index.html
-  - text: Kvantitatiivsed mudelid kaitumisteadustes (SHPH.00.004)
+  - text: Praktikumide materjalid
     menu:
-    - text: 1 - sissejuhatus
+    - text: 1. Praktikum - sissejuhatus
       href: praktikum1.html
-    - text: 1.2 - korrelatsioon
-      href: praktikum1_korrelatsioon.html
-    - text: 1.3 - andmete eraldamine
-      href: praktikum1_subsetting.html      
-    - text: 2 - joonised
+    - text: 2. Pratkikum - joonised
       href: praktikum2.html
-    - text: 2.1. keskmiste vordlemine
+    - text: 3. Praktikum - regressioon
+      href: praktikum3.html 
+  - text: Lisamaterjalid
+    menu:
+    - text: 1.1. Korrelatsioon
+      href: praktikum1_korrelatsioon.html
+    - text: 1.2. Andmete eraldamine
+      href: praktikum1_subsetting.html      
+    - text: 2.1. Keskmiste vordlemine
       href: praktikum2_ttestid.html      
-    - text: 3. praktikum
-      href: praktikum3.html      
   - text: Kirjandus
     href: lugemist.html
   - text: Kontakt

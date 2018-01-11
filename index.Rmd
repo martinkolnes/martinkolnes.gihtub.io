@@ -1,4 +1,4 @@
 ---
-title: "Andmeanalüüs R'iga"
+title: "Kvantitatiivsed mudelid käitumisteadustes (SHPH.00.004)"
 output: html_document
 ---
