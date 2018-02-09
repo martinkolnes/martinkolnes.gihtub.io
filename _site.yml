@@ -8,7 +8,7 @@ navbar:
     menu:
     - text: 1. Praktikum - sissejuhatus
       href: praktikum1.html
-    - text: 2. Pratkikum - joonised
+    - text: 2. Praktikum - joonised
       href: praktikum2.html
     - text: 3. Praktikum - regressioon
       href: praktikum3.html 
@@ -26,7 +26,7 @@ navbar:
       href: praktikum1_subsetting.html      
     - text: 2.1. Keskmiste vordlemine
       href: praktikum2_ttestid.html      
-  - text: Kirjandus
+  - text: Soovitused  
     href: lugemist.html
   - text: Kontakt
     href: about.html

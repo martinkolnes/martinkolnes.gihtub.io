@@ -297,7 +297,7 @@ div.tocify {
       <a href="praktikum1.html">1. Praktikum - sissejuhatus</a>
     </li>
     <li>
-      <a href="praktikum2.html">2. Pratkikum - joonised</a>
+      <a href="praktikum2.html">2. Praktikum - joonised</a>
     </li>
     <li>
       <a href="praktikum3.html">3. Praktikum - regressioon</a>
@@ -332,7 +332,7 @@ div.tocify {
   </ul>
 </li>
 <li>
-  <a href="lugemist.html">Kirjandus</a>
+  <a href="lugemist.html">Soovitused</a>
 </li>
 <li>
   <a href="about.html">Kontakt</a>
@@ -350,7 +350,7 @@ div.tocify {
 
 
 <h1 class="title toc-ignore"><ol style="list-style-type: decimal">
-<li>praktikum: RStudio kasutamine, kirjeldav statistika, korrelatsioon, t-test</li>
+<li>praktikum: RStudio kasutamine, andmetega manipuleerimine, kirjeldav statistika</li>
 </ol></h1>
 <h4 class="author"><em>Martin Kolnes, Karin Täht</em></h4>
 
@@ -361,18 +361,17 @@ div.tocify {
 <div id="praktikumi-eesmargid" class="section level1">
 <h1>Praktikumi eesmärgid</h1>
 <ul>
-<li>RStudio kasutamisega tutvumine: andmete laadimine R’i, andmeväljadele viitamine R’is<br />
+<li>RStudio tutvumine<br />
 </li>
-<li>Üldine kirjeldav statistika: keskmine, mediaan, stadnadrhälve jne<br />
+<li>Andmetega manipuleerimine<br />
 </li>
-<li>Korrelatsiooni kasutamine<br />
-</li>
-<li>T-testi kasutamine</li>
+<li>Üldine kirjeldav statistika: keskmine, mediaan, stadnadrhälve</li>
 </ul>
+<p>Laadige alla <a href="https://drive.google.com/open?id=1oOK59Dp1jMNUKzuGvKb1OxnePYFx0PPr">praktikumi andmed</a>.</p>
 </div>
 <div id="rstudio-paigaldamine" class="section level1">
 <h1>RStudio paigaldamine</h1>
-<p>Arvutiklassi arvutites on need programmid juba olemas, aga kui on soovi paigaldada RStudio ka enda arvutisse, siis kasutage järgnevaid linke:</p>
+<p>Arvutiklassi arvutites on vajalikud programmid juba olemas, aga kui on soovi paigaldada RStudio ka enda arvutisse, siis kasutage järgnevaid linke:</p>
 <ul>
 <li>programmeerimiskeel R - <a href="http://ftp.eenet.ee/pub/cran" class="uri">http://ftp.eenet.ee/pub/cran</a><br />
 </li>
@@ -381,13 +380,12 @@ div.tocify {
 </div>
 <div id="rstudio-kasutamine" class="section level1">
 <h1>1. RStudio kasutamine</h1>
-<p>Laadige alla praktikumi koodi ja andmeid sisaldav zip-fail Moodle’ist. Pakkige zip-fail lahti. Selles on 2 faili: koodifail praktikum1.R ja andmefail praktikum1.RData.</p>
 <p>Käivitame RStudio. Avanema peaks allolev pilt.</p>
 <div class="figure">
 <img src="KMKT/1praktikum/rstudio1.png" alt="Joonis 1. RStudio ülevaade" />
 <p class="caption">Joonis 1. RStudio ülevaade</p>
 </div>
-<p>Avame zip-failis olnud koodifaili praktikum1.R ja andmefaili prakitkum1.RData kasutades ülaloleval joonisel osutatud nuppe või RStudio aknas paremal all osas paiknevat paneeli <em>Files</em>. Kui soovime olemasoleva koodifaili asemel avada hoopis uut tühja koodifaili, siis seda saab teha valides RStudio menüü-ribalt <em>File</em> ja sellest <em>New File</em> -&gt; <em>R Script</em>.</p>
+<p>Avame andmefaili 1praktikumAndmed.RData kasutades ülaloleval joonisel osutatud nuppe või RStudio aknas paremal allosas paiknevat paneeli <em>Files</em> (need võimalused sobivad rdata-formaadis andmete avamiseks). Soovitan avada ka tühi koodifail (RScript). Seda saab teha valides RStudio menüüribalt <em>File</em> -&gt; <em>New File</em> -&gt; <em>R Script</em>. Koodifail on mõeldud andmeanalüüsi salvestamiseks. Me saame sinna salvestada kõik käsud, mida me tahame R-ile väärtustamiseks saata.</p>
 <p>Nüüd peaks meil RStudio aknas lahti olemas 4 osa. Erinevate osade funktsioonid on toodud allpool. <img src="KMKT/1praktikum/rstudio2.png" alt="Joonis 2. RStudio erinevad aknad" /></p>
 <p><strong>Üleval vasakul</strong> olevasse ossa kirjutame koodi, mille abil ütleme R-ile, mida me tahame, et see andmetega teeks. Kuidas koodi R-ile saatmine käib? Kui soovime saata ainult ühte rida korraga tuleb kõige pealt klõpsata sellel koodireal, mida soovime R-ile saata (nii et kursor hakkab vilkuma sellel real) ja seejärel vajutada koodiredaktori paneeli paremal ülaosas paiknevat nuppu <em>Run</em>. Nupu asemel võib kasutada ka klahvikombinatsiooni <em>Ctrl + Enter</em> (Maci arvutitel <em>Cmd + Enter</em>). Kui soovime saata mitut koodirida korraga, tuleb need koodiredaktoris valida (st teha hiirega siniseks) ja seejärel vajutada <em>Run</em>-nuppu või klahvikombinatsiooni.</p>
 <p><strong>All vasakul</strong> on konsool (<em>Console</em>). Seal asubki arvutusi teostav R ise. Kui laseme R-il midagi arvutada, ilmuvad tulemused nähtavale just selles osas. Koodi võib põhimõtteliselt kirjutada ka otse siia, aga enamasti on mugavam kirjutada kood üleval valmis ja seejärel alla konsooli saata. Nii on lihtsam koodi vajadusel parandusi teha ja koodi korduvkasutada.</p>
@@ -396,9 +394,9 @@ div.tocify {
 <li><em>Files</em>: R-i koodi ja andmefailide avamiseks.<br />
 <strong>NB!</strong> Selles aknas saate sättida enda töökeskkonda. See annab R’ile teada, missuguse kaustaga parasjagu tööd tehakse. Kausta otsimiseks vajutage sümbolile “…”, otsige üles sobiv kaust ja vajutage “OK”. Seejärel vajutage nupule <em>More</em> ja valige <em>Set As Working Directory</em>. Jälgige alati, et töökekskond oleks kaust hetkel kasutatavate andmetega.<br />
 </li>
-<li><em>Plots</em>: selles osas ilmuvad nähtavale joonised.<br />
+<li><em>Plots</em>: siia kuvtakse tehtud joonised.<br />
 </li>
-<li><em>Packages</em>: selle osa abil saab installida ja laadida lisamooduleid, mis lisavad R-ile täiendavat funktsionaalsust. Lisamoodulid tuleb kõigepealt installida, st öelda R-ile, see tõmbaks mooduli internetist antud arvutisse. Seda saab teha vajutades paneelil nuppu <em>Install</em> ja kirjutades avanevasse aknasse meid huvitava lisamooduli nime. Kui R on mooduli installinud, tuleb see ka laadida. Laadimiseks tuleb vajaminev moodul <em>Packages</em>-paneeli nimekirjast üles otsida ja selle nime eesasuvasse kasti linnukene teha. Lisamooduleid saab installida ja laadida ka R-i koodi abil - <em>library(“lisamooduli nimi”)</em>.<br />
+<li><em>Packages</em>: selle osa abil saab installida ja laadida lisamooduleid, mis lisavad R-ile täiendavat funktsionaalsust. Lisamoodulid tuleb kõigepealt installida (tuleb teha ainult ühe korra). Seda saab teha vajutades paneelil nuppu <em>Install</em> ja kirjutades avanevasse aknasse meid huvitava lisamooduli nime. Kui R on mooduli installinud, tuleb see ka laadida. Laadimiseks tuleb vajaminev moodul <em>Packages</em>-paneeli nimekirjast üles otsida ja selle nime eesasuvasse kasti linnukene teha. Lisamooduleid saab installida ja laadida ka R-i koodi abil: <em>install.packages(“lisamooduli nimi”)</em> ja <em>library(“lisamooduli nimi”)</em>.<br />
 </li>
 <li><em>Help</em>: Abiinfo R-i funktsioonide kohta. Kirjutades paneeli otsingukasti meid huvitava R-i funktsiooni nime ja vajutades Enterit, näidatakse infot funktsiooni kasutamise kohta. Abiinfo lehe lõpus on toodud ka näited selle konkreetse funktsiooni kasutamise kohta.<br />
 </li>
@@ -406,8 +404,9 @@ div.tocify {
 </ul>
 <p><strong>Üleval paremal</strong> asub 2 paneeli:</p>
 <ul>
-<li><em>Environment</em>: selles osas näidatakse parajasti lahti olevaid andmeid.</li>
-<li><em>History</em>: R-i konsooli käskude ajalugu. Natuke lähemalt <em>Environment</em> paneelist. Kui avasite alguses andmefaili <em>praktikum1.RData</em>, peaks paneel välja nägema nagu alloleval pildil. Muutuja <em>tabel</em> viitab konkreetse andmetabeli nimele. Erinevalt näiteks SPSS-ist võivad R-i andmefailid sisaldada rohkem kui ühte andmetabelit (ja lisaks andmetabelitele ka teistsuguseid andmestruktuure). Igal andmetabelil on oma nimi ja tabelis olevad andmed saamegi hiljem kätte just selle nime abil. 200 obs of 10 variables näitab, et tabelis on 200 rida ja 10 tulpa.</li>
+<li><em>Environment</em>: selles osas näidatakse parajasti kasutusel olevaid andmeid.<br />
+</li>
+<li><em>History</em>: R-i konsooli käskude ajalugu. Natuke lähemalt <em>Environment</em> paneelist. Kui avasite alguses andmefaili <em>1praktikumiAndmed.RData</em>, peaks paneel välja nägema nagu alloleval pildil. Muutuja <em>tabel</em> viitab konkreetse andmetabeli nimele. Erinevalt näiteks SPSS-ist võivad R-i andmefailid sisaldada rohkem kui ühte andmetabelit (ja lisaks andmetabelitele ka teistsuguseid andmestruktuure). Igal andmetabelil on oma nimi ja tabelis olevad andmed saamegi hiljem kätte just selle nime abil. 200 obs of 10 variables näitab, et tabelis on 200 rida ja 10 tulpa.</li>
 </ul>
 <div class="figure">
 <img src="KMKT/1praktikum/rstudio3.png" alt="Joonis 3. RStudio Global Environment" />
@@ -418,32 +417,131 @@ div.tocify {
 <img src="KMKT/1praktikum/rstudio4.png" alt="Joonis 4. RStudio ülevaade" />
 <p class="caption">Joonis 4. RStudio ülevaade</p>
 </div>
-<p>Meile näidatakse tabelis olevate tulpade nimesid, andmetüüpe ja esimesi andmepunkte. Esimene tulp/muutuja kannab nime “vanus”. Andmetüüp on <em>int</em> , mis tuleb inglisekeelsest sõnast <em>integer</em> ehk täisarv, st. tegemist on tulbaga, milles sisalduvad andmed on täisarvud. (Teine R-is levinud numbriliste andmete tüüp on <em>num</em> ehk <em>numeric</em>, mis võib sisaldada ka komakohaga arve.) Teine tulp kannab nime “elukoht”&quot; ja selle tüübiks on märgitud <em>Factor</em> w/ 2 levels „maa“ , „linn“. <em>Factor</em> tähendab R-i kontekstis kategooriaid sisaldavat muutujat. Antud juhul on neid kategooriaid 2 tükki: „maa“ ja „linn“. Kõik ülejäänud tabelis olevad muutujad sisaldavad sarnaselt esimese tulbaga täisarvulist tüüpi andmeid (<em>int</em>).</p>
-<p><strong>Ülesanded - RStudio kasutamine</strong></p>
-<ol style="list-style-type: decimal">
-<li>Looge uus muutuja nimega “uus_muutuja”. Andke sellele muutujale numbriline väärtus.<br />
+<p>Meile näidatakse tabelis olevate tulpade nimesid, andmetüüpe ja esimesi andmepunkte. Esimene tulp/muutuja kannab nime “vanus”. Andmetüüp on <em>int</em> , mis tuleb inglisekeelsest sõnast <em>integer</em> ehk täisarv, st. tegemist on tulbaga, milles sisalduvad andmed on täisarvud. (Teine R-is levinud numbriliste andmete tüüp on <em>num</em> ehk <em>numeric</em>, mis võib sisaldada ka komakohaga arve.) Teine tulp kannab nime “elukoht” ja selle tüübiks on märgitud <em>Factor</em> w/ 2 levels „maa“ , „linn“. <em>Factor</em> tähistab R-i kontekstis kategooriaid sisaldavat muutujat. Antud juhul on neid kategooriaid 2 tükki: „maa“ ja „linn“. Kõik ülejäänud tabelis olevad muutujad sisaldavad sarnaselt esimese tulbaga täisarvulist tüüpi andmeid (<em>int</em>).</p>
+</div>
+<div id="r-i-suntaks" class="section level1">
+<h1>2. R-i süntaks</h1>
+<p>Enne andmete juurde asumist teeme väikse kõrvalpõike R-i süntaksiga tutvumiseks. Nagu juba eelnevalt mainisin, siis üldiselt on kasulik kirjutada koodi koodifaili (<em>Rscript</em>). Selle saate salvestada enda arvutisse ja avada järgmisel kasutamisel uuesti. Konsoolile kirjutatud koodiread lähevad pärast R-i sulgemist kaduma.<br />
+Paar nõuannet ka koodi kirjutamise kohta. Esiteks, R-i koodi kirjutamisel te ei pea jätma koodi tühikuid. Koodi loetavuse mõttes on see siiski soovitatav. Teiseks, punkte ja komasid kasutatakse R-is erinevatel juhtudel. Punkte kasutatakse andmete puhul. Komasid kasutatakse aga erinevate elementide eristamiseks. Näiteks <span class="math inline">\(5.12\)</span> on üks number, aga <span class="math inline">\(5,12\)</span> on kaks numbrit.</p>
+<div id="aritmeetika" class="section level2">
+<h2>Aritmeetika</h2>
+<p>R-i võib kasutada tavalise kalkulaatorina. Proovige teha järgnevaid tehteid R-i konsoolil.</p>
+<ul>
+<li>liitmine: 2 + 2</li>
+<li>lahutamine: 4 - 5</li>
+<li>korrutamine: 5 * 7<br />
 </li>
-<li>Korrutage see muutuja kahega. Võtke see muutuja ruutu.<br />
+<li>jagamine: 21 / 3</li>
+<li>astmesse tõstmine: 2^4</li>
+</ul>
+</div>
+<div id="muutujate-loomine" class="section level2">
+<h2>Muutujate loomine</h2>
+<p>Vahepeal on vajalik luua andmetöötluse käigus uus muutuja, kuhu on salvestatud mingi oluline väärtus, lihtsalt üks veerg andmestikust või terve andmestik. Uue muutuja väärtustamiseks kasutatakse kas noolt “&lt;-” või tavalist võrdusmärki. Muutujate nimede puhul ei luba R tühikuid kasutada. Seega on pikema nime puhul hea kasutada punkti (uus.muutuja), alakriipsu (uus_muutuja) või suurtähti (uusMuutuja).</p>
+<pre class="r"><code># Need kaks väärtustamist annavad sama tulemuse
+uus_muutuja &lt;- 2
+uus_muutuja = 2</code></pre>
+<p>Töökeskonnas olevate muutujatega saate teha ka tavalisi artimeetilisi tehteid.</p>
+<pre class="r"><code>uus_muutuja * 4</code></pre>
+</div>
+<div id="andmetuubid-ja-vektorid" class="section level2">
+<h2>Andmetüübid ja vektorid</h2>
+<p>Põhilised andmetüübid, millega kursuse jooksul kokku puutume:</p>
+<ul>
+<li>numbrilised (numeric, integer): 2.2, 3<br />
+</li>
+<li>sõned (character): “hello”<br />
+</li>
+<li>tõeväärtused: TRUE, FALSE</li>
+</ul>
+<p>Miks on need olulised? Kõik andmestikud on koosnevad nendest andmetüüpidest. Andmestiku ühte veergu võib käsitleda vektorina, mis koosneb teatud tüüpi elementidest. Vaatme kõigepealt, kuidas R-is saab vektoreid luua. Vektorid (erinevalt listidest) võivad sisaldada ainult ühte tüüpi elemente.</p>
+<pre class="r"><code># Numbriline vektor
+num_vektor &lt;- c(3,1,2)
+# Sõnedega vektor
+s_vektor &lt;- c(&quot;SPSS&quot;, &quot;R&quot;, &quot;Matlab&quot;)
+# Tõeväärtustega vektor
+t_vektor &lt;- c(FALSE, TRUE, FALSE)</code></pre>
+<p>Vektori tüübi kontrollimiseks saame kasutada funktsiooni nimega <em>class</em>.</p>
+<pre class="r"><code>class(num_vektor)</code></pre>
+</div>
+<div id="tehted-vektoritega" class="section level2">
+<h2>Tehted vektoritega</h2>
+<p>Kõik arvutused, mis me R-is teeme on seotud vektoritega. Kirjeldava statistika puhul võetakse sageli üks andmeveerg (ehk vektor andmetega) ja vaadatakse selle näitajaid.</p>
+<pre class="r"><code># Teeme kaks vektorit:
+v1 &lt;- c(1,4,6,7,3)
+v2 &lt;- c(1:5) # koolon näitab, et teeme vektori 1-st kuni 5-ni
+
+# Liitmine
+v1 + v2
+
+# Korrutamine
+v1 * v2
+
+# Vektori keskmine
+mean(v1)
+
+# Vektori andmete summa
+sum(v1)
+
+# Vektori mediaan
+median(v1)</code></pre>
+</div>
+<div id="andmete-eraldamine-vektorist" class="section level2">
+<h2>Andmete eraldamine vektorist</h2>
+<p>R-i üks peamisi tugevusi peitub andmete manipuleerimises. Andmete eraldamiseks saab kasutada indekseid või loogikaavaldisega. Indeksiga võtame konkreetse koha, mis meid huvitab. Loogikaavaldisega saame valida väärtused, mis vastavad meie poolt määratud reeglile.</p>
+<pre class="r"><code># Loome vektori
+v3 &lt;- seq(1,10,0.5) #teeme vektori 1-st kuni 10-ni sammuga 0,5
+
+# Elradame esimese elemendi
+v3[1]
+
+# Eraldame kolmanda, neljanda ja viienda elemendi:
+v3[3:5]
+
+# Eraldame elemendid, mis on suuremad kui 7
+v3[v3 &gt; 7]</code></pre>
+</div>
+<div id="ulesanded---r-i-suntaks" class="section level2">
+<h2>Ülesanded - R-i süntaks</h2>
+<ol style="list-style-type: decimal">
+<li>Tehke kaks erineva vektorit, kus on vähemalt 10 numbrilist elementi.<br />
+</li>
+<li>Arvutage nende vektori aritmeetiline keskmine ja mediaan.<br />
+</li>
+<li>Liitke need vektorid ja salvestage tulemus uude muutujasse. Arvutage uue muutuja keskmine, mediaan ja summa.<br />
+</li>
+<li>Eraldage eelmises ülesandes loodud muutujast väärtused, mis on suuremad kui selle muutuja aritmeetiline keskmine.</li>
+</ol>
+</div>
+</div>
+<div id="andmetega-manipuleerimine" class="section level1">
+<h1>3. Andmetega manipuleerimine</h1>
+<p>Enne alustamist veenduge, et Teil oleks RStudio töökeskkonnas (<em>Global Environment</em>) vastav andmetabel olemas (Joonis 3.).</p>
+<p>Tehke esialgu läbi järgnevad ülesanded:</p>
+<div id="ulesanded---andemstikuga-tutvumine" class="section level2">
+<h2>Ülesanded - andemstikuga tutvumine</h2>
+<ol style="list-style-type: decimal">
+<li>Kui palju muutujaid on andmestikus? Mis on nende muutujate nimed?<br />
 </li>
 <li>Kasutage funktsiooni <em>head()</em>, argumendiks pange andmesitiku nimi. Mida see funktsioon näitab?<br />
 </li>
+<li>Kasutage funktsiooni <em>tail()</em>, argumendiks pange andmesitiku nimi. Mida see funktsioon näitab?<br />
+</li>
 <li>Kaustage funktsiooni <em>str()</em>, argumendiks pange andmesitiku nimi. Mida see funktsioon näitab?</li>
 </ol>
-</div>
-<div id="andmetega-manipuleerimine" class="section level1">
-<h1>2. Andmetega manipuleerimine</h1>
-<p>Enne alustamist veenduge, et Teil oleks RStudio töökeskkonnas (<em>Global Environment</em>) vastav andmetabel olemas (Joonis 3.).</p>
-<p>R’i üks suurimaid eeliseid SPSS’i ees on võimalus andmeid kiirelt kohandada enda vajadustele.</p>
-<p>Siin tutvustame kolme võimalust:</p>
+<p>R’i üks suurimaid eeliseid SPSS’i ees on võimalus andmeid kiirelt kohandada enda vajadustele.<br />
+Siin tutvustame kolme võimalust:</p>
 <ul>
 <li>Dollari märrgi abil viitamine<br />
 </li>
 <li>Nurgelist sulgude kasutamine - R’is annavad nurgelised sulud märku, et mingist objektist/andmestikust tahetakse mingit konkreetsemat muutujat kätte saada.<br />
 </li>
-<li>Funktsioon <em>subset</em> - See funktsioon võimaldab teha sama, mida nurgelised sulud.</li>
+<li>Funktsioon <em>subset</em> - see funktsioon võimaldab teha sama, mida nurgelised sulud.</li>
 </ul>
-<p><strong>Veergude erladamine</strong><br />
-R’is saab kergesti kasutada funktsioone muutujate peal eraldi. Et arvutada tabelis oleva muutuja kohta statistilisi näitajaid, peame teadma, kuidas tulbas olevad andmed koodi abil kätte saada. Selleks peame teadma nii andmetabeli nime kui ka tulba nime või tulba järjekorranumbrit. Tulbas vanus olevad andmed saame muutuja nime abil kätte nii:</p>
+</div>
+<div id="veergude-erladamine" class="section level2">
+<h2>Veergude erladamine</h2>
+<p>R’is saab kergesti kasutada funktsioone muutujate peal eraldi. Et arvutada tabelis oleva muutuja kohta statistilisi näitajaid, peame teadma, kuidas tulbas olevad andmed koodi abil kätte saada. Selleks peame teadma nii andmetabeli nime kui ka tulba nime või tulba järjekorranumbrit. Tulbas vanus olevad andmed saame muutuja nime abil kätte nii:</p>
 <p>Dollari märgi abil:</p>
 <pre class="r"><code>tabel$vanus</code></pre>
 <p>Nurgeliste sulgudega:</p>
@@ -456,12 +554,16 @@ Kasutage miinusmärki:</p>
 <pre class="r"><code>subset(tabel, select = -c(vanus, elukoht)) # eemaldab veerud vanus ja elukoht
 tabel[,1] # eemaldab esimese veeru
 tabel[-1,] # eemaldab esimese rea</code></pre>
-<p><strong>Ridade eraldamine</strong><br />
-Järjekorra numbri abil saab ridasid samamoodi eraldada nagu veerge:</p>
+</div>
+<div id="ridade-eraldamine" class="section level2">
+<h2>Ridade eraldamine</h2>
+<p>Järjekorra numbri abil saab ridasid samamoodi eraldada nagu veerge:</p>
 <pre class="r"><code>tabel[1,] #esimne rida</code></pre>
 <pre class="r"><code>tabel[1:5,] #esimesed viis rida</code></pre>
-<p><strong>Tingimuste kasutamine</strong><br />
-Kuidas valida ridu, mis vastavad teatud tingimustele? Proovime näiteks võtta andmestikust need read, kus vaadeldava isiku vanus on alla 30. Nurgeliste sulgudega:</p>
+</div>
+<div id="tingimuste-kasutamine" class="section level2">
+<h2>Tingimuste kasutamine</h2>
+<p>Kuidas valida ridu, mis vastavad teatud tingimustele? Proovime näiteks võtta andmestikust need read, kus vaadeldava isiku vanus on alla 30. Nurgeliste sulgudega:</p>
 <pre class="r"><code>tabel[tabel$vanus&lt;30,]</code></pre>
 <p>Funktsiooniga <em>subset</em>:</p>
 <pre class="r"><code>subset(tabel, vanus &lt; 30)</code></pre>
@@ -469,12 +571,18 @@ Kuidas valida ridu, mis vastavad teatud tingimustele? Proovime näiteks võtta a
 <pre class="r"><code>tabel[tabel$elukoht == &quot;maa&quot;,] </code></pre>
 <p>Samasuguse tulemuse saame ka funktsiooniga <em>subset</em></p>
 <pre class="r"><code>subset(tabel, elukoht == &quot;maa&quot;)</code></pre>
-<p><strong>Ülesanded - andmetega manipuleerimine</strong><br />
-1. Eraldage andmetest veerg “vanus”. Looge uus muutuja, kus on ainult see veerg.<br />
-2. Tehke kaks uut andmestikku. Esimesse salvestage maal elavata katseisikute tulemused ja teise salvestage linnas elavate katseisikute tulemused.</p>
+</div>
+<div id="ulesanded---andmetega-manipuleerimine" class="section level2">
+<h2>Ülesanded - andmetega manipuleerimine</h2>
+<ol style="list-style-type: decimal">
+<li>Eraldage andmetest veerg “vanus”. Looge uus muutuja, kus on ainult see veerg.<br />
+</li>
+<li>Tehke kaks uut andmestikku. Esimesse salvestage maal elavata katseisikute tulemused ja teise salvestage linnas elavate katseisikute tulemused.</li>
+</ol>
+</div>
 </div>
 <div id="kirjeldav-statistika" class="section level1">
-<h1>3. Kirjeldav Statistika</h1>
+<h1>4. Kirjeldav Statistika</h1>
 <p>Nüüd, kui teame, kuidas anda R’ile edasi ainult üks muutuja andmestikus, proovime saada selgemat ülevaadet muutujast <em>vanus</em>.<br />
 <strong>Kekmise</strong> vanuse saame andes funktsioonile <em>mean</em> argumendiks muutuja <em>vanus</em>:</p>
 <pre class="r"><code>mean(tabel$vanus)</code></pre>
@@ -495,58 +603,15 @@ median(tabel$sotsiaalsus, na.rm=TRUE)</code></pre>
 <pre class="r"><code>table(tabel$elukoht)</code></pre>
 <p>Protsentuaalse jaotuse saame lisades sagedustabeli ümber funktsiooni <em>prop.table</em>:</p>
 <pre class="r"><code>prop.table(table(tabel$elukoht))</code></pre>
-<p><strong>Ülesanded - kirjeldav statistika</strong><br />
-1. Leidke sotsiaalsuse, meelekindluse, ekstravertsuse, neurootilisuse ja avatuse keskmised tulemused.<br />
-2. Kasutage funktsiooni <em>summary()</em>. Andke argumendiks üks veerg. Andke argumendiks terve tabel. Mida see funktsioon väljastab?<br />
-3. Millises vahemikus varieeruvad ekstravertsuse skoorid?</p>
-</div>
-<div id="korrelatsioon" class="section level1">
-<h1>4. Korrelatsioon</h1>
-<p>Kahe muutuja vahelise korrelatsioonikordaja väätuse saame andes need muutujad argumentideks funktsioonile <em>cor</em>:</p>
-<pre class="r"><code>cor(tabel$vanus, tabel$depressioon)</code></pre>
-<p>Funktsioonile <em>cor</em> saab ette anda ka mitu muutujat korraga kasutades andmetabeli tulpade järjekorranumbreid. Sellisel juhul tagastatakse meile korrelatsioonimaatriks.</p>
-<pre class="r"><code>cor(tabel[,3:7])</code></pre>
-<p>Nagu näha on mõnede korrelatsioonikordajate väärtuseks puuduv väärtus ehk NA. Funktsiooni <em>cor</em> puhul käib puuduvate väärtuste välja jätmine argumendi <em>use</em> abil. <em>use=“complete.obs”</em> jätab kasvõi ühe puuduva väärtusega inimese andmed välja kõigist arvutustest. <em>use=“pairwise”</em> jätab inimese välja aga ainult nendest arvutustest, mille puhul tal esineb puuduvaid andmeid:</p>
-<pre class="r"><code>cor(tabel[,3:7], use=&quot;complete.obs&quot;)</code></pre>
-<p>Kuna antud juhul on puuduvaid andmeid väga vähe, on puuduvate andmete eemaldamise meetodi kasutamise puhul erinevused vaevumärgatavad:</p>
-<pre class="r"><code>cor(tabel[,3:7], use=&quot;pairwise&quot;)</code></pre>
-<p>Korrelatsioonimaatriksit on enamasti parem jälgida väiksema komakohtade arvu puhul. Ümardamise saame lisades funktsiooni cor ümber funktsiooni round ja andes sellele ette soovitava komakohtade arvu.</p>
-<pre class="r"><code>round(cor(tabel[,3:7], use=&quot;complete.obs&quot;), 2)</code></pre>
-<p>Vahel soovime teada ka korrelatsioonikordaja statistilist olulisust. Selle saame funktsiooni cor.test abil.</p>
-<pre class="r"><code>cor.test(tabel$neurootilisus, tabel$stateanx)</code></pre>
-<p>Funktsiooni väljund näeb välja selline: P-väärtus on väljundis antud kujul 4.809e-13. See tähistab arvu 4.809 korda 10 astmel -13, <span class="math inline">\(4.809 \times 10^{-13}\)</span> ehk tegemist on väga väikese arvuga ja seega võib korrelatsioonikordajat lugeda statistiliselt oluliseks. Väga väikeste või väga suurte arvude puhul kasutabki R-i sellist tähistust.</p>
-<p><strong>Ülesanded - korrelatsioon</strong><br />
-1. Kui tugev on seisundi- ja püsiärevuse vaheline korrelatsioon?<br />
-2. Kui tugev on neurootlisuse ja ekstravertsuse vaheline korrelatsioon?<br />
-3. Kui tugev on depressiooni ja püsiärevuse vaheline korrelatsioon?<br />
-4. Kas need korrelatsioonikordajad on statistiliselt olulised?</p>
-</div>
-<div id="t-test" class="section level1">
-<h1>5. T-test</h1>
-<p>T-testi abil saab võrrelda, kas kahe grupi keskmised erinevad statistiliselt olulisel määral. T-testi saab R-is kätte andes funktsioonile t.test ette numbrilise tunnuse (antud juhul vanus) ja grupeeriva tunnuse (antud juhul elukoht) alljärgneval kujul:</p>
-<pre class="r"><code>t.test(tabel$vanus~tabel$elukoht)</code></pre>
-<p>või sellisel kujul:</p>
-<pre class="r"><code>t.test(vanus~elukoht, data=tabel)</code></pre>
-<p><strong>Ülesanded - t-test</strong></p>
+<div id="ulesanded---kirjeldav-statistika" class="section level2">
+<h2>Ülesanded - kirjeldav statistika</h2>
 <ol style="list-style-type: decimal">
-<li>Kas maa- ja linnaelanike keskmised erinevad…</li>
-</ol>
-<ul>
-<li>avatuse osas?</li>
-<li>ekstravertsuse osas?</li>
-<li>sotsiaalsuse osas?</li>
-<li>meelekindluse osas</li>
-<li>neurootilisuse osas?</li>
-</ul>
-<div id="moned-huvitavad-lingid" class="section level2">
-<h2>Mõned huvitavad lingid</h2>
-<p>Allpool on toodud mõned veebilehed, mis võivad osutuda kasulikuks, kui soovite R-i omal käel natuke lähemalt tundma õppida.</p>
-<ul>
-<li><a href="http://tryr.codeschool.com/" class="uri">http://tryr.codeschool.com/</a> - interaktiivne veebikursus R-i põhitõdedest<br />
+<li>Leidke sotsiaalsuse, meelekindluse, ekstravertsuse, neurootilisuse ja avatuse keskmised tulemused.<br />
 </li>
-<li><a href="http://health.adelaide.edu.au/psychology/ccs/docs/lsr/lsr-0.4.pdf" class="uri">http://health.adelaide.edu.au/psychology/ccs/docs/lsr/lsr-0.4.pdf</a> - psühholoogiatudengitele suunatud raamat statistikast ja R-ist.</li>
-<li><a href="http://statmethods.net/" class="uri">http://statmethods.net/</a></li>
-</ul>
+<li>Kasutage funktsiooni <em>summary()</em>. Andke argumendiks üks veerg. Andke argumendiks terve tabel. Mida see funktsioon väljastab?<br />
+</li>
+<li>Millises vahemikus varieeruvad ekstravertsuse skoorid?</li>
+</ol>
 </div>
 </div>
 

@@ -1,8 +1,15 @@
 ---
-title: "Soovituslik kirjandus"
+title: "Soovitused"
 output: html_document
 ---
 
+# Mõned huvitavad lingid
+Allpool on toodud mõned veebilehed, mis võivad osutuda kasulikuks, kui soovite R-i omal käel natuke lähemalt tundma õppida.
+ 
+* http://tryr.codeschool.com/ - interaktiivne veebikursus R-i põhitõdedest.     
+* http://statmethods.net/ - ülevaated erinevatest teemadest.    
+* https://stats.idre.ucla.edu/other/mult-pkg/whatstat/ - analüüsimeetodite valik.   
+  
 # Raamatud  
 
 * Field, A., Miles, J., & Field, Z. (2012). *Discovering Statistics Using R (1 edition)*. London: SAGE Publications Ltd.  
@@ -11,8 +18,6 @@ output: html_document
 
 
 # Artiklid
-
-*Teoreetilised artiklid:*  
 
 * Goodman, S. (2008). A dirty dozen: twelve p-value misconceptions. *Seminars in Hematology, 45*(3), 135–140. https://doi.org/10.1053/j.seminhematol.2008.04.003   
 * Banerjee, A., Chitnis, U. B., Jadhav, S. L., Bhawalkar, J. S., & Chaudhury, S. (2009). Hypothesis testing, type I and type II errors. *Industrial Psychiatry Journal, 18*(2), 127–131. https://doi.org/10.4103/0972-6748.62274

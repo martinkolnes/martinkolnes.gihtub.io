@@ -2,3 +2,4 @@
 title: "Kvantitatiivsed mudelid käitumisteadustes (SHPH.00.004)"
 output: html_document
 ---
+Kursuse annab ülevaate erinevatest kaasaegsetes käitumusteaduslikes uuringutes kasutatavatest kvantitatiivsetest mudelitest (alustades korrelatsioonimudelist kuni kinnitava faktoranalüüsi ja teemudelini). Praktikumide peamine eesmärk on tutvustada R-is nende analüüside tegemist ja tõlgendamist.  
