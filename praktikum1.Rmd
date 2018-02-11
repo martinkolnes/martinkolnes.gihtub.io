@@ -19,7 +19,7 @@ knitr::opts_chunk$set(fig.width=12, fig.height=8,
 
 * RStudio tutvumine  
 * Andmetega manipuleerimine     
-* Üldine kirjeldav statistika: keskmine, mediaan, stadnadrhälve     
+* Üldine kirjeldav statistika: keskmine, mediaan, standardhälve     
 
 Laadige alla [praktikumi andmed](https://drive.google.com/open?id=1oOK59Dp1jMNUKzuGvKb1OxnePYFx0PPr). 
 
@@ -49,8 +49,8 @@ Nüüd peaks meil RStudio aknas lahti olemas 4 osa. Erinevate osade funktsioonid
 **All paremal** asub 5 erinevat paneeli:
 
 * *Files*: R-i koodi ja andmefailide avamiseks.  
-**NB!** Selles aknas saate sättida enda töökeskkonda. See annab R'ile teada, missuguse kaustaga parasjagu tööd tehakse. Kausta otsimiseks vajutage sümbolile "...", otsige üles sobiv kaust ja vajutage "OK". Seejärel vajutage nupule *More* ja valige *Set As Working Directory*. Jälgige alati, et töökekskond oleks kaust hetkel kasutatavate andmetega.   
-* *Plots*: siia kuvtakse tehtud joonised.   
+**NB!** Selles aknas saate sättida enda töökeskkonda. See annab R'ile teada, missuguse kaustaga parasjagu tööd tehakse. Kausta otsimiseks vajutage sümbolile "...", otsige üles sobiv kaust ja vajutage "OK". Seejärel vajutage nupule *More* ja valige *Set As Working Directory*. Jälgige alati, et töökeskkond oleks kaust hetkel kasutatavate andmetega.   
+* *Plots*: siia kuvatakse tehtud joonised.   
 * *Packages*: selle osa abil saab installida ja laadida lisamooduleid, mis lisavad R-ile täiendavat funktsionaalsust. Lisamoodulid tuleb kõigepealt installida (tuleb teha ainult ühe korra). Seda saab teha vajutades paneelil nuppu *Install* ja kirjutades avanevasse aknasse meid huvitava lisamooduli nime. Kui R on mooduli installinud, tuleb see ka laadida. Laadimiseks tuleb vajaminev moodul *Packages*-paneeli nimekirjast üles otsida ja selle nime eesasuvasse kasti linnukene teha. Lisamooduleid saab installida ja laadida ka R-i koodi abil: *install.packages("lisamooduli nimi")* ja *library("lisamooduli nimi")*.      
 * *Help*: Abiinfo R-i funktsioonide kohta. Kirjutades paneeli otsingukasti meid huvitava R-i funktsiooni nime ja vajutades Enterit, näidatakse infot funktsiooni kasutamise kohta. Abiinfo lehe lõpus on toodud ka näited selle konkreetse funktsiooni kasutamise kohta.  
 * *Viewer*: Selle osa abil saab teha keerulisemat tüüpi andmevisualisatsioone, millel on lisaks joonisele ka kontrollelemendid, mis võimaldavad joonise parameetreid muuta. Seda osa me antud kursusel ei kasuta.  
@@ -106,8 +106,8 @@ Põhilised andmetüübid, millega kursuse jooksul kokku puutume:
 * sõned (character): "hello"  
 * tõeväärtused: TRUE, FALSE  
   
-Miks on need olulised? Kõik andmestikud on koosnevad nendest andmetüüpidest. Andmestiku ühte veergu võib käsitleda vektorina, mis koosneb teatud tüüpi elementidest.
-Vaatme kõigepealt, kuidas R-is saab vektoreid luua. Vektorid (erinevalt listidest) võivad sisaldada ainult ühte tüüpi elemente.
+Miks on need olulised? Kõik andmestikud koosnevad nendest andmetüüpidest. Andmestiku ühte veergu võib käsitleda vektorina, mis koosneb teatud tüüpi elementidest.
+Vaatame kõigepealt, kuidas R-is saab vektoreid luua. Vektorid (erinevalt listidest) võivad sisaldada ainult ühte tüüpi elemente.
 ```{r}
 # Numbriline vektor
 num_vektor <- c(3,1,2)
@@ -147,13 +147,13 @@ median(v1)
 ```
 
 ## Andmete eraldamine vektorist   
-R-i üks peamisi tugevusi peitub andmete manipuleerimises. Andmete eraldamiseks saab kasutada indekseid või loogikaavaldisega. Indeksiga võtame konkreetse koha, mis meid huvitab. Loogikaavaldisega saame valida väärtused, mis vastavad meie poolt määratud reeglile.  
+R-i üks peamisi tugevusi peitub andmete manipuleerimises. Andmete eraldamiseks saab kasutada indekseid või loogikaavaldisi. Indeksiga võtame konkreetse koha, mis meid huvitab. Loogikaavaldisega saame valida väärtused, mis vastavad meie poolt määratud reeglile.  
 
 ```{r, eval = F}
 # Loome vektori
 v3 <- seq(1,10,0.5) #teeme vektori 1-st kuni 10-ni sammuga 0,5
 
-# Elradame esimese elemendi
+# Eraldame esimese elemendi
 v3[1]
 
 # Eraldame kolmanda, neljanda ja viienda elemendi:
@@ -164,7 +164,7 @@ v3[v3 > 7]
 ```
 
 ## Ülesanded - R-i süntaks    
-1. Tehke kaks erineva vektorit, kus on vähemalt 10 numbrilist elementi.    
+1. Tehke kaks erinevat vektorit, kus on vähemalt 10 numbrilist elementi.    
 2. Arvutage nende vektori aritmeetiline keskmine ja mediaan.  
 3. Liitke need vektorid ja salvestage tulemus uude muutujasse. Arvutage uue muutuja keskmine, mediaan ja summa.  
 5. Eraldage eelmises ülesandes loodud muutujast väärtused, mis on suuremad kui selle muutuja aritmeetiline keskmine.  
@@ -176,21 +176,21 @@ Enne alustamist veenduge, et Teil oleks RStudio töökeskkonnas (*Global Environ
 
 Tehke esialgu läbi järgnevad ülesanded:  
 
-## Ülesanded - andemstikuga tutvumine
+## Ülesanded - andmestikuga tutvumine
 
 1. Kui palju muutujaid on andmestikus? Mis on nende muutujate nimed?  
-2. Kasutage funktsiooni *head()*, argumendiks pange andmesitiku nimi. Mida see funktsioon näitab?   
-3. Kasutage funktsiooni *tail()*, argumendiks pange andmesitiku nimi. Mida see funktsioon näitab?   
-4. Kaustage funktsiooni *str()*, argumendiks pange andmesitiku nimi. Mida see funktsioon näitab?  
+2. Kasutage funktsiooni *head()*, argumendiks pange andmestiku nimi. Mida see funktsioon näitab?   
+3. Kasutage funktsiooni *tail()*, argumendiks pange andmestiku nimi. Mida see funktsioon näitab?   
+4. Kasutage funktsiooni *str()*, argumendiks pange andmestiku nimi. Mida see funktsioon näitab?  
   
 R'i üks suurimaid eeliseid SPSS'i ees on võimalus andmeid kiirelt kohandada enda vajadustele.   
 Siin tutvustame kolme võimalust:
 
-* Dollari märrgi abil viitamine  
-* Nurgelist sulgude kasutamine - R'is annavad nurgelised sulud märku, et mingist objektist/andmestikust tahetakse mingit konkreetsemat muutujat kätte saada.  
+* Dollari märgi abil viitamine  
+* Nurgeliste sulgude kasutamine - R'is annavad nurgelised sulud märku, et mingist objektist/andmestikust tahetakse mingit konkreetset muutujat kätte saada.  
 * Funktsioon *subset* - see funktsioon võimaldab teha sama, mida nurgelised sulud.   
 
-##Veergude erladamine  
+##Veergude eraldamine  
 R'is saab kergesti kasutada funktsioone muutujate peal eraldi. Et arvutada tabelis oleva muutuja kohta statistilisi näitajaid, peame teadma, kuidas tulbas olevad andmed koodi abil kätte saada. Selleks peame teadma nii andmetabeli nime kui ka tulba nime või tulba järjekorranumbrit. Tulbas vanus olevad andmed saame muutuja nime abil kätte nii:  
 
 Dollari märgi abil:   
@@ -225,7 +225,7 @@ tabel[-1,] # eemaldab esimese rea
 Järjekorra numbri abil saab ridasid samamoodi eraldada nagu veerge:
 
 ```{r , eval = FALSE}
-tabel[1,] #esimne rida
+tabel[1,] #esimene rida
 ```
 
 
@@ -262,12 +262,12 @@ subset(tabel, elukoht == "maa")
    
 ##Ülesanded - andmetega manipuleerimine 
 1. Eraldage andmetest veerg "vanus". Looge uus muutuja, kus on ainult see veerg.  
-2. Tehke kaks uut andmestikku. Esimesse salvestage maal elavata katseisikute tulemused ja teise salvestage linnas elavate katseisikute tulemused.  
+2. Tehke kaks uut andmestikku. Esimesse salvestage maal elavate katseisikute tulemused ja teise salvestage linnas elavate katseisikute tulemused.  
 
 
 # 4. Kirjeldav Statistika  
 Nüüd, kui teame, kuidas anda R'ile edasi ainult üks muutuja andmestikus, proovime saada selgemat ülevaadet muutujast *vanus*.  
-**Kekmise** vanuse saame andes funktsioonile *mean* argumendiks muutuja *vanus*:
+**Keskmise** vanuse saame andes funktsioonile *mean* argumendiks muutuja *vanus*:
 
 ```{r}
 mean(tabel$vanus)
