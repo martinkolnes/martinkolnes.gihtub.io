@@ -20,11 +20,13 @@ navbar:
       href: praktikum6.html 
   - text: Lisamaterjalid
     menu:
-    - text: 1.1. Korrelatsioon
+    - text: Andmete importimine
+      href: lisa_andmente_importimine.html
+    - text: Korrelatsioon
       href: praktikum1_korrelatsioon.html
-    - text: 1.2. Andmete eraldamine
+    - text: Andmete eraldamine
       href: praktikum1_subsetting.html      
-    - text: 2.1. Keskmiste vordlemine
+    - text: Keskmiste vordlemine
       href: praktikum2_ttestid.html      
   - text: Soovitused  
     href: lugemist.html

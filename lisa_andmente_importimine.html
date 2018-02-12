@@ -12,7 +12,7 @@
 <meta name="author" content="Martin Kolnes" />
 
 
-<title>Andmete eraldamine</title>
+<title>Andmete importimine</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -352,103 +352,66 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Andmete eraldamine</h1>
+<h1 class="title toc-ignore">Andmete importimine</h1>
 <h4 class="author"><em>Martin Kolnes</em></h4>
 
 </div>
 
 
-<div id="veergude-valimine" class="section level2">
-<h2><strong>Veergude valimine</strong></h2>
-<p>Tavaline lähenemine. Saame kasutada valimiseks ridade ja veergude numbreid.</p>
-<pre class="r"><code># veeru eraldamine
-tabel[,1]#kõik read, aga ainult esimesest veerust
-tabel[,&quot;ekstravertsus&quot;]#saab teha ka veeru nime alusel</code></pre>
-<p>Kui ei taha järjestikkuseid veerge eraldada:</p>
-<pre class="r"><code>data.frame(tabel$ekstravertsus,tabel$neurootilisus)</code></pre>
-<p>Veergude valimine dplyr paketis oleva select() funktsiooniga:</p>
-<pre class="r"><code>library(dplyr) #pakett tuleb enne installeerida (vt. slaididelt)
-#uus_tabel &lt;- select(tabel, sotsiaalsus, ekstravertsus) #teeme uue tabeli, kus on 2 veergud: sotsiaalsus ja ekstravertsus</code></pre>
+<p>RStudiosse saab andmeid importida kahel viisil. Esimene ja lihtsam viis on kasutada <em>Environment</em> paneelil olevat menüüriba <em>Import Dataset</em>. Teine viis on kasutada andmete sisselugemiseks loodud funktsioone (nt. read.csv(), read.xslx()). Funktsioonidele antakse argumendiks andmete asukoht arvutis (nt. read.csv(“C:/Users/Martin/KMKT/1praktikum/praktikumi_andmed.csv”)).</p>
+<div id="andmete-importimine-environment-paneeli-kaudu" class="section level2">
+<h2>Andmete importimine <em>Environment</em> paneeli kaudu</h2>
+<p><em>Environment</em> paneelis saab avada akna andmete importimiseks (Joonis 1.). See võimaldab laadida erinevas formaadis olevaid andmeid (csv, xls, xlsx, sav, dta, por, sas ja stata).</p>
+<div class="figure">
+<img src="KMKT/andmeteimportimine/data-import-environment.png" alt="Joonis 1. Import Dataset" />
+<p class="caption">Joonis 1. Import Dataset</p>
 </div>
-<div id="loogikaavaldiste-kasutamine" class="section level2">
-<h2><strong>Loogikaavaldiste kasutamine</strong></h2>
-<pre class="r"><code># Loogikaavaldise kasutamine. Andmetest kindlate väärtuste eraldamine.
-tabel[(tabel$vanus &lt;= 30 &amp; tabel$ekstravertsus &gt; 100),] #jäävad osalejad, kelle vanus on väikesm või võrdne 30&#39;ga. Nendest omakorda jäetakse osalejad, kelle ekstravertsuse skoor on üle 100.</code></pre>
-<pre><code>##     vanus elukoht sotsiaalsus meelekindlus ekstravertsus neurootilisus
-## 4      27     maa         153          114           123            58
-## 9      23     maa         100           97           131            67
-## 16     23     maa         132          126           131            72
-## 20     25     maa         155          132           129           104
-## 26     27    linn         130          127           107           112
-## 34     21    linn         138          129           116            52
-## 61     24     maa         124          108           105            69
-## 62     30    linn         142          112           107            98
-## 68     24     maa         133          141           105           109
-## 82     30    linn         122           88           118           114
-## 85     28     maa         106          131           127            52
-## 89     19     maa         135          114           107            70
-## 101    23    linn         150          178           150           100
-## 104    28     maa         137          126           144            64
-## 112    18    linn         128           88           103           107
-## 119    30    linn         145          119           149            42
-## 120    22     maa         101           99           107           116
-## 126    29    linn         126          124           107            85
-## 137    26     maa         116          108           110            76
-## 143    26    linn         145           87           136            68
-## 151    24     maa         131          134           112           111
-## 152    20    linn         124           97           113           130
-## 154    23    linn         159          136           117            93
-## 165    25    linn         136          111           124            82
-## 175    29     maa         112          125           116            87
-## 198    19    linn         135          112           103           110
-##     avatus depressioon traitanx stateanx
-## 4      138           3       29       29
-## 9      121           3       27       38
-## 16     131           7       39       44
-## 20     157          13       46       48
-## 26      88          18       37       59
-## 34     125           4       27       24
-## 61     101           5       33       33
-## 62     173           6       34       23
-## 68     152           5       40       31
-## 82     118          14       46       54
-## 85     135           1       23       40
-## 89     121           5       29       32
-## 101    158           6       30       33
-## 104    108           7       31       28
-## 112    115           6       42       35
-## 119    142           0       25       27
-## 120    132           7       41       40
-## 126    132           4       37       45
-## 137    125           5       39       38
-## 143    116           2       29       26
-## 151    128          11       34       34
-## 152    122          22       44       52
-## 154    124           8       46       38
-## 165    104          22       52       55
-## 175    116           1       43       43
-## 198    143           4       39       39</code></pre>
-<pre class="r"><code>#kandilised sulud tähistavad eraldamist</code></pre>
+<p>Vaatame lähemalt, kuidas importida csv-formaadis olevaid andmeid. Üritage laadida ka enda arvutisse andmestik <a href="https://drive.google.com/open?id=1yxE15tlAtIMoVa1QHOVJbfxBZXrEDDJ5">titanic_data.csv</a>.</p>
+<ul>
+<li>Valige kõigepealt <strong>Import Dataset</strong> menüüst vastav formaat (selle andmestiku puhul CSV). Võimalik, et ekraanile tuleb teade <em>“Install Required Packages”</em>. Sel juhul vajutage <em>“Yes”</em> ja laske RStudiol vajalikud paketid ära installeerida. Kui see on tehtud, siis avaneb uus aken.<br />
+</li>
+<li>Esmalt peate valima <strong>“Browse”</strong> nupu abil arvutis oleva andmestiku.<br />
+</li>
+<li>Kui andmestik on valitud, siis peaksite nägema andmestiku eelvaadet (Joonis 2.).<br />
+</li>
+<li>Aknas <strong>“Data Preview”</strong> näete, millisel kujul andmestik imporditakse. Siin on oluline, et kõik veerud oleksid eraldi.<br />
+</li>
+<li>Andmete importimise tulemust saate muuta <strong>Import Options</strong> parameetrite abil. Antud juhul pange linnuke kindlasti <em>First Row as Names</em> ette (<em>Trim Spaces</em> ei ole määrava tähtsusega, <em>Open Data Viewer</em> avab pärast importimist andmestiku RStudio Data Vieweris).<br />
+</li>
+<li>Kui veerud ei ole üksteisest eraldatud sellisel viisil nagu peaks, siis peab muutma <strong>Delimiter</strong> parameetrit. Antud juhul peaks sobima “Comma”. See ütleb, et meie toorandmetes tähistatakse veergude eraldamist komaga.</li>
+</ul>
+<div class="figure">
+<img src="KMKT/andmeteimportimine/view_csv.png" alt="Joonis 2. Data Preview" />
+<p class="caption">Joonis 2. Data Preview</p>
 </div>
-<div id="andmete-sorteerimine-ja-jarjestamine" class="section level2">
-<h2><strong>Andmete sorteerimine ja järjestamine</strong></h2>
-<pre class="r"><code>#sorteerimine
-sort(tabel$ekstravertsus)</code></pre>
-<pre class="r"><code># Järjestab tabeli vanus alusel:
-tabel[order(tabel$vanus),]
-
-#juhul kui vanused on võrdsed, siis järjestab sotsiaalsuse alusel
-tabel[order(tabel$vanus, tabel$sotsiaalsus),]</code></pre>
-<pre class="r"><code># Tabeli järjestamine arrange() funktsiooniga
-library(plyr)
-arrange(tabel,vanus)
-arrange(tabel,desc(vanus))</code></pre>
+<p>Exceli failide importimisega võib mõnes arvutis probleeme tekkida. Kõige lihtsam viis neid vältida on salvestada Excelis olev andmefail csv-formaadis.<br />
+Proovige seda teha andmefailiga <a href="https://drive.google.com/open?id=1mjE0rCsudjEmKnkCGjKXdfxKqUmyHUsY">ANDMED.xls</a>. Teeme sellest failist koopia ja salvestame uue faili csv-formaadis (nimetus tuleb sõnadest <em>comma separated variable</em>). Salvestame fail käsklusega <em>Save As…</em> ja paneme faili nimeks ANDMED_R.csv (Joonis 3.). Proovige see andmestik nüüd RStudiosse importida.</p>
+<div class="figure">
+<img src="KMKT/andmeteimportimine/excel-sal.png" alt="Joonis 3. Exceli faili salvestamine csv-formaadis." />
+<p class="caption">Joonis 3. Exceli faili salvestamine csv-formaadis.</p>
 </div>
-<div id="na-vaartused" class="section level2">
-<h2><strong>NA väärtused</strong></h2>
-<pre class="r"><code># Mitu NA väärtust on andmetes
-sum(is.na(tabel))</code></pre>
-<pre><code>## [1] 4</code></pre>
+</div>
+<div id="andmete-importimine-funktsioonide-abil" class="section level2">
+<h2>Andmete importimine funktsioonide abil</h2>
+<p>Paljude andmeformaatide jaoks on R-is olemas spetsiifilised funktsioonid:</p>
+<ul>
+<li>read.csv ja read.csv2 - csv-formaadis olevate andmete jaoks;<br />
+</li>
+<li>read.xlsx (paketis “xlsx”) - Exceli failide jaoks;<br />
+</li>
+<li>read.spss (paketis “foreign”) - SPSS failide jaoks;<br />
+</li>
+<li>read.table - txt-formaadis olevate andmete jaoks.</li>
+</ul>
+<p>Csv-formaadis olevate andmete sisselugemiseks saame kasutada funktsiooni <em>read.csv()</em>. Funktsiooni esimeseks arugmendiks pange andmestiku asukoht koos andmestiku nimega (minu arvutis oleks esimene argument antud anmete puhul “C:/Users/Martin/KMKT/1praktikum/ANDMED_R.csv”).</p>
+<pre class="r"><code>andmed &lt;- read.csv(&quot;C:/Users/Martin/KMKT/1praktikum/ANDMED_R.csv&quot;, header=TRUE, sep =&quot;;&quot;) 
+#lisaargumendiga &quot;header&quot; anname teada, et esimesel real on muutujate nimed
+#lisaargumendiga &quot;sep&quot; anname teada, missuguse tähistusega eraldatakse veerge (peamised võimalused: sep = &quot;,&quot; - eraldajaks koma, sep = &quot; &quot; - erldajaks tühik, sep = &quot;;&quot; - eraldajaks semikoolon, sep = &quot;\t&quot; - eraldajaks TABiga(tabulaatoriga))</code></pre>
+<p>Ka Exceli failide importimiseks on eraldi funktsioon. Esialgu peame installeerima RStudiosse uue pakti. Meil on vaja paketti <em>xlsx</em>, kus on meid huvitav funktsioon. Kirjutage konsoolile järgmine rida:</p>
+<pre class="r"><code>install.packages(&quot;xlsx&quot;)</code></pre>
+<p>Nüüd saame kasutada funktsiooni <em>read.xlsx()</em>. Esimeseks argumendiks paneme jälle andmestiku asukoha koos andmestiku nimega.</p>
+<pre class="r"><code>library(xlsx)#teeb paketis olevad funktsioonid aktiivseks. 
+andmed &lt;- read.xlsx(&quot;C:/Users/Martin/KMKT/1praktikum/ANDMED.xls&quot;, sheetIndex = 1) </code></pre>
 </div>
 
 
