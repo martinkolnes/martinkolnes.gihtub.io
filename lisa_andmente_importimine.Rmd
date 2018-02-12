@@ -14,8 +14,8 @@ RStudiosse saab andmeid importida kahel viisil. Esimene ja lihtsam viis on kasut
 
 ## Andmete importimine *Environment* paneeli kaudu
 *Environment* paneelis saab avada akna andmete importimiseks (Joonis 1.). See võimaldab laadida erinevas formaadis olevaid andmeid (csv, xls, xlsx, sav, dta, por, sas ja stata). 
-  
-![Joonis 1. Import Dataset](KMKT/andmeteimportimine/dataImportEnvironment.png)
+   
+![Joonis 1. Import Dataset](dataImportEnvironment.png)
   
 Vaatame lähemalt, kuidas importida csv-formaadis olevaid andmeid. Üritage laadida ka enda arvutisse andmestik [titanic_data.csv](https://drive.google.com/open?id=1yxE15tlAtIMoVa1QHOVJbfxBZXrEDDJ5).
 
