@@ -15,7 +15,7 @@ RStudiosse saab andmeid importida kahel viisil. Esimene ja lihtsam viis on kasut
 ## Andmete importimine *Environment* paneeli kaudu
 *Environment* paneelis saab avada akna andmete importimiseks (Joonis 1.). See võimaldab laadida erinevas formaadis olevaid andmeid (csv, xls, xlsx, sav, dta, por, sas ja stata). 
    
-![Joonis 1. Import Dataset](dataImportEnvironment.png)
+![Joonis 1. Import Dataset](lisadataImportEnvironment.png)
   
 Vaatame lähemalt, kuidas importida csv-formaadis olevaid andmeid. Üritage laadida ka enda arvutisse andmestik [titanic_data.csv](https://drive.google.com/open?id=1yxE15tlAtIMoVa1QHOVJbfxBZXrEDDJ5).
 
@@ -27,14 +27,14 @@ Vaatame lähemalt, kuidas importida csv-formaadis olevaid andmeid. Üritage laad
 - Kui veerud ei ole üksteisest eraldatud sellisel viisil nagu peaks, siis peab muutma **Delimiter** parameetrit. Antud juhul peaks sobima "Comma". See ütleb, et meie toorandmetes tähistatakse veergude eraldamist komaga. 
 
   
-![Joonis 2. Data Preview](KMKT/andmeteimportimine/viewCsv.png)
+![Joonis 2. Data Preview](lisaviewCsv.png)
 
   
 Exceli failide importimisega võib mõnes arvutis probleeme tekkida. Kõige lihtsam viis neid vältida on salvestada Excelis olev andmefail csv-formaadis.   
 Proovige seda teha andmefailiga [ANDMED.xls](https://drive.google.com/open?id=1mjE0rCsudjEmKnkCGjKXdfxKqUmyHUsY). Teeme sellest failist koopia ja salvestame uue faili csv-formaadis (nimetus tuleb sõnadest *comma separated variable*). Salvestame fail käsklusega *Save As...* ja paneme faili nimeks ANDMED_R.csv (Joonis 3.). Proovige see andmestik nüüd RStudiosse importida.   
 
   
-![Joonis 3. Exceli faili salvestamine csv-formaadis.](KMKT/andmeteimportimine/excelSal.png)
+![Joonis 3. Exceli faili salvestamine csv-formaadis.](lisaexcelSal.png)
 
 
 
