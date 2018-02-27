@@ -256,7 +256,7 @@ ggplot(pisa, aes(x= PV1MATH, y = PV1SCIE))+
 
 Vaikimisi tähistavad hajuvusdiagrammil andmepunkte mustad punktid. Nende kuju saame muuta, kui lisame kihile *geom_smooth* arugmendi "*shape = ...*". Selle argumendi väärtus määrab punktide kuju (Joonis 2):  
 
-![Joonis 2. Argumendis shape väärtused](KMKT/2praktikum/symbols2.png)
+![Joonis 2. Argumendis shape väärtused](symbols2.png)
 
 Hea oleks joonisele lisada regressioonisirge, mis näitab muutujatevahelise seose tugevust ja suunda. Seda saab teha, kui lisada uus kiht *geom_smooth()* argumendiga "*method = lm*":
 ```{r}
