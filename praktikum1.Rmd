@@ -2,12 +2,14 @@
 title: '1. praktikum: RStudio kasutamine, andmetega manipuleerimine, kirjeldav statistika'
 author: "Martin Kolnes, Karin Täht"
 output:
+  word_document:
+    toc: yes
   html_document:
     css: style.css
-    toc: true
+    toc: yes
     toc_float:
-      collapsed: false
-      smooth_scroll: false
+      collapsed: no
+      smooth_scroll: no
 ---
 <script src="hideOutput.js"></script>
 ```{r global_options, include=FALSE, echo = F}

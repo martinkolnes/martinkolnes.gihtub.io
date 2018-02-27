@@ -358,20 +358,21 @@ div.tocify {
 </div>
 
 
+<p><a href="https://drive.google.com/open?id=1oOK59Dp1jMNUKzuGvKb1OxnePYFx0PPr">Konspektis kasutatavad andmed.</a></p>
 <div id="cor" class="section level2">
 <h2><strong>cor()</strong></h2>
-<p>Funktsioonile cor() saame anda sisendiks terve tabeli. Allolevas näites olen sisendi määramisel kasutanud funktsiooni data.frame(). Selle abil saame muuta vektorid ühtseks andmestikuks (nt. võtame teisest tabelist muutujad ja teeme neist uue andmestiku). See lähenemine võimaldab arvutada korrelatsioone mitme muutuja vahel, mis asuvad tabelis üksteisest kaugel.<br />
+<p>Funktsioonile cor() saame anda sisendiks terve tabeli. Allolevas näites olen sisendi määramisel kasutanud funktsiooni data.frame(). Selle abil saame muuta vektorid ühtseks andmestikuks (nt. võtame teisest tabelist muutujad ja teeme neist uue andmestiku). See lähenemine võimaldab arvutada korrelatsioone mitme muutuja vahel, mis ei paikne andmestikus kõrvuti.<br />
 <strong>Järk-järgult</strong></p>
 <pre class="r"><code>tabel_cor &lt;- data.frame(tabel$avatus, tabel$ekstravertsus, tabel$neurootilisus) </code></pre>
-<p>Nüüd on töökeskkonnas olemas objekt nimega tabel_cor. Selle objekti sisuks on tabel, millel on kolm veergu: avatus, ekstravertsus, neurootilisus.<br />
-Kasutan tabelil funktsiooni cor():</p>
+<p>Nüüd on töökeskkonnas olemas objekt nimega tabel_cor. Selle objekti sisuks on kolm muutujage andmestik: avatus, ekstravertsus, neurootilisus.<br />
+Selle objekti saame anda argumendiks funktsioonile <em>cor()</em>:</p>
 <pre class="r"><code>cor(tabel_cor)</code></pre>
 <pre><code>##                     tabel.avatus tabel.ekstravertsus tabel.neurootilisus
 ## tabel.avatus           1.0000000          0.46325180          0.28952552
 ## tabel.ekstravertsus    0.4632518          1.00000000          0.00672297
 ## tabel.neurootilisus    0.2895255          0.00672297          1.00000000</code></pre>
 <p><strong>Kõik ühel real</strong><br />
-Saab kirjutada ka lühemalt:</p>
+Eelnevad koodiread saame panna ka ühele reale (sellisel juhul ei loo me töökeskkonda uut andmestikku):</p>
 <pre class="r"><code>cor(data.frame(tabel$avatus, tabel$ekstravertsus, tabel$neurootilisus)) # andsin funktsioonile cor() argumendiks uue andmestiku. data.frame(tabel$avatus, tabel$ekstravertsus, tabel$neurootilisus) - genereerib uue andmestiku, kus on 3 veergu: avatus, ekstravertsus, neurootilisus.</code></pre>
 <pre><code>##                     tabel.avatus tabel.ekstravertsus tabel.neurootilisus
 ## tabel.avatus           1.0000000          0.46325180          0.28952552
@@ -380,7 +381,6 @@ Saab kirjutada ka lühemalt:</p>
 </div>
 <div id="cor.test-ja-corr.test" class="section level2">
 <h2><strong>cor.test() ja corr.test()</strong></h2>
-<p>Funktsioon corr.test() psych paketis. See võimaldab võtta korrelatsiooni mitme muutuja vahel korraga. Seejuures annab ka infomratsiooni korrelatsioonide olulisuse kohta.</p>
 <pre class="r"><code>cor.test(tabel$sotsiaalsus, tabel$ekstravertsus)# saab kasutada kahete muutujat</code></pre>
 <pre><code>## 
 ##  Pearson&#39;s product-moment correlation
@@ -393,6 +393,7 @@ Saab kirjutada ka lühemalt:</p>
 ## sample estimates:
 ##      cor 
 ## 0.470886</code></pre>
+<p>Funktsioon <em>corr.test()</em> on psych paketi komplektis. See võimaldab võtta korrelatsiooni mitme muutuja vahel korraga. Selle funktsiooni väljund annab infomratsiooni ka korrelatsioonide olulisuse kohta.</p>
 <pre class="r"><code># install.packages(&quot;psych&quot;)
 library(&quot;psych&quot;) #nüüd saame kasutada paketi funktsioone
 corr.test(tabel[,7:9])</code></pre>

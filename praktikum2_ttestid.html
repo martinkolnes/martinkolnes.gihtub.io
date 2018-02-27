@@ -359,13 +359,14 @@ div.tocify {
 
 
 <p>Selle praktikumi eesmärkideks on läbi teha järgmised tegevused:<br />
-(1) kahe sõltumatu grupi keskmiste võrdlemine parameetrilise ja mitteparameetrilise testiga (t test),<br />
-(2) kahe sõltuva grupi keskmiste võrdlemine parameetrilise ja mitteparameetrilise testiga,<br />
-<img src="testid.png" alt="Joonis 1. Keskmiste võrdlemine kahe grupi korral." /> (3) rohkem kui kahe grupiga keskmiste võrdlemine parameetrilise (ANOVA) ja mitteparameetrilise (Kurskal-Wallis) testiga.</p>
+(1) kahe sõltumatu grupi keskmiste võrdlemine parameetrilise ja mitteparameetrilise testiga (t test);<br />
+(2) kahe sõltuva grupi keskmiste võrdlemine parameetrilise ja mitteparameetrilise testiga;<br />
+<img src="testid.png" alt="Joonis 1. Keskmiste võrdlemine kahe grupi korral." /><br />
+(3) rohkem kui kahe grupiga keskmiste võrdlemine parameetrilise (ANOVA) ja mitteparameetrilise (Kurskal-Wallis) testiga.</p>
 <div id="kordamine" class="section level2">
 <h2>Kordamine</h2>
-<p>Laadige andmestik <strong>test11.csv</strong> RStudiosse.<br />
-<strong>Ülesanne 1.</strong> Leidke meeste ja naiste keskmised teksti mõistmise ja matemaatika ülesannetes (1 = M, 2 = N).<br />
+<p>Laadige andmestik <a href="https://drive.google.com/open?id=1XEy50wRN3Vfe72jeTBD4jZGQhD6RmftT">test11.csv</a> RStudiosse.</p>
+<p><strong>Ülesanne 1.</strong> Leidke meeste ja naiste keskmised teksti mõistmise ja matemaatika ülesannetes (1 = M, 2 = N).<br />
 <strong>NB!</strong> Kasutage subset() funktsiooni ainult ühe kategooria andmete valimiseks. Esimene argument on meid huvitav tunnus, teise argumendiga määrame kategooria väärtuse:</p>
 <pre class="r"><code>#subset(tunnus, kategooria == väärtus) # topelt võrdusmärk tähedab, otsime täpselt antud väärtusega andmeid
 subset(test11$tekst, test11$Sugu == 1)# see annab meile teksti mõistmise tulemused kategooria 1 kohta ehk meeste teksti mõistmise tulemsued.
@@ -395,7 +396,7 @@ shapiro.test(subset(test11$tekst, test11$Sugu == 2))</code></pre>
 ## 
 ## data:  subset(test11$tekst, test11$Sugu == 2)
 ## W = 0.96074, p-value = 3.349e-13</code></pre>
-<p>Praktikas on omajagu harv normaaljaotustestide põhjal leida normaaljaotuslikkust – levinud on asümmeetriakordaja (<em>skewness</em>) ning ekstsessi (<em>kurtosis</em>) vaatamine. Andmeid peetakse normaaljaotuslikult siis, kui nii asümmeetriakordaja kui ka järsakusaste/ekstsess on vahemikus (-0.5;0.5); liberaalsemalt on aga levinud ka vahemike (-1; 1) kasutamine (Fieldi õpiku näide).</p>
+<p>Praktikas leiab harva selle testi põhjal normaalajotusele vastavust, st on levinud asümmeetriakordaja (<em>skewness</em>) ning ekstsessi (<em>kurtosis</em>) põhjal normaaljaotuse hindamine. Andmeid peetakse normaaljaotusele ligilähedaseks siis, kui asümmeetriakordaja ja järsakusaste/ekstsess on vahemikus -1 kuni 1.</p>
 <p>Vaatame, kuidas asümmeetrijakordajat (<em>skew</em>) ja ekstsessi (<em>kurtosis</em>) arvutada.<br />
 Selleks kasutame funktsiooni <em>describe()</em>, mis on paketi <em>psych</em> funktsioonide komplektis. Esmalt peame selle paketi enda arvutisse installeerima. See käib läbi RStudio konsooli:</p>
 <pre class="r"><code>install.packages(&quot;psych&quot;)#kirjutage see rida RStudio konsoolile. Paketi installeerimise peale võib minna natuke aega.</code></pre>
@@ -430,7 +431,7 @@ leveneTest(test11$tekst, test11$Sugu)</code></pre>
 <h2>Sõltumatute gruppidega t-test</h2>
 <div id="parameetriline" class="section level3">
 <h3>Parameetriline</h3>
-<p>Avage andmefail <strong>test11</strong>.<br />
+<p>Avage andmefail <a href="https://drive.google.com/open?id=1XEy50wRN3Vfe72jeTBD4jZGQhD6RmftT">test11</a>.<br />
 <strong>Ülesanne 2.</strong> Uurige hüpoteesi: naiste teksti mõistmise testi tulemus on statistiliselt oluliselt parem kui meeste oma.<br />
 Selle testi tegemiseks kasutame funktsiooni t.test():<br />
 <em>t.test(y~x)</em>, kus y on numbriline tunnus ja x on kategooria (binaarne).</p>
@@ -464,7 +465,7 @@ t.test(test11$matemaatika ~ test11$Sugu) </code></pre>
 </div>
 <div id="mitteparameetriline" class="section level3">
 <h3>Mitteparameetriline</h3>
-<p>Avage andmefail <strong>koolid.csv</strong>.<br />
+<p>Avage andmefail <a href="https://drive.google.com/open?id=1G55pBAz_mM3N0p7ahoQe_1HdmhCE1VN9">koolid.csv</a>.<br />
 <strong>Ülesanne 4.</strong> Kas antisotsiaalsuse (tunnus “antisotsiaalsus2”“) keskmised tulemused erinevad sugude lõikes?<br />
 Selle testi tegemiseks kasutame Mann-Whitney U testi. R-is saame seda teha funktsiooniga wilcox.test():<br />
 <em>wilcox.test(y ~ x)</em>, kus y on numbriline tunnus ja x on kategooria (binaarne).</p>
@@ -480,7 +481,7 @@ wilcox.test(koolid$antisots2 ~ koolid$sugu) </code></pre>
 </div>
 <div id="soltuvate-gruppidega-t-test---auhinnangud" class="section level2">
 <h2>Sõltuvate gruppidega t-test - AUhinnangud</h2>
-<p>Avage andmefail <strong>AUhinnangud.csv</strong>.<br />
+<p>Avage andmefail <a href="https://drive.google.com/open?id=1nB7jHkb4sJ_lON3IDGIuuZ9UA-nP3v2z">AUhinnangud.csv</a>.<br />
 Tegemist on ühe koolitöö raames kogutud andmestikuga, milles näidati naisterahvastele 10 mehe pilte, mida paluti atraktiivsuse (A) ja usaldusväärsuse (U) 10-palli-skaalal hinnata. Igast pildist oli 2 versiooni: (1) ühel juhul vaatas isik otse, (2) teisel juhul oli pilti töödeldud nii, et pilk oli suunatud kõrvale (andmestikus on märge a, mis tuleneb ingliskeelsest sõnast averted). Hüpoteesideks oli, et otsepilguga pilte hinnati keskmiselt (H1) atraktiivsemaks ning (H2) usaldusväärsemaks. Kas need hüpoteesid leidsid kinnitust ka andmestikust?<br />
 Katsetingimuste keskmised tulemused on juba välja arvutatud:<br />
 1) U_kesk - usaldusväärsuse hinnang, isik pildil vaatas otse</p>
@@ -544,7 +545,7 @@ wilcox.test(AUhinnangud$A_kesk, AUhinnangud$A_kesk_a,paired=TRUE) </code></pre>
 Ravimiuuringud on ilmselt üks lihtsamini näitlikustatav valdkond dispersioonanalüüsi ehk ANOVA (ANalysis Of VAriance) kasutamisest. Aga samuti on see meetod üsna laialt kasutatav erinevates mitut gruppi (st enamat kui kahte gruppi) võrdlevates uuringutes.</p>
 <div id="parameetriline-2" class="section level3">
 <h3>Parameetriline</h3>
-<p>Avage andmefail <strong>iqdata.csv</strong>.<br />
+<p>Avage andmefail <a href="https://drive.google.com/open?id=150aWp-NakimASTd9EfwkphwW_Sd-se0X">iqdata.csv</a>.<br />
 Tegemist on simuleeritud andmestikuga tudengite kohta; muutujateks on eriala, IQ skoor ning vanus. Andmestiku allikas: <a href="http://staff.bath.ac.uk/pssiw/stats2/page16/page16.html" class="uri">http://staff.bath.ac.uk/pssiw/stats2/page16/page16.html</a></p>
 <p><strong>Ülesanne 7.</strong> Püstitage hüpotees gruppidevaheliste (eriala) erinevuste kohta ning testige hüpoteesi.<br />
 Selle testi tegemiseks kasutame funktsiooni <em>aov()</em>: <strong>aov(y ~ A, data=mydataframe)</strong>, kus y on sõltuv tunnus ja A on sõltumatu muutuja ehk erinevad grupid.</p>
@@ -558,7 +559,8 @@ summary(mudel) # funktsiooniga summary saame kätte meie analüüsi tulemused</c
 </div>
 <div id="mitteparameetriline-2" class="section level3">
 <h3>Mitteparameetriline</h3>
-<p>ANOVA mitteparameetriliseks analoogiks on <em>Kruskall-Wallis</em> test. <strong>Ülesanne 8.</strong> Testige hüpoteesi ka mitteparameetrilise testiga.<br />
+<p>ANOVA mitteparameetriliseks analoogiks on <em>Kruskall-Wallis</em> test.</p>
+<p><strong>Ülesanne 8.</strong> Testige hüpoteesi ka mitteparameetrilise testiga.<br />
 Selle testi tegemiseks kasutame funktsiooni <em>kurskal.test()</em>:<br />
 <strong>kruskal.test(y ~ A, data=mydataframe)</strong>, kus y on sõltuv tunnus ja A on sõltumatu muutuja ehk erinevad grupid.</p>
 <pre class="r"><code>kruskal.test(iq ~group, data = iqdata) </code></pre>

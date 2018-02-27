@@ -360,104 +360,181 @@ div.tocify {
 </div>
 
 
-<pre><code>## 
-## Attaching package: &#39;ggplot2&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:psych&#39;:
-## 
-##     %+%, alpha</code></pre>
 <div id="praktikumi-eesmargid" class="section level1">
 <h1>Praktikumi eesmärgid</h1>
 <ul>
-<li>Andmete lugemine R’i
-<ul>
-<li>read.csv ja read.csv2 - csv formaadis failide lugemiseks<br />
+<li>Vaatame üle, kuidas lugeda andmeid RStudiosse</li>
+<li>Jooniste abil andmetega tutvumine<br />
 </li>
-<li>read.xlsx - Exceli failide lugemiseks<br />
+<li>Korrelatsioonanalüüs ja hajuvusdiagramm<br />
 </li>
-<li>read.spss - SPSS-i failide lugemiseks</li>
-</ul></li>
-<li>Eksploratiivsed joonised paketiga ggplot2<br />
-</li>
-<li>Ülesanded: eelmise praktikumi teemad; eksploratiivsed joonised</li>
+<li>Keskmiste võrdlemine kahe grupi korral</li>
 </ul>
-<p>Laadige alla praktikumi kood ja andmefailid (Kysimustik.csv, Kysimustik.xls ja PISA2009.sav).</p>
+<p>Laadige alla <a href="https://drive.google.com/open?id=1xHiis3zt-LOlam2BOL1HqIYBq2XwBqlQ">praktikumi andmed</a>.</p>
+</div>
+<div id="tookausta-maaratlemine" class="section level1">
+<h1>Töökausta määratlemine</h1>
+<p>Alustuseks peaksime rääkima sellisest mõistest nagu R-i töökaust. Kui me RStudio käivitame, määrab R ära kausta, millest ta vaikimisi faile otsima hakkab. Kui tahame salvestada andmeid või jooniseid, siis salvestatakse ka need vaikimisi just sinna kausta. Seda kausta nimetataksegi R-i töökaustaks. Windowsi arvutis on vaikimisi töökaustaks <em>My Documents</em>. Andmefailid, mida me laadida tahame, paiknevad tõenäoliselt mõnes muus kaustas või alamkaustas. R-i töökausta muutmiseks peaksime otsima RStudio <em>Files</em>-paneeli (akna alumises parempoolses nurgas) abil üles selle kausta, milles meid huvitav andmefail paikneb. Seejärel peaksime muutma selle kausta R-i töökaustaks, vajutades <em>Files</em>-paneeli ülaosas asuvat nuppu <em>More</em> ja valides avanevast menüüst <em>Set As Working Directory</em>.<br />
+<img src="workspace.png" alt="Joonis 1. Töökausta määramine" /></p>
+<div id="kordamine" class="section level2">
+<h2>Kordamine</h2>
+<p>Kasutame andmestikku PISA.</p>
+<ol style="list-style-type: decimal">
+<li>Tehke praktikumi materjalide jaoks arvutis eraldi kaust. Tõstke materjalid sinna kausta ja laadige need RStudiosse.<br />
+</li>
+<li><p>Leidke uuringus osalenute keskmine vanus.</p></li>
+<li><p>Leidke tüdrukute ja poiste keskmine vanus.</p></li>
+<li><p>Kui palju tüdrukuid ja poisse oli uuringus (1 = tüdruk, 2 = poiss)?</p></li>
+<li><p>Kui palju õpilasi oli erinevates klassides (GR - klassid)?</p></li>
+</ol>
+</div>
 </div>
 <div id="andmete-sisselugemine-excelist-ja-spss-ist" class="section level1">
 <h1>Andmete sisselugemine Excelist ja SPSS-ist</h1>
-<p>Eelmises praktikumis olid andmed RData-formaadis olemas. Enamasti jõuavad andmed meieni mõnes teises formaadis. Vaatame, kuidas saada andmed kätte kahest teisest programmist, millega võite kõige tõenäolisemalt kokku puutuda: Excelist ja SPSS-ist.</p>
-<div id="tookausta-maaratlemine" class="section level3">
-<h3>Töökausta määratlemine</h3>
-<p>Alustuseks peaksime rääkima sellisest mõistest nagu R-i töökaust. Kui me RStudio käivitame, määrab R ära kausta, millest ta vaikimisi faile otsima hakkab. Kui tahame salvestada andmeid või jooniseid, siis salvestatakse ka need vaikimisi just sinna kausta. Seda kausta nimetataksegi R-i töökaustaks. Windowsi arvutis on vaikimisi töökaustaks <em>My Documents</em>. Andmefailid, mida me laadida tahame, paiknevad tõenäoliselt mõnes muus kaustas või alamkaustas. R-i töökausta muutmiseks peaksime otsima RStudio <em>Files</em>-paneeli (akna alumises parempoolses nurgas) abil üles selle kausta, milles meid huvitav andmefail paikneb. Seejärel peaksime muutma selle kausta R-i töökaustaks, vajutades <em>Files</em>-paneeli ülaosas asuvat nuppu <em>More</em> ja valides avanevast menüüst <em>Set As Working Directory</em>.<br />
-<img src="workspace.png" alt="Joonis 1. Töökausta määramine" /></p>
-</div>
-<div id="excel" class="section level2">
-<h2>Excel</h2>
-<p>Andmete Excelist R-i saamiseks on mitu erinevat võimalust. Vaatame kõige tüüpilisemalt kasutatavat viisi, mis ei eelda lisamooduli kasutamist. Selleks tuleks avada andmed kõigepealt Excelis ja salvestada need komaga eraldatud csv-formaadis (nimetus tuleb sõnadest <em>comma separated variable</em>). Nüüd saame andmed csv-failist R-i lugeda funktsiooni <em>read.csv()</em> abil.</p>
-<pre class="r"><code>kysimustik &lt;- read.csv(&quot;KMKT/2praktikum/Kysimustik.csv&quot;, header=TRUE) #lisaargumendiga &quot;header&quot; anname teada, et esimesel real on muutujate nimed</code></pre>
-<p>Koodirida paigutab andmed tabelisse nimega <em>kysimustik</em>. Funktsiooni <em>read.csv()</em> argument <em>header=TRUE</em> ütleb, et csv-faili esimeses reas paiknevad muutujate nimed. Environment-paneelis näeme, et sisseloetud andmestikus on R-i arvates 24 rida ja ainult 1 tulp. Tundub, et midagi on natuke valesti läinud.</p>
-<p>Antud juhul on asi selles, et csv-faile on kahte tüüpi: nii-ölda Euroopa ja Ameerika tüüpi. Mandri-Euroopa maades, kasutatakse murdarvude puhul kümnendosa eraldajana koma. Seetõttu ei saa koma csv-failis väljade eraldajana enam kasutada ja selle asemel on kasutusel hoopis semikoolon. Kui meil on eestikeelne Excel, siis tõenäoliselt salvestab see csv-faile just semikoolonitega variandis. Kui klõpsame Environment-paneelis tabeli nime peal ja meile avaneb andmestik, siis on seal tõepoolest näha üsna palju semikooloneid. R-is on 2 csv-failide lugemise funktsiooni:</p>
-<ol style="list-style-type: decimal">
-<li>read.csv - Ameerika tüüpi csv-failide jaoks, milles kümnendkohta eraldab punkt ja andmevälju koma ning</li>
-<li>read.csv2 - Euroopa tüüpi csv-failide jaoks, milles kümnendkohta eraldab koma ja andmevälju semikoolon. Praegu lähebki meil vaja hoopis funktsiooni read.csv2.</li>
-</ol>
-<p>Meie probleemi lahendamiseks on kaks võimalust.<br />
-Esiteks saame kasutada funktsiooni read.csv2(), kus on juba vaikimisi määratud andmevälju eemaldavaks tunnuseks seminkoolon. See on eriti kasulik juhul, kui andmetest eraldab kümnenkohti koma.</p>
-<pre class="r"><code>kysimustik &lt;- read.csv2(&quot;KMKT/2praktikum/Kysimustik.csv&quot;, header=TRUE) #andmevälju eraldab semikoolon</code></pre>
-<p>Teiseks saame anda funktsioonile read.csv() lisaargumendiga teada, et meie andmetes eraldab andmevälju semikoolon.</p>
-<pre class="r"><code>kysimustik &lt;- read.csv(&quot;KMKT/2praktikum/kysimustik.csv&quot;, header = TRUE, sep =&quot;;&quot;) #Argument &quot;sep&quot; võimaldab täpsustada andmeväljade eraldamise viisi toorandmetes.</code></pre>
-<div id="uue-mooduli-installeerimine" class="section level3">
-<h3>Uue mooduli installeerimine</h3>
-<p>Kui kasutate sageli Excelist pärinevaid andmeid, võib csv-failidega majandamine minna natuke tüütuks. Sellisel juhul on abi lisamooduli <em>xlsx</em> funktsioonist <em>read.xlsx</em>, mis oskab lugeda Exceli <em>xls</em> ja <em>xlsx</em> failiformaate otse R-i. Lisamoodul <em>xlsx</em> tuleb aga kõigepealt installida.</p>
+<p>RStudiosse saab andmeid laadida mitmel erineval viisil. Selles praktikumis vaatame kõige kiiremat moodust - andmete laadimine funktsioonide abil. Teiste viisidega tutvumiseks vaadake lisamaterjalide alt konspekti Andmete Importimine.<br />
+Laadige enda arvutisse:<br />
+1) <a href="https://drive.google.com/open?id=1SMASCTWq6upqWQTb9Tjb61O1jQWgiF4O">Andmestik nimega Kysimustik</a>(csv-formaadis);<br />
+2) <a href="https://drive.google.com/open?id=1vzgv5gnOM_E-Nrs-zqQbsNbctHjS90mH">Andmestik nimega Kysimustik</a>(xls-fomraadis).</p>
+<p>Paljude andmeformaatide jaoks on R-is olemas spetsiifilised funktsioonid:</p>
+<ul>
+<li>read.csv ja read.csv2 - csv-formaadis olevate andmete jaoks;<br />
+</li>
+<li>read.xlsx (paketis “xlsx”) - Exceli failide jaoks;<br />
+</li>
+<li>read.spss (paketis “foreign”) - SPSS failide jaoks;<br />
+</li>
+<li>read.table - txt-formaadis olevate andmete jaoks.</li>
+</ul>
+<p>Csv-formaadis olevate andmete sisselugemiseks saame kasutada funktsiooni <em>read.csv()</em>. Funktsiooni esimeseks arugmendiks pange andmestiku asukoht koos andmestiku nimega (minu arvutis oleks esimene argument antud andmete puhul “C:/Users/Martin/ownCloud/rojects/Rwebsite/martinkolnes.github.io/KMKT/2praktikum/Kysimustik.csv”).</p>
+<pre class="r"><code>andmed &lt;- read.csv(&quot;C:/Users/Martin/ownCloud/Projects/Rwebsite/martinkolnes.github.io/KMKT/2praktikum/Kysimustik.csv&quot;, header=TRUE, sep =&quot;;&quot;) 
+#lisaargumendiga &quot;header&quot; anname teada, et esimesel real on muutujate nimed
+#lisaargumendiga &quot;sep&quot; anname teada, missuguse tähistusega eraldatakse veerge (peamised võimalused: sep = &quot;,&quot; - eraldajaks koma, sep = &quot; &quot; - erldajaks tühik, sep = &quot;;&quot; - eraldajaks semikoolon, sep = &quot;\t&quot; - eraldajaks TABiga(tabulaatoriga))</code></pre>
+<p>Excelis olevate andmete importimiseks peame esialgu installeerima RStudiosse uue pakti nimega <em>xlsx</em>. Kirjutage konsoolile järgmine rida:</p>
 <pre class="r"><code>install.packages(&quot;xlsx&quot;)</code></pre>
-<p>Nüüd tuleb natuke oodata kuni R moodulit installib. Seejärel saame lisamooduli laadida. Mooduli laadimine R-is tagab moodulis olevatele funktsioonidele juurdepääsu.</p>
-<pre class="r"><code>library(xlsx) #mooduli aktiviseerimine - tagab mooduli funktsioonidele juurdepääsu</code></pre>
-<p>Seejärel saame funktsiooni <em>read.xlsx</em> abil andmestiku sisse lugeda.</p>
-<pre class="r"><code>kysimustik &lt;- read.xlsx(&quot;KMKT/2praktikum/Kysimustik.xls&quot;, sheetIndex=1)</code></pre>
-<p>Kuna Exceli failides võib olla mitu töölehte, tuleb funktsioonile argumendi <em>sheetIndex</em> abil öelda, mitmendat töölehte me sisselugeda soovime. Selle asemel võib kasutada ka argumenti <em>sheetName</em> ja töölehe nimetust. Funktsiooni <em>read.xlsx</em> puhul on argumendi <em>header</em> väärtus juba vaikimisi <em>TRUE</em>, nii et seda me praegusel juhul täpsustama ei pea. (Kui me ei taha, et R kohtleks esimese rea andmeid muutujate nimedena, tuleks seda talle öelda <em>header=FALSE</em> abil)</p>
+<p>Nüüd saame kasutada selles paketis olevat funktsiooni <em>read.xlsx()</em>. Esimeseks argumendiks paneme jälle andmestiku asukoha koos andmestiku nimega.</p>
+<pre class="r"><code>library(xlsx)#teeb paketis olevad funktsioonid aktiivseks. 
+andmed &lt;- read.xlsx(&quot;C:/Users/Martin/ownCloud/Projects/Rwebsite/martinkolnes.github.io/KMKT/2praktikum/Kysimustik.xls&quot;, sheetIndex = 1) </code></pre>
 </div>
+<div id="jooniste-abil-andmetega-tutvumine" class="section level1">
+<h1>Jooniste abil andmetega tutvumine</h1>
+<p>Jooniste tegemiseks soovitame kasutada paketti <em>ggplot2</em>. See on populaarne R’i pakett, mis võimaldab vähese vaevaga teha ilusaid jooniseid. Selles paketis on kaks funktsiooni jooniste tegemiseks: <em>ggplot()</em> ja <em>qplot()</em>. Meie soovitame kasutada funktsiooni <em>ggplot()</em>, sest see on paindlikum ja võimaldab erinevaid andmestikke ühele joonisele lisada.</p>
+<p>Ülevaade selles paketis olevatest erinevatest funktsioonidest leiate lehelt <a href="http://docs.ggplot2.org/current/" class="uri">http://docs.ggplot2.org/current/</a>.</p>
+<p>Vaatame esmalt üle, missugune on funktsioonile <em>ggplot()</em> antavate argumentide järjekord.</p>
+<pre class="r"><code>library(ggplot2)# esmalt aktiveerime paketi. NB! pakett peab olema enne installeeritud
+ggplot(andmed, aes(x = tunnus1, y = tunnus2)) #See on struktuur, mida saate alati joonise tegemisel kasutada.</code></pre>
+<p>Sellisel kujul me veel ei näe joonist. Joonise ehitamine <em>ggplot()</em> funktsiooniga toimub kihtide alusel. Me peame lisama kihi, mis loob x ja y elementidest vastava struktuuri (sõltub sellest, kas tahame tunnuseid näha punktidena, tulpadena, ühendatud joontega jne.). Tulpade joonistamiseks peaksime lisama <em>geom_bar()</em>:</p>
+<pre class="r"><code>ggplot(andmed, aes(x = tunnus1, y = tunnus2)) +
+        geom_bar()</code></pre>
+<div id="histogramm" class="section level2">
+<h2>Histogramm</h2>
+<p>Numbriliste tunnuste puhul peaks vaatama, milline on andmete jaotus. See annab meile ettekujutuse sellest, kas andmed on enam-vähem normaaljaotusega ja kas esineb üksikuid äärmuslikke väärtusi. Andmestikus PISA on kolm olulist tunnust, mille jaotust võiks uurida: lugemine (skoor muutujas nimega PV1READ), matemaatika (PV1MATH) ja loodusteadused (PV1SCIE). Teeme histogrammi lugemise alatesti skooride (PV1READ) jaotuse kohta.</p>
+<pre class="r"><code>ggplot(pisa, aes(x=PV1READ))+
+        geom_histogram()</code></pre>
+<p><img src="Figs/unnamed-chunk-11-1.png" width="768" /></p>
+<p>Histogrammi välimuse muutmiseks saab funktsioonile lisada erinevaid argumente:</p>
+<ul>
+<li><em>labs()</em> - võimaldab muuta joonise pealkirja, x-ja y-telje nimesid (labs(title= “jooniuse pealkiri”, x = “x-telje nimi”, y = “y-telje nimi”)).</li>
+<li><em>xlim()</em> - horisontaaltelje otspunktide väärtused. Otspunktide väärtused tuleb anda funktsiooni c() sees, nt nii: xlim(c(100, 800))<br />
+</li>
+<li><em>ylim()</em> - vertikaaltelje otspunktide väärtused, samal kujul nagu argument xlim.<br />
+</li>
+<li><em>col</em> - tulpade värv. See argument lisatakse tavaliselt joonise struktuuri täpsustava kihi juurde (näiteks geom_histogram(col = “blue”, fill = “green”)). Värvi väärtust saab muuda kahel viisil: 1) värvi nimega(nt “grey”, “red”, “blue”); 2) peenemaid värvitoone saab valida värvi heksadetsimaalkoodi abil (nt #FF0000 on punase värvi kood). Need koodid leiata, kui guugledate <em>hexadecimal color codes</em>.<br />
+</li>
+<li>vormide kasutamine - joonisele saab lisada juba eelnevalt seadistatud vormi, mis kujundab joonise välimust. Näiteks argument <em>theme_bw()</em> annab joonisele valge tausta. Mõned klassikalised vormid leiata lehelt <a href="https://www.r-bloggers.com/ggplot2-themes-examples/" class="uri">https://www.r-bloggers.com/ggplot2-themes-examples/</a>.</li>
+</ul>
+<p>Kui sooviksime teha ülalolevat histogrammi natuke ilusamaks, siis võiksime koodi lisada järgmised täpsustused:</p>
+<pre class="r"><code>ggplot(pisa, aes(x=PV1READ))+ #pluss märk näitab, et me liidame siia veel ühe argumendi juurde
+        geom_histogram(col = &quot;blue&quot;, fill = &quot;gray&quot;)+
+        labs(title = &quot;Lugemise alatesti skooride jaotus&quot;, x =&quot;Alatesti skoor&quot; , y = &quot;Sagedus&quot;)+
+        theme_bw()</code></pre>
+<p><img src="Figs/unnamed-chunk-12-1.png" width="768" /></p>
+<p>Kui tahate joonist suuremal kujul vaadata, siis vajutage RStudio <em>Plots</em>-paneelil olevat nuppu <em>Zoom</em>. Joonise pildifailina salvestamiseks vajutage nuppu <em>Export</em> ja valige avanevast menüüst <em>Save as Image</em>.</p>
+<p><strong>Ülesanne</strong><br />
+1. Tehke histogramm loodusteaduste (PV1SCIE) tulemustega.</p>
 </div>
-<div id="spss" class="section level2">
-<h2>SPSS</h2>
-<p>SPSS-i andmefaile saab R-i lugeda lisamooduli <em>foreign</em> funktsiooni <em>read.spss</em> abil. Lisamoodul <em>foreign</em> tuleb R-i installatsiooniga kaasa, seetõtuu pole seda vaja eraldi installida. Küll aga peab selle laadima.</p>
-<pre class="r"><code>library(foreign)
-pisa &lt;- read.spss(&quot;KMKT/2praktikum/PISA2009.sav&quot;, to.data.frame=TRUE, use.value.labels=FALSE)</code></pre>
-<p>Funktsiooni <em>read.spss</em> sagedamini vajaminevad lisaargumendid on:</p>
-<ol style="list-style-type: decimal">
-<li><p><em>to.data.frame=TRUE</em> - ütleb, et soovime andmeid laadida andmetabeli kujul;</p></li>
-<li><p><em>use.value.labels=FALSE</em> - kasulik, kui meil on SPSS-is Likerti tüüpi andmete puhul määratud iga väärtuse jaoks mingi silt nt 1=“täiesti vale”. Sellisel juhul ütleb see argument, et soovime andmeid laadida numbrilisel mitte tekstilisel kujul.</p></li>
-</ol>
-<p>Lõpetuseks veel töökausta määramisest. Põhimõtteliselt on võimalik jätta ka töökaust määramata ja valida fail interaktiivselt. Seda saab teha kui kirjutada sisselugemiseks kasutatavasse funktsiooni faili nime argumendi väärtuseks file.choose(). Näiteks niimoodi:</p>
-<pre class="r"><code>pisa &lt;- read.spss(file.choose(), to.data.frame=TRUE, use.value.labels=FALSE)</code></pre>
-<p>Peaks avanema aken (NB! See ei pruugi olla esiplaanil), mis võimaldab andmefaili valida ja kui me valime praegusel juhul sellesama faili PISA2009.sav, peaks ka lõpptulemus olema sama. On maitse küsimus, kas eelistada töökausta määramist Files-paneeli abil või kasutedes viimati mainitud file.choose() meetodi.</p>
+<div id="tulpdiagramm-barplot" class="section level2">
+<h2>Tulpdiagramm (<em>barplot</em>)</h2>
+<p>Kategooriatest koosneva tunnuse sageduse kujutamiseks kasutatakse tulpdiagrammi. Veerus nimega GR (<em>grade</em>) on kirjas õpilase klass. Teeme selle tunnuse kohta tulpdiagrammi:</p>
+<pre class="r"><code>ggplot(pisa, aes(GR))+
+        geom_bar()+
+        labs(x =&quot;klass&quot; , y = &quot;õpilasi valimis&quot;)+
+        theme_bw()</code></pre>
+<p><img src="Figs/unnamed-chunk-13-1.png" width="768" /></p>
+<p>Näeme, et enamik antud valimis olevatest õpilastest käivad 8. või 9. klassis. Tulpdiagramm on eriti kasulik juhul, kui kategooriaid on rohkem. See annab meile hea ülevaate gruppide suurustest ja võimaldab tuvastada teistest eristuvaid gruppe.</p>
+<p><strong>*LISA</strong><br />
+Tulpdiagrammi abil saab ka kujutada gruppide keskmisi tulemusi. Kujutame näiteks matemaatika skoori keskmisi tulemusi klasside lõikes. Selle tegemiseks peame lisama kihile <em>geom_bar</em> kaks argumenti: “stat =”summary“”&quot; ja “f”un.y = “mean”“. Need argumendid näitavad, et me kasutame joonise tegemiseks keskmisi tulemusi.</p>
+<pre class="r"><code>ggplot(pisa, aes(y=PV1MATH, x = GR))+
+        geom_bar(aes(group = GR), stat = &quot;summary&quot;, fun.y = &quot;mean&quot;) +
+        labs(x =&quot;klass&quot; , y = &quot;matemaatika alatesti keskmine skoor&quot;)</code></pre>
+<p><img src="Figs/unnamed-chunk-14-1.png" width="768" /></p>
+<p>Kontrollimise mõttes võiks need tulemused arvutada ka funktsiooniga <em>mean</em>. Gruppide lõikes mingi kirjeldava statistika näitaja arvutamiseks soovitan kasutada funktsiooni nimega <em>tapply</em>.<br />
+Funktsiooni <em>tapply</em> argumentideks on 1) numbriline tunnus, 2) grupeeriv tunnus, 3) kirjeldava statistika funktsiooni nimetus (nt mean, median, sd), 4) na.rm=TRUE juhul kui andmetes esineb puuduvaid väärtusi.</p>
+<pre class="r"><code>tapply(sõltuv tunnus, grupeeriv tunnus, kasutatav funktsioon)</code></pre>
+<pre class="r"><code>tapply(pisa$PV1MATH, pisa$GR, mean, na.rm=TRUE)</code></pre>
+<pre><code>##        7        8        9 
+## 359.4100 485.1533 517.5558</code></pre>
 </div>
-<div id="kordamine" class="section level2">
-<h2>Kordamine</h2>
-<p>Eelmise praktikumi teemade koradamine. Kasutame andmestikku PISA.</p>
-<ol style="list-style-type: decimal">
-<li>Leia uuringus osalenute keskmine vanus?</li>
-</ol>
-<pre class="r"><code>mean(pisa$AGE)# keskmise arvutamiseks sai kasutada funktsiooni mean()</code></pre>
-<pre><code>## [1] 15.81886</code></pre>
-<pre class="r"><code>#summary(pisa)#annab ülevaate tervest andmestikust</code></pre>
-<ol start="2" style="list-style-type: decimal">
-<li>Kui palju tüdrukuid ja poisse oli uuringus? (andmetes: 1 = tüdruk, 2 = poiss)</li>
-</ol>
-<pre class="r"><code>table(pisa$Gender)</code></pre>
+<div id="normaaljaotuse-testmine" class="section level2">
+<h2>Normaaljaotuse testmine</h2>
+<p>Teeme siinkohal väikse kõrvalepõike nomraaljaotuse testimise juurde. Histogrammide abil saime üldise ettekujutuse andmete jaotusest, aga me peaksime hindama seda ka statistiliselt. Üks levinumaid statistilisi meetodeid normaaljaotuse kontrollimiseks on Shapiro Wilki test. Selle testi väljundist tuleb vaadata <em>p-value</em>-t. Kui <em>p-value</em> on väiksem kui 0.05, siis ei ole andmed selle testi kohaselt normaaljaotuslikud. Vaatame kahe muutuja jaotust (PV1READ, JOYREAD) sugude lõikes.</p>
+<pre class="r"><code># Kontrollime naiste(1) puhul tunnuse &quot;PV1READ&quot; normaaljaotust:
+shapiro.test(subset(pisa$PV1READ, pisa$Gender == 1)) </code></pre>
 <pre><code>## 
-##   1   2 
-## 345 401</code></pre>
+##  Shapiro-Wilk normality test
+## 
+## data:  subset(pisa$PV1READ, pisa$Gender == 1)
+## W = 0.99611, p-value = 0.5587</code></pre>
+<pre class="r"><code># Kontrollime meeste(2) puhul tunnuse &quot;PV1READ&quot; normaaljaotust:
+shapiro.test(subset(pisa$PV1READ, pisa$Gender == 2))</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  subset(pisa$PV1READ, pisa$Gender == 2)
+## W = 0.99713, p-value = 0.7095</code></pre>
+<pre class="r"><code># Kontrollime naiste(1) puhul tunnuse &quot;JOYREAD&quot; normaaljaotust:
+shapiro.test(subset(pisa$JOYREAD, pisa$Gender == 1))</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  subset(pisa$JOYREAD, pisa$Gender == 1)
+## W = 0.9912, p-value = 0.03983</code></pre>
+<pre class="r"><code># Kontrollime meeste(2) puhul tunnuse &quot;JOYREAD&quot; normaaljaotust:
+shapiro.test(subset(pisa$JOYREAD, pisa$Gender == 2))</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  subset(pisa$JOYREAD, pisa$Gender == 2)
+## W = 0.99, p-value = 0.008508</code></pre>
+<p>Praktikas leiab harva selle testi põhjal normaalajotusele vastavust, st on levinud asümmeetriakordaja (<em>skewness</em>) ning ekstsessi (<em>kurtosis</em>) põhjal normaaljaotuse hindamine. Andmeid peetakse normaaljaotusele ligilähedaseks siis, kui asümmeetriakordaja ja järsakusaste/ekstsess on vahemikus -1 kuni 1.</p>
+<p>Vaatame, kuidas asümmeetrijakordajat (<em>skew</em>) ja ekstsessi (<em>kurtosis</em>) arvutada.<br />
+Selleks kasutame funktsiooni <em>describe()</em>, mis on paketi <em>psych</em> funktsioonide komplektis. Esmalt peame selle paketi enda arvutisse installeerima. See käib läbi RStudio konsooli:</p>
+<pre class="r"><code>install.packages(&quot;psych&quot;)#kirjutage see rida RStudio konsoolile. Paketi installeerimise peale võib minna natuke aega.</code></pre>
+<p>Nüüd saame kasutada funktsiooni <em>describe</em>. Sellele funktsioonile anname argumendiks ühe grupi andmed.</p>
+<pre class="r"><code>library(psych)#selle käsuga teeme antud paketi funktsioonide aktiivseks
+describe(subset(pisa$PV1READ, pisa$Gender == 1))#naiste andmed</code></pre>
+<pre><code>##    vars   n   mean    sd median trimmed   mad    min   max  range  skew
+## X1    1 345 513.54 75.16 516.82  514.99 79.97 305.03 717.8 412.77 -0.14
+##    kurtosis   se
+## X1    -0.26 4.05</code></pre>
+<pre class="r"><code>describe(subset(pisa$PV1READ, pisa$Gender == 2))#meeste andmed</code></pre>
+<pre><code>##    vars   n   mean    sd median trimmed   mad    min    max  range  skew
+## X1    1 401 472.63 78.73 468.23  473.35 77.61 230.93 681.39 450.46 -0.11
+##    kurtosis   se
+## X1    -0.04 3.93</code></pre>
+<p>** Ülesanne **<br />
+2. Missugused on tunnuse JOYREAD asümmeetrijakordaja ja ekstsess sugude lõikes? Kas neid võib pidada normaaljaotusele vastavaks?</p>
 <ol start="3" style="list-style-type: decimal">
-<li>Kui palju õpilasi oli erinevates klassides?</li>
+<li>Tehke histogrammid tunnuse JOYREAD jaotuste kohta. Kasutage allolevat koodi, et eristada ühel joonisel poiste ja tüdrukute tulemusi.</li>
 </ol>
-<pre class="r"><code>table(pisa$GR)</code></pre>
-<pre><code>## 
-##   7   8   9 
-##  15 202 529</code></pre>
-<ol start="4" style="list-style-type: decimal">
-<li>Milline on korrelatsioon matemaatik (PV1MATH), lugemise (PV1READ) ja loodusteaduste (PV1SCIE) alatestide tulemuste vahel?</li>
-</ol>
-<pre class="r"><code>#saab teha paarikauapa:
-cor.test(pisa$PV1MATH, pisa$PV1READ)</code></pre>
+<pre class="r"><code>ggplot(andmed, aes(x=tunnus))+
+        geom_histogram()+
+        facet_wrap(~kategoriseeriv tunnus)</code></pre>
+</div>
+</div>
+<div id="korrelatsioonanaluus" class="section level1">
+<h1>Korrelatsioonanalüüs</h1>
+<p>Kui tahate arvutada korrelatsiooni kahe muutuja vahel, siis soovitan kasutada funktsiooni <em>cor.test()</em>. Vaikimisi teeb see funktsioon Pearsoni korrelatsioonanalüüsi. Selle seade muutmiseks peab lisama argumendi “method =”spearman“”.</p>
+<pre class="r"><code>cor.test(pisa$PV1MATH, pisa$PV1READ)</code></pre>
 <pre><code>## 
 ##  Pearson&#39;s product-moment correlation
 ## 
@@ -469,35 +546,50 @@ cor.test(pisa$PV1MATH, pisa$PV1READ)</code></pre>
 ## sample estimates:
 ##       cor 
 ## 0.7727951</code></pre>
-<pre class="r"><code>#maatriksi saab kätte cor() funktsiooniga või corr.test funktsiooniga paketist psych
-cor(pisa[,c(&quot;PV1MATH&quot;, &quot;PV1READ&quot;, &quot;PV1SCIE&quot;)]) #annab sisendiks nimetatud veerud</code></pre>
-<pre><code>##           PV1MATH   PV1READ   PV1SCIE
-## PV1MATH 1.0000000 0.7727951 0.8265235
-## PV1READ 0.7727951 1.0000000 0.8437376
-## PV1SCIE 0.8265235 0.8437376 1.0000000</code></pre>
-<pre class="r"><code>library(psych)#pakett tuleb enne installeerida
-corr.test(pisa[,c(&quot;PV1MATH&quot;, &quot;PV1READ&quot;, &quot;PV1SCIE&quot;)])</code></pre>
-<pre><code>## Call:corr.test(x = pisa[, c(&quot;PV1MATH&quot;, &quot;PV1READ&quot;, &quot;PV1SCIE&quot;)])
+<p>Kui tahate aga arvutada korrelatsiooni mitme muutuja kohta korraga, siis soovitan kasutada funktsiooni <em>corr.test()</em> pakatist <em>psych</em>. Ka selle funtksiooni puhul saab korrelatsioonianalüüsi meetodit muuta, kui lisada argument “method =”spearman“”.</p>
+<pre class="r"><code>library(psych)
+corr.test(pisa[,c(&quot;PV1READ&quot;, &quot;PV1MATH&quot;, &quot;PV1SCIE&quot;)])</code></pre>
+<pre><code>## Call:corr.test(x = pisa[, c(&quot;PV1READ&quot;, &quot;PV1MATH&quot;, &quot;PV1SCIE&quot;)])
 ## Correlation matrix 
-##         PV1MATH PV1READ PV1SCIE
-## PV1MATH    1.00    0.77    0.83
-## PV1READ    0.77    1.00    0.84
-## PV1SCIE    0.83    0.84    1.00
+##         PV1READ PV1MATH PV1SCIE
+## PV1READ    1.00    0.77    0.84
+## PV1MATH    0.77    1.00    0.83
+## PV1SCIE    0.84    0.83    1.00
 ## Sample Size 
 ## [1] 746
 ## Probability values (Entries above the diagonal are adjusted for multiple tests.) 
-##         PV1MATH PV1READ PV1SCIE
-## PV1MATH       0       0       0
+##         PV1READ PV1MATH PV1SCIE
 ## PV1READ       0       0       0
+## PV1MATH       0       0       0
 ## PV1SCIE       0       0       0
 ## 
 ##  To see confidence intervals of the correlations, print with the short=FALSE option</code></pre>
-<ol start="5" style="list-style-type: decimal">
-<li>Võrdle meeste ja naiste keskmisi t-testiga:</li>
-</ol>
-<pre class="r"><code>t.test(sõltuv muutuja ~ sõktumatu muutuja)</code></pre>
-<p>5.1. lugemine</p>
-<pre class="r"><code>t.test(pisa$PV1READ ~ pisa$Gender)</code></pre>
+<div id="hajuvusdiagramm-scatterplot" class="section level2">
+<h2>Hajuvusdiagramm (<em>scatterplot</em>)</h2>
+<p>Korrelatsiooni illustreerimiseks saab kasutada hajuvusdiagrammi. See võimaldab öelda, kas seos tunnuste vahel on lineaarne ja kas andmetes esineb üksikuid erindeid, mis võivad tulemusi kallutada. Teeme hajuvusdiagrammi matemaatika ja loodusteaduste alatesti tulemustega.</p>
+<pre class="r"><code>ggplot(pisa, aes(x= PV1MATH, y = PV1SCIE))+
+        geom_point()+#hajuvusdiagrammi lisamine
+        theme_bw()</code></pre>
+<p><img src="Figs/unnamed-chunk-25-1.png" width="768" /></p>
+<p>Vaikimisi tähistavad hajuvusdiagrammil andmepunkte mustad punktid. Nende kuju saame muuta, kui lisame kihile <em>geom_smooth</em> arugmendi “<em>shape = …</em>”. Selle argumendi väärtus määrab punktide kuju (Joonis 2):</p>
+<div class="figure">
+<img src="KMKT/2praktikum/symbols2.png" alt="Joonis 2. Argumendis shape väärtused" />
+<p class="caption">Joonis 2. Argumendis shape väärtused</p>
+</div>
+<p>Hea oleks joonisele lisada regressioonisirge, mis näitab muutujatevahelise seose tugevust ja suunda. Seda saab teha, kui lisada uus kiht <em>geom_smooth()</em> argumendiga “<em>method = lm</em>”:</p>
+<pre class="r"><code>ggplot(pisa, aes(x= PV1MATH, y = PV1SCIE))+
+    geom_point(shape=1) +    # shape = 1 - tühjad ringid
+    geom_smooth(method=lm,   # lisab regressioonisirge
+                se=FALSE)+    # SE = FALSE - ei lisa usalduspiire
+    theme_bw()</code></pre>
+<p><img src="Figs/unnamed-chunk-26-1.png" width="768" /></p>
+</div>
+</div>
+<div id="keskmiste-vordlemine-kaha-grupi-korral-t-test" class="section level1">
+<h1>Keskmiste võrdlemine kaha grupi korral (t-test)</h1>
+<p>T-testi abil saame võrrelda, kas kahe grupi keskmised erinevad statistiliselt olulisel määral. T-testi saame teha funktsiooniga <em>t.test</em>:<br />
+<em>t.test(y~x)</em>, kus y on numbriline tunnus ja x on kategooria (binaarne).</p>
+<pre class="r"><code>t.test(pisa$PV1READ~pisa$Gender)</code></pre>
 <pre><code>## 
 ##  Welch Two Sample t-test
 ## 
@@ -509,191 +601,37 @@ corr.test(pisa[,c(&quot;PV1MATH&quot;, &quot;PV1READ&quot;, &quot;PV1SCIE&quot;)
 ## sample estimates:
 ## mean in group 1 mean in group 2 
 ##        513.5414        472.6302</code></pre>
-<p>5.2. matemaatika</p>
-<pre class="r"><code>t.test(pisa$PV1MATH ~ pisa$Gender)</code></pre>
-<pre><code>## 
-##  Welch Two Sample t-test
-## 
-## data:  pisa$PV1MATH by pisa$Gender
-## t = -2.4794, df = 726.74, p-value = 0.01339
-## alternative hypothesis: true difference in means is not equal to 0
-## 95 percent confidence interval:
-##  -25.273729  -2.936305
-## sample estimates:
-## mean in group 1 mean in group 2 
-##        498.0201        512.1252</code></pre>
-<p>5.3.loodusteadus</p>
-<pre class="r"><code>t.test(pisa$PV1SCIE ~ pisa$Gender)</code></pre>
-<pre><code>## 
-##  Welch Two Sample t-test
-## 
-## data:  pisa$PV1SCIE by pisa$Gender
-## t = -0.37242, df = 728.92, p-value = 0.7097
-## alternative hypothesis: true difference in means is not equal to 0
-## 95 percent confidence interval:
-##  -13.866146   9.444211
-## sample estimates:
-## mean in group 1 mean in group 2 
-##        525.7908        528.0017</code></pre>
-<ol start="6" style="list-style-type: decimal">
-<li>Millised olid alatestide keskmised väärtused?</li>
-</ol>
-<pre class="r"><code>#keskmised väärtused saame kätte funktsiooni t.test() väljundist (mõlema grupi kohta eraldi)
-# üldise keskmise väärtuse saame funktsiooniga mean -&gt; mean(pisa$PV1READ) 
-#Ka funktsiooniga tapply() saab arvutada keskmisi kategoriseeriva tunnuse alusel:
-tapply(pisa$PV1MATH, pisa$Gender, mean, na.rm = TRUE)</code></pre>
-<pre><code>##        1        2 
-## 498.0201 512.1252</code></pre>
-</div>
-</div>
-<div id="joonised-paketiga-ggplot2" class="section level1">
-<h1>Joonised paketiga ggplot2</h1>
-<p>Jooniste tegemiseks kasutame paketti <em>ggplot2</em>. See on populaarne R’i pakett, mis võimaldab vähese vaevaga teha ilusaid jooniseid. Selles paketis on kaks funktsiooni jooniste tegemiseks: <em>ggplot()</em> ja <em>qplot()</em>. Meie soovitame kasutada funktsiooni <em>ggplot()</em>, sest see on paindlikum ja võimaldab erinevaid andmestikke ühele joonisele lisada.</p>
-<p>Ülevaade paketi võimalustest - <a href="http://docs.ggplot2.org/current/" class="uri">http://docs.ggplot2.org/current/</a></p>
-<p>Esmalt tutvustame funktsiooni <em>ggplot()</em> struktuuri. Nagu kõikide R’i funktsioonide puhul tuleb tutvuda funktsioonile antavate argumentide järjekorra ja sisuga.</p>
-<pre class="r"><code>library(ggplot2)# esmalt aktiveerime paketi. NB! pakett peab olema enne installeeritud
-ggplot(andmed, aes(x = tunnus1, y = tunnus2)) #See on struktuur, mida saate alati joonise tegemisel kasutada.</code></pre>
-<p>Sellisel kujul me veel ei näe joonist. Joonise ehitamine <em>ggplot()</em> funktsiooniga toimub kihtide alusel. Me peame lisama kihi, mis loob x ja y elementidest vastava struktuuri (sõltub sellest kas tahame tunnuseid näha punktidena, tulpadena, ühendatud joontega jne.). Tulpade joonistamiseks peaksime lisama <em>geom_bar()</em>:</p>
-<pre class="r"><code>ggplot(andmed, aes(x = tunnus1, y = tunnus2)) +
-        geom_bar()</code></pre>
-<div id="histogramm" class="section level2">
-<h2>Histogramm</h2>
-<p>Numbriliste tunnuste puhul soovime sageli uurida, milline on tunnuse väärtuste jaotus. Näiteks et teada saada, kas tunnus on enam-vähem normaaljaotusega või kas esineb üksikuid, teistest äärmuslikult eristuvaid väärtusi. Sellisel juhul on abi tunnuse histogrammist, mille R-is saab funktsiooni hist abil. Ülalpool lugesime sisse faili PISA2009.sav ja paigutasime andmed tabelisse nimega pisa. Andmestikus sisaldab PISA uuringu andedmeid, milles uuritakse põhikooliealiste õpilaste sooritust kolmes valdkonnas: lugemine (skoor muutujas nimega PV1READ), matemaatika (PV1MATH) ja loodusteadused (PV1SCI ). Teeme histogrammi lugemise alatesti skooride jaotuse kohta.</p>
-<pre class="r"><code>ggplot(pisa, aes(x=PV1READ))+
-        geom_histogram()</code></pre>
-<p><img src="Figs/unnamed-chunk-22-1.png" width="768" /></p>
-<p>Histogrammi välimuse muutmiseks saab funktsioonile lisada erinevaid argumente. Sagedamini kasutatavad neist on:</p>
-<ul>
-<li><em>labs()</em> - võimaldab muuta joonise pealkirja, x-ja y-telje nimesid (labs(title= “jooniuse pealkiri”, x = “x-telje nimi”, y = “y-telje nimi”)).</li>
-<li><em>xlim()</em> - horisontaaltelje otspunktide väärtused. Otspunktide väärtused tuleb anda funktsiooni c() sees, nt nii: xlim(c(100, 800))<br />
-</li>
-<li><em>ylim()</em> - vertikaaltelje otspunktide väärtused, samal kujul nagu argument xlim.<br />
-</li>
-<li><em>col</em> - tulpade värv. See argument lisatakse tavaliselt joonise struktuuri täpsustava kihi juurde (näiteks geom_histogram(col = “blue”, fill = “green”)). Värvi väärtuse saab määrata mitut moodi. Lihtsama värvi saab kirjutada ingliskeele nimetusega, nt “grey”, “red”, “blue”. Peenemaid värvitoone saab muuhulgas värvi heksadetsimaal koodi abil (nt #FF0000 on punase värvi kood). Värvide koodide teada saamiseks guugeldage <em>hexadecimal</em> color codes.<br />
-</li>
-<li>vormide kasutamine - joonisele saab lisada juba eelnevalt seadistatud vormi, mis kujundab joonise välimust. Näiteks argument <em>theme_bw()</em> annab joonisele valge tausta. Mõned klassikalised vormid - <a href="https://www.r-bloggers.com/ggplot2-themes-examples/" class="uri">https://www.r-bloggers.com/ggplot2-themes-examples/</a>.</li>
-</ul>
-<p>Kui sooviksime teha ülalolevat histogrammi natuke ilusamaks, võiks kood välja näha näiteks selline:</p>
-<pre class="r"><code>ggplot(pisa, aes(x=PV1READ))+
-        geom_histogram(col = &quot;blue&quot;, fill = &quot;gray&quot;)+
-        labs(title = &quot;Lugemise alatesti skooride jaotus&quot;, x =&quot;Alatesti skoor&quot; , y = &quot;Sagedus&quot;)</code></pre>
-<p><img src="Figs/unnamed-chunk-23-1.png" width="768" /></p>
-<p>Koodilugemise lihtsuse huvides on ülalolevas koodijupis argumendid paigutatud eraldi ridadele, aga samahästi võib kõik argumendid ka ühele reale kirjutada. (Mitmerealise koodijupi konsoolile saatmiseks tuli read hiirega siniseks teha ja seejärel vajutada Run-nuppu või Ctrl+Enter klahvikombinatisooni) Joonist saab suuremal kujul vaadata vajutades RStudio Plots-paneelil nuppu Zoom ning pildifailina salvestada vajutades kõrvalasuvat nuppu Export ja valides avanevast menüüst Save as Image.</p>
-</div>
-<div id="tulpdiagramm-barplot" class="section level2">
-<h2>Tulpdiagramm (<em>barplot</em>)</h2>
-<p>Histogrammi analoog kategooriatest koosneva tunnuse jaoks on tulpdiagramm, mille saab R-is funktsiooni barplot abil. Funktsioonile barplot tuleks ette anda kategoriaalse tunnuse sagedustabel, mille sai funktsiooni table abil. Andmestiku pisa tulbas nimega GR (<em>grade</em>) on kirjas mitmendas klassis õpilane käib. Teeme selle tunnuse kohta tulpdiagrammi:</p>
-<pre class="r"><code>ggplot(pisa, aes(GR))+
-        geom_bar()+
-        labs(x =&quot;klass&quot; , y = &quot;õpilasi valimis&quot;)+
-        theme_bw()</code></pre>
-<p><img src="Figs/unnamed-chunk-24-1.png" width="768" /></p>
-<p>Enamik antud valimis olevatest õpilastest käivad 8. või 9. klassis, aga üksikud ka seitsmendas. Väikese kategooriate arvu korral (nagu praegu) tulpdiagramm sagedustabelile midagi erilist juurde ei anna, aga suurema gruppide arvu korral on jooniselt kergem infot lugeda ja teistest eristuvaid gruppe kindlaks teha. Tulpdiagramm võib marjaks ära kuluda ka siis, kui soovime jagada mingi numbrilise tunnuse kategooriatest koosneva tunnuse abil gruppideks ja võrrelda neid gruppe näiteks keskmise, mediaani või standardhälbe osas. Gruppide kaupa kirjeldava statistika näitaja saame kätte funktsiooni <em>tapply</em> abil.<br />
-Funktsiooni <em>tapply</em> argumentideks on 1) numbriline tunnus, 2) grupeeriv tunnus, 3) kirjeldava statistika funktsiooni nimetus (nt mean, median, sd), 4) na.rm=TRUE juhul kui andmetes esineb puuduvaid väärtusi.</p>
-<pre class="r"><code>tapply(sõltuv tunnus, grupeeriv tunnus, kasutatav funktsioon)</code></pre>
-<pre class="r"><code>tapply(pisa$PV1MATH, pisa$GR, mean, na.rm=TRUE)</code></pre>
-<pre><code>##        7        8        9 
-## 359.4100 485.1533 517.5558</code></pre>
-<p>Funktsiooniga ggplot() saame neid tulemusi suurema vaevata ka graafiliselt kujutada:</p>
-<pre class="r"><code>ggplot(pisa, aes(y=PV1MATH, x = GR))+
-        geom_bar(aes(group = GR), stat = &quot;summary&quot;, fun.y = &quot;mean&quot;) +
-        labs(x =&quot;klass&quot; , y = &quot;matemaatika alatesti keskmine skoor&quot;)</code></pre>
-<p><img src="Figs/unnamed-chunk-27-1.png" width="768" /></p>
-</div>
+<pre class="r"><code>#t.test(PV1MATH~Gender, data=pisa) # võime kirjutada funktsiooni ka sellisel kujul</code></pre>
+<p><strong>Ülesanne</strong><br />
+4. Uurige hüpoteesi: poste ja tüdrukute keskmised tulemused matemaatika testis on erinevad.</p>
 <div id="karpdiagramm-boxplot" class="section level2">
 <h2>Karpdiagramm (<em>boxplot</em>)</h2>
-<p>Gruppide võrdlemisel osutub kasulikuks ka karpdiagramm. Selle saame R-is funktsiooni boxplot abil, millele anname valemi kujul numbriline tunnus ~ grupeeriv tunnus. Võtame numbriliseks tunnuseks matemaatika alatesti skoori ja grupeerivaks tunnuseks klassi.</p>
-<pre class="r"><code>ggplot(pisa, aes(y = PV1MATH, x = as.factor(GR)))+
+<p>Gruppide võrdlemisel saab kasutada karpdiagrammi. Vaatame matemaatiak tulemuste jaotusi sugude lõikes karpdiagrammi abil.</p>
+<pre class="r"><code>ggplot(pisa, aes(y = PV1MATH, x = as.factor(Gender)))+
         geom_boxplot()+
         labs(x = &quot;klass&quot;, y = &quot;matemaatika alatesti skoor&quot;)</code></pre>
 <p><img src="Figs/unnamed-chunk-28-1.png" width="768" /></p>
 <p>Mida karpdiagrmmi osad tähistavad? Karbi keskel olev joon on grupi mediaanväärtus (pooled väärtused on sellest suuremad ja pooled väiksemad). Karp ise tähistab kvartiilhaaret ehk keskmist 50% väärtustest. Juhul kui eraldi punktidena välja toodud äärmuslikke väärtusi ei esine, tähistavad vuntsid vastavalt grupi kõige suuremat ja kõige väiksemat väärtust. äärmuslike erindite erinemise korral tähistab vunts kõige suuremat/väiksemat “mõistlikku” väärtust (st viimane andmepunkt, mis jääb karbi servast mitte rohkem kui 1,5-kordse kvartiilhaarde võrra üles- või allapoole). Kuidas gruppidevahelisi erinevusi tõlgendada? Kui kahe grupi karbid omavahel ei kattu, võib üsna julgelt öelda, et need grupid erinevad vaadeldava tunnuse osas. Kui karbid kattuvad ja mõlema grupi puhul jääb mediaan teise grupi karbi sisse, võib öelda et grupid ei erine tunnuse osas. Kui karbid kattuvad, aga vähemalt ühe grupi mediaan jääb väljapoole teise grupi karpi, võib aga ei pruugi oluline seos esineda. Sellisel juhul tuleks erinevust täpsemalt uurida mõne muu meetodiga nt t-testi või ANOVA-ga. Lisaks gruppidevahelistele erinevustele aitab karpdiagramm gruppide siseselt aimu saada ka jaotuse sümmeetrilisuse kohta. Kui karbi mediaanist ülespoole jääv osa on suurem kui allapoole jääv osa või üks vunts suurem kui teine, ei ole tunnus päris sümmeetiriliselt jaotunud.</p>
 </div>
-<div id="hajuvusdiagramm-scatterplot" class="section level2">
-<h2>Hajuvusdiagramm (<em>scatterplot</em>)</h2>
-<p>Kahe pideva jaotusega numbrilise tunnuse vahelist seost kujutava hajuvusdiagrammi saame funktsiooni plot abil. Lisaks seose olemuse iseloomustamisele aitab hajuvusdiagramm kindlaks teha, kas nende kahe muutuja puhul esineb üksikjuhtumeid, mis teistest väga selgelt eristuvad ja seeläbi meie analüüside tulemusi tugevalt mõjutada võivad. Teeme hajuvusdiagrammi kasutades matemaatika ja loodusteaduste alatesti skoore.</p>
-<pre class="r"><code>ggplot(pisa, aes(x= PV1MATH, y = PV1SCIE))+
-        geom_point()</code></pre>
+<div id="keskmised-koos-usalduspiiridega" class="section level2">
+<h2>Keskmised koos usalduspiiridega</h2>
+<p>T-testi tulemuse illustreerib aga paremini joonis, kus keskmised tulemused koos usalduspiiridega. Siinkohal soovitan kasutada funktsiooni <em>plotmeans</em> paketist <em>gplots</em>. Seda joonist saab teha ka funktsiooniga <em>ggplot</em>, aga seal vajab see rohkem eeltööd.</p>
+<pre class="r"><code>library(gplots) # enne tuleb pakett arvutisse insatalleerida
+plotmeans(PV1MATH ~ Gender, data = pisa, frame = FALSE)</code></pre>
 <p><img src="Figs/unnamed-chunk-29-1.png" width="768" /></p>
-<p>Vaikimisi tähistavad hajuvusdiagrammil andmepunkte mustad punktid. Nende kuju saame muuta kui lisame kihile <em>geom_smooth</em> arugmendi <em>shape = …</em>. Selle argumendi väärtus määrab nende punktide kuju:</p>
-<div class="figure">
-<img src="KMKT/2praktikum/symbols2.png" alt="Joonis 2. Argumendis shape väärtused" />
-<p class="caption">Joonis 2. Argumendis shape väärtused</p>
 </div>
-<p>Vahel soovime hajuvusdiagrammile lisada muutujatevahelise seose tugevust ja suunda näitava regressioonisirge. Seda saab teha, kui lisada uus kiht nimega <em>geom_smooth()</em>, argumendiks anname <em>method = lm</em>:</p>
-<pre class="r"><code>ggplot(pisa, aes(x= PV1MATH, y = PV1SCIE))+
-    geom_point(shape=1) +    # shape = 1 - tühjad ringid
-    geom_smooth(method=lm,   # lisab regressioonisirge
-                se=FALSE)    # SE = FALSE - ei lisa usalduspiire</code></pre>
-<p><img src="Figs/unnamed-chunk-30-1.png" width="768" /></p>
 </div>
-<div id="ulesanded---joonised" class="section level2">
-<h2>Ülesanded - Joonised</h2>
+<div id="ulesanded---joonised" class="section level1">
+<h1>Ülesanded - Joonised</h1>
 <ol style="list-style-type: decimal">
-<li>Histogramm matemaatika alatesti tulemuste kohta (lisa joonisele pealkiri):</li>
+<li><p>Histogramm matemaatika alatesti tulemuste kohta (lisage joonisele pealkiri):</p></li>
+<li><p>Tehke karpdiagramm, mis illustreerib meeste ja naiste matemaatika alatestide skoore</p></li>
+<li><p>Näidake matemaatika ja lugemise alatestide tulemuste seost (lisage joonisele regressioonisirge). Arvutage ka korrelatsioonikordaja.</p></li>
+<li><p>Näidake lugemise ja loodusteaduste alatestide tulemuste seos (lisage joonisele regressioonisirge). Arvutage ka korrelatsioonikordaja.</p></li>
+<li><p>Tehke tulpdiagramm lugemise alatesti tulemuste kohta erinevate klasside lõikes.</p></li>
+<li><p>Tehke eraldi histogramm naiste ja meeste matemaatika alatesti tulemuste kohta:</p></li>
+<li><p>Analüüsiga, kas poiste ja tüdrukute keskmised tulemused erinevad lugemise nautimise suhtes (JOYREAD) ja õpetajaga läbisaamise suhtes(STUDREL). Tehke tulemsute kohta joonised (keskmised koos usalduspiiridega).</p></li>
 </ol>
-<pre class="r"><code>ggplot(pisa, aes(PV1MATH))+
-        geom_histogram(col = &quot;blue&quot;, fill = &quot;gray&quot;)+
-        labs(title = &quot;Mamtemaatika tulemused&quot;)</code></pre>
-<p><img src="Figs/unnamed-chunk-31-1.png" width="768" /></p>
-<ol start="2" style="list-style-type: decimal">
-<li>Tee karpdiagramm, mis illustreerib meeste ja naiste matemaatika alatestide skoore</li>
-</ol>
-<pre class="r"><code>ggplot(pisa, aes(x = as.factor(Gender), y = PV1MATH))+ #kui joonis ei tee eraldi tulpasi, siis tuleb lisada kategoriseerivale tunnusele funtksioon as.factor()
-        geom_boxplot(fill = &quot;grey80&quot;, colour = &quot;#3366FF&quot;)+ #värvisin karpide sisu hallikaks ja karpide ääre siniseks
-        scale_x_discrete(labels = c(&quot;tüdrukud&quot;, &quot;poisid&quot;))+
-        labs(x = &quot;sugu&quot;, y = &quot;matemaatika tulemused&quot;)+
-        theme_classic() #lisasin juba töödeldud vormi joonisele</code></pre>
-<p><img src="Figs/unnamed-chunk-32-1.png" width="768" /></p>
-<ol start="3" style="list-style-type: decimal">
-<li>Matemaatika ja lugemise alatestide tulemuste seos (lisa joonisele regressioonisirge)</li>
-</ol>
-<pre class="r"><code>ggplot(pisa, aes(x= PV1MATH, y = PV1READ))+
-    geom_point(shape=1) +    # shape = 1 - tühjad ringid
-    geom_smooth(method=lm, se=TRUE)    # lisab regressioonisirge, se = TRUE - lisab usalduspiire</code></pre>
-<p><img src="Figs/unnamed-chunk-33-1.png" width="768" /></p>
-<ol start="4" style="list-style-type: decimal">
-<li>Lugemise ja loodusteaduste alatestide tulemuste seos (lisa joonisele regressioonisirge)</li>
-</ol>
-<pre class="r"><code>ggplot(pisa, aes(x= PV1READ, y = PV1SCIE))+
-        geom_point(shape=1) +    # shape = 1 - tühjad ringid
-        geom_smooth(method=lm, se=TRUE) +   # lisab regressioonisirge, se = TRUE - lisab usalduspiire
-        theme_classic() </code></pre>
-<p><img src="Figs/unnamed-chunk-34-1.png" width="768" /></p>
-<ol start="5" style="list-style-type: decimal">
-<li>Tulpdiagramm erinevate klasside lugemise alatesti skooride kohta</li>
-</ol>
-<pre class="r"><code>ggplot(pisa, aes(y=PV1READ, x = GR))+
-        geom_bar(aes(group = GR), stat = &quot;summary&quot;, fun.y = &quot;mean&quot;) +
-        labs(x =&quot;klass&quot; , y = &quot;lugemise alatesti keskmine skoor&quot;)</code></pre>
-<p><img src="Figs/unnamed-chunk-35-1.png" width="768" /></p>
-<pre class="r"><code>#kontrollime funktsiooniga tapply() kas saime joonisele õiged tulemused:
-tapply(pisa$PV1READ, pisa$GR, mean, na.rm =TRUE)</code></pre>
-<pre><code>##        7        8        9 
-## 350.5693 466.1382 505.2515</code></pre>
-<ol start="6" style="list-style-type: decimal">
-<li>Tee eraldi histogramm naiste ja meeste matemaatika alatesti tulemuste kohta:</li>
-</ol>
-<pre class="r"><code>#Selle ülesande lahendamiseks on mitu võimalust. 
-# Esiteks saate teha uued andmestikud funktsiooniga subset ja kasutada neid andmestikke jooniste koostamisel:
-pisa_tydrukud &lt;- subset(pisa, Gender == 1)
-pisa_poisid &lt;- subset(pisa, Gender == 2)
-
-# Teiseks saate kasutada ka joonise koostamise ajal funktsiooni subset:
-ggplot(subset(pisa, Gender == 1), aes(x=PV1MATH))+
-        geom_histogram()+
-        labs(tilte =&quot;Tüdrukute tulemused&quot;)</code></pre>
-<p><img src="Figs/unnamed-chunk-37-1.png" width="768" /></p>
-<pre class="r"><code>ggplot(subset(pisa, Gender == 2), aes(x=PV1MATH))+
-        geom_histogram()+
-        labs(tilte =&quot;Poiste tulemused&quot;)</code></pre>
-<p><img src="Figs/unnamed-chunk-37-2.png" width="768" /></p>
-<pre class="r"><code>#Kolmandaks saate kasutada ggplot&#39;i kihti nimega facet_wrap()
-ggplot(pisa, aes(x=PV1MATH))+
-        geom_histogram()+
-        facet_wrap(~Gender)#selle kihiga saab lisada kategoriseeriva tunnuse joonisele</code></pre>
-<p><img src="Figs/unnamed-chunk-37-3.png" width="768" /></p>
-</div>
 </div>
 
 

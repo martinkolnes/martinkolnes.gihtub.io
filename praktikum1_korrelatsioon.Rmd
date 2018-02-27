@@ -13,23 +13,24 @@ output:
 ```{r, echo = FALSE}
 load("KMKT/1praktikum/praktikum1.RData")
 ```
-
+[Konspektis kasutatavad andmed.](https://drive.google.com/open?id=1oOK59Dp1jMNUKzuGvKb1OxnePYFx0PPr)   
+  
 **cor()**
 ----------------------
-Funktsioonile cor() saame anda sisendiks terve tabeli. Allolevas näites olen sisendi määramisel kasutanud funktsiooni data.frame(). Selle abil saame muuta vektorid ühtseks andmestikuks (nt. võtame teisest tabelist muutujad ja teeme neist uue andmestiku). See lähenemine võimaldab arvutada korrelatsioone mitme muutuja vahel, mis asuvad tabelis üksteisest kaugel.   
+Funktsioonile cor() saame anda sisendiks terve tabeli. Allolevas näites olen sisendi määramisel kasutanud funktsiooni data.frame(). Selle abil saame muuta vektorid ühtseks andmestikuks (nt. võtame teisest tabelist muutujad ja teeme neist uue andmestiku). See lähenemine võimaldab arvutada korrelatsioone mitme muutuja vahel, mis ei paikne andmestikus kõrvuti.   
 **Järk-järgult** 
 ```{r}
 tabel_cor <- data.frame(tabel$avatus, tabel$ekstravertsus, tabel$neurootilisus) 
 ```
-Nüüd on töökeskkonnas olemas objekt nimega tabel_cor. Selle objekti sisuks on tabel, millel on kolm veergu: avatus, ekstravertsus, neurootilisus.  
-Kasutan tabelil funktsiooni cor():  
+Nüüd on töökeskkonnas olemas objekt nimega tabel_cor. Selle objekti sisuks on kolm muutujage andmestik: avatus, ekstravertsus, neurootilisus.  
+Selle objekti saame anda argumendiks funktsioonile *cor()*:  
 ```{r}
 cor(tabel_cor)
 ```
 
 
 **Kõik ühel real**  
-Saab kirjutada ka lühemalt:  
+Eelnevad koodiread saame panna ka ühele reale (sellisel juhul ei loo me töökeskkonda uut andmestikku):
 ```{r}
 cor(data.frame(tabel$avatus, tabel$ekstravertsus, tabel$neurootilisus)) # andsin funktsioonile cor() argumendiks uue andmestiku. data.frame(tabel$avatus, tabel$ekstravertsus, tabel$neurootilisus) - genereerib uue andmestiku, kus on 3 veergu: avatus, ekstravertsus, neurootilisus.
 
@@ -37,11 +38,10 @@ cor(data.frame(tabel$avatus, tabel$ekstravertsus, tabel$neurootilisus)) # andsin
 
 **cor.test() ja corr.test()**
 -----------------------------
-Funktsioon corr.test() psych paketis. See võimaldab võtta korrelatsiooni mitme muutuja vahel korraga. Seejuures annab ka infomratsiooni korrelatsioonide olulisuse kohta.  
 ```{r}
 cor.test(tabel$sotsiaalsus, tabel$ekstravertsus)# saab kasutada kahete muutujat
 ```
-
+Funktsioon *corr.test()* on psych paketi komplektis. See võimaldab võtta korrelatsiooni mitme muutuja vahel korraga. Selle funktsiooni väljund annab infomratsiooni ka korrelatsioonide olulisuse kohta. 
 ```{r}
 # install.packages("psych")
 library("psych") #nüüd saame kasutada paketi funktsioone

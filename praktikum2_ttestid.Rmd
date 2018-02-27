@@ -15,13 +15,14 @@ load("KMKT/2praktikum_ttest/ttest_andmed.RData")
 ```
 
 Selle praktikumi eesmärkideks on läbi teha järgmised tegevused:  
-(1) kahe sõltumatu grupi keskmiste võrdlemine parameetrilise ja mitteparameetrilise testiga (t test),  
-(2) kahe sõltuva grupi keskmiste võrdlemine parameetrilise ja mitteparameetrilise testiga,  
-![Joonis 1. Keskmiste võrdlemine kahe grupi korral.](testid.png)
-(3) rohkem kui kahe grupiga keskmiste võrdlemine parameetrilise (ANOVA) ja mitteparameetrilise (Kurskal-Wallis) testiga.  
+(1) kahe sõltumatu grupi keskmiste võrdlemine parameetrilise ja mitteparameetrilise testiga (t test);   
+(2) kahe sõltuva grupi keskmiste võrdlemine parameetrilise ja mitteparameetrilise testiga;   
+![Joonis 1. Keskmiste võrdlemine kahe grupi korral.](testid.png)  
+(3) rohkem kui kahe grupiga keskmiste võrdlemine parameetrilise (ANOVA) ja mitteparameetrilise (Kurskal-Wallis) testiga.   
 
 ## Kordamine  
-Laadige andmestik **test11.csv** RStudiosse.    
+Laadige andmestik [test11.csv](https://drive.google.com/open?id=1XEy50wRN3Vfe72jeTBD4jZGQhD6RmftT) RStudiosse.    
+
 **Ülesanne 1.** Leidke meeste ja naiste keskmised teksti mõistmise ja matemaatika ülesannetes (1 = M, 2 = N).   
 **NB!** Kasutage subset() funktsiooni ainult ühe kategooria andmete valimiseks. Esimene argument on meid huvitav tunnus, teise argumendiga määrame kategooria väärtuse: 
 ```{r, eval = F}
@@ -52,8 +53,7 @@ shapiro.test(subset(test11$tekst, test11$Sugu == 1))
 shapiro.test(subset(test11$tekst, test11$Sugu == 2))
 ```
 
-Praktikas on omajagu harv normaaljaotustestide põhjal leida normaaljaotuslikkust – levinud on asümmeetriakordaja (*skewness*) ning ekstsessi (*kurtosis*) vaatamine.
-Andmeid peetakse normaaljaotuslikult siis, kui nii asümmeetriakordaja kui ka järsakusaste/ekstsess on vahemikus (-0.5;0.5); liberaalsemalt on aga levinud ka vahemike (-1; 1) kasutamine (Fieldi õpiku näide).  
+Praktikas leiab harva selle testi põhjal normaalajotusele vastavust, st on levinud asümmeetriakordaja (*skewness*) ning ekstsessi (*kurtosis*) põhjal normaaljaotuse hindamine. Andmeid peetakse normaaljaotusele ligilähedaseks siis, kui asümmeetriakordaja ja järsakusaste/ekstsess on vahemikus -1 kuni 1.
 
 Vaatame, kuidas asümmeetrijakordajat (*skew*) ja ekstsessi (*kurtosis*) arvutada.  
 Selleks kasutame funktsiooni *describe()*, mis on paketi *psych* funktsioonide komplektis. Esmalt peame selle paketi enda arvutisse installeerima. See käib läbi RStudio konsooli:  
@@ -93,7 +93,7 @@ leveneTest(test11$tekst, test11$Sugu)
 
 ## Sõltumatute gruppidega t-test    
 ### Parameetriline  
-Avage andmefail **test11**.    
+Avage andmefail [test11](https://drive.google.com/open?id=1XEy50wRN3Vfe72jeTBD4jZGQhD6RmftT).    
 **Ülesanne 2.** Uurige hüpoteesi: naiste teksti mõistmise testi tulemus on statistiliselt oluliselt parem kui meeste oma.  
 Selle testi tegemiseks kasutame funktsiooni t.test():  
 *t.test(y~x)*, kus y on numbriline tunnus ja x on kategooria (binaarne).   
@@ -109,7 +109,7 @@ t.test(test11$matemaatika ~ test11$Sugu)
 ```
 
 ### Mitteparameetriline  
-Avage andmefail **koolid.csv**.    
+Avage andmefail [koolid.csv](https://drive.google.com/open?id=1G55pBAz_mM3N0p7ahoQe_1HdmhCE1VN9).     
 **Ülesanne 4.** Kas antisotsiaalsuse (tunnus "antisotsiaalsus2"") keskmised tulemused erinevad sugude lõikes?  
 Selle testi tegemiseks kasutame Mann-Whitney U testi. R-is saame seda teha funktsiooniga wilcox.test():    
 *wilcox.test(y ~ x)*, kus y on numbriline tunnus ja x on kategooria (binaarne).  
@@ -120,7 +120,7 @@ wilcox.test(koolid$antisots2 ~ koolid$sugu)
 ```
 
 ## Sõltuvate gruppidega t-test - AUhinnangud  
-Avage andmefail **AUhinnangud.csv**.  
+Avage andmefail [AUhinnangud.csv](https://drive.google.com/open?id=1nB7jHkb4sJ_lON3IDGIuuZ9UA-nP3v2z).  
 Tegemist on ühe koolitöö raames kogutud andmestikuga, milles näidati naisterahvastele 10 mehe pilte, mida paluti atraktiivsuse (A) ja usaldusväärsuse (U) 10-palli-skaalal hinnata. Igast pildist oli 2 versiooni: (1) ühel juhul vaatas isik otse, (2) teisel juhul oli pilti töödeldud nii, et pilk oli suunatud kõrvale (andmestikus on märge a, mis tuleneb ingliskeelsest sõnast averted). Hüpoteesideks oli, et otsepilguga pilte hinnati keskmiselt (H1) atraktiivsemaks ning (H2) usaldusväärsemaks. Kas need hüpoteesid leidsid kinnitust ka andmestikust?  
 Katsetingimuste keskmised tulemused on juba välja arvutatud:    
 1) U_kesk - usaldusväärsuse hinnang, isik pildil vaatas otse 
@@ -169,7 +169,7 @@ Sageli hõlmavad eksperimentaalsed uuringud enam kui kahe grupi või tingimuse v
 Ravimiuuringud on ilmselt üks lihtsamini näitlikustatav valdkond dispersioonanalüüsi ehk ANOVA (ANalysis Of VAriance) kasutamisest. Aga samuti on see meetod üsna laialt kasutatav erinevates mitut gruppi (st enamat kui kahte gruppi) võrdlevates uuringutes.  
 
 ### Parameetriline  
-Avage andmefail **iqdata.csv**.  
+Avage andmefail [iqdata.csv](https://drive.google.com/open?id=150aWp-NakimASTd9EfwkphwW_Sd-se0X).  
 Tegemist on simuleeritud andmestikuga tudengite kohta; muutujateks on eriala, IQ skoor ning vanus. Andmestiku allikas: http://staff.bath.ac.uk/pssiw/stats2/page16/page16.html 
 
 **Ülesanne 7.** Püstitage hüpotees gruppidevaheliste (eriala) erinevuste kohta ning testige hüpoteesi.  
@@ -182,6 +182,7 @@ summary(mudel) # funktsiooniga summary saame kätte meie analüüsi tulemused
 
 ### Mitteparameetriline  
 ANOVA mitteparameetriliseks analoogiks on *Kruskall-Wallis* test. 
+   
 **Ülesanne 8.** Testige hüpoteesi ka mitteparameetrilise testiga.  
 Selle testi tegemiseks kasutame funktsiooni *kurskal.test()*:  
 **kruskal.test(y ~ A, data=mydataframe)**, kus y on sõltuv tunnus ja A on sõltumatu muutuja ehk erinevad grupid.  

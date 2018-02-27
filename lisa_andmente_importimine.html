@@ -359,8 +359,8 @@ div.tocify {
 
 
 <p>RStudiosse saab andmeid importida kahel viisil. Esimene ja lihtsam viis on kasutada <em>Environment</em> paneelil olevat menüüriba <em>Import Dataset</em>. Teine viis on kasutada andmete sisselugemiseks loodud funktsioone (nt. read.csv(), read.xslx()). Funktsioonidele antakse argumendiks andmete asukoht arvutis (nt. read.csv(“C:/Users/Martin/KMKT/1praktikum/praktikumi_andmed.csv”)).</p>
-<div id="andmete-importimine-environment-paneeli-kaudu" class="section level2">
-<h2>Andmete importimine <em>Environment</em> paneeli kaudu</h2>
+<div id="andmete-importimine-environment-paneeli-kaudu" class="section level1">
+<h1>Andmete importimine <em>Environment</em> paneeli kaudu</h1>
 <p><em>Environment</em> paneelis saab avada akna andmete importimiseks (Joonis 1.). See võimaldab laadida erinevas formaadis olevaid andmeid (csv, xls, xlsx, sav, dta, por, sas ja stata).</p>
 <div class="figure">
 <img src="lisadataImportEnvironment.png" alt="Joonis 1. Import Dataset" />
@@ -391,27 +391,53 @@ Proovige seda teha andmefailiga <a href="https://drive.google.com/open?id=1mjE0r
 <p class="caption">Joonis 3. Exceli faili salvestamine csv-formaadis.</p>
 </div>
 </div>
-<div id="andmete-importimine-funktsioonide-abil" class="section level2">
-<h2>Andmete importimine funktsioonide abil</h2>
-<p>Paljude andmeformaatide jaoks on R-is olemas spetsiifilised funktsioonid:</p>
-<ul>
-<li>read.csv ja read.csv2 - csv-formaadis olevate andmete jaoks;<br />
-</li>
-<li>read.xlsx (paketis “xlsx”) - Exceli failide jaoks;<br />
-</li>
-<li>read.spss (paketis “foreign”) - SPSS failide jaoks;<br />
-</li>
-<li>read.table - txt-formaadis olevate andmete jaoks.</li>
-</ul>
-<p>Csv-formaadis olevate andmete sisselugemiseks saame kasutada funktsiooni <em>read.csv()</em>. Funktsiooni esimeseks arugmendiks pange andmestiku asukoht koos andmestiku nimega (minu arvutis oleks esimene argument antud anmete puhul “C:/Users/Martin/KMKT/1praktikum/ANDMED_R.csv”).</p>
-<pre class="r"><code>andmed &lt;- read.csv(&quot;C:/Users/Martin/KMKT/1praktikum/ANDMED_R.csv&quot;, header=TRUE, sep =&quot;;&quot;) 
-#lisaargumendiga &quot;header&quot; anname teada, et esimesel real on muutujate nimed
-#lisaargumendiga &quot;sep&quot; anname teada, missuguse tähistusega eraldatakse veerge (peamised võimalused: sep = &quot;,&quot; - eraldajaks koma, sep = &quot; &quot; - erldajaks tühik, sep = &quot;;&quot; - eraldajaks semikoolon, sep = &quot;\t&quot; - eraldajaks TABiga(tabulaatoriga))</code></pre>
-<p>Ka Exceli failide importimiseks on eraldi funktsioon. Esialgu peame installeerima RStudiosse uue pakti. Meil on vaja paketti <em>xlsx</em>, kus on meid huvitav funktsioon. Kirjutage konsoolile järgmine rida:</p>
+<div id="andmete-importimine-funktsioonide-abil" class="section level1">
+<h1>Andmete importimine funktsioonide abil</h1>
+<p>Laadige enda arvutisse järgmised andmestikud:<br />
+1) <a href="https://drive.google.com/open?id=1SMASCTWq6upqWQTb9Tjb61O1jQWgiF4O">Andmestik nimega Kysimustik</a>(csv-formaadis)<br />
+2) <a href="https://drive.google.com/open?id=1vzgv5gnOM_E-Nrs-zqQbsNbctHjS90mH">Andmestik nimega Kysimustik</a>(xls-fomraadis)<br />
+2) <a href="https://drive.google.com/open?id=1N0OBaky-pajTGIdGIfoFU-QkXa9bLevh">Andmestik nimega PISA2009</a>(sav-fomraadis)</p>
+<div id="excel" class="section level2">
+<h2>Excel</h2>
+<p>Andmete Excelist R-i saamiseks on mitu erinevat võimalust. Vaatame kõige tüüpilisemalt kasutatavat viisi, mis ei eelda lisamooduli kasutamist. Selleks tuleks avada andmed kõigepealt Excelis ja salvestada need komaga eraldatud csv-formaadis (nimetus tuleb sõnadest <em>comma separated variable</em>). Nüüd saame andmed csv-failist R-i lugeda funktsiooni <em>read.csv()</em> abil.</p>
+<pre class="r"><code>kysimustik &lt;- read.csv(&quot;KMKT/2praktikum/Kysimustik.csv&quot;, header=TRUE) #lisaargumendiga &quot;header&quot; anname teada, et esimesel real on muutujate nimed
+# NB! Kui töökausta ei ole määratletud, siis peab andma terve asukoha. Antud juhul on töökasuta määratletud ja andmed on alamkaustas KMKT ja 2praktikum</code></pre>
+<p>Koodirida paigutab andmed tabelisse nimega <em>kysimustik</em>. Funktsiooni <em>read.csv()</em> argument <em>header=TRUE</em> ütleb, et csv-faili esimeses reas paiknevad muutujate nimed. Environment-paneelis näeme, et sisseloetud andmestikus on R-i arvates 24 rida ja ainult 1 tulp. Tundub, et midagi on natuke valesti läinud.</p>
+<p>Antud juhul on asi selles, et csv-faile on kahte tüüpi: nii-ölda Euroopa ja Ameerika tüüpi. Mandri-Euroopa maades, kasutatakse murdarvude puhul kümnendosa eraldajana koma. Seetõttu ei saa koma csv-failis väljade eraldajana enam kasutada ja selle asemel on kasutusel hoopis semikoolon. Kui meil on eestikeelne Excel, siis tõenäoliselt salvestab see csv-faile just semikoolonitega variandis. Kui klõpsame Environment-paneelis tabeli nime peal ja meile avaneb andmestik, siis on seal tõepoolest näha üsna palju semikooloneid. R-is on 2 csv-failide lugemise funktsiooni:</p>
+<ol style="list-style-type: decimal">
+<li>read.csv - Ameerika tüüpi csv-failide jaoks, milles kümnendkohta eraldab punkt ja andmevälju koma ning</li>
+<li>read.csv2 - Euroopa tüüpi csv-failide jaoks, milles kümnendkohta eraldab koma ja andmevälju semikoolon. Praegu lähebki meil vaja hoopis funktsiooni read.csv2.</li>
+</ol>
+<p>Meie probleemi lahendamiseks on kaks võimalust.<br />
+Esiteks saame kasutada funktsiooni read.csv2(), kus on juba vaikimisi määratud andmevälju eemaldavaks tunnuseks seminkoolon. See on eriti kasulik juhul, kui andmetest eraldab kümnenkohti koma.</p>
+<pre class="r"><code>kysimustik &lt;- read.csv2(&quot;KMKT/2praktikum/Kysimustik.csv&quot;, header=TRUE) #andmevälju eraldab semikoolon</code></pre>
+<p>Teiseks saame anda funktsioonile read.csv() lisaargumendiga teada, et meie andmetes eraldab andmevälju semikoolon.</p>
+<pre class="r"><code>kysimustik &lt;- read.csv(&quot;KMKT/2praktikum/kysimustik.csv&quot;, header = TRUE, sep =&quot;;&quot;) #Argument &quot;sep&quot; võimaldab täpsustada andmeväljade eraldamise viisi toorandmetes.</code></pre>
+<div id="uue-mooduli-installeerimine" class="section level3">
+<h3>Uue mooduli installeerimine</h3>
+<p>Kui kasutate sageli Excelist pärinevaid andmeid, võib csv-failidega majandamine minna natuke tüütuks. Sellisel juhul on abi lisamooduli <em>xlsx</em> funktsioonist <em>read.xlsx</em>, mis oskab lugeda Exceli <em>xls</em> ja <em>xlsx</em> failiformaate otse R-i. Lisamoodul <em>xlsx</em> tuleb aga kõigepealt installida.</p>
 <pre class="r"><code>install.packages(&quot;xlsx&quot;)</code></pre>
-<p>Nüüd saame kasutada funktsiooni <em>read.xlsx()</em>. Esimeseks argumendiks paneme jälle andmestiku asukoha koos andmestiku nimega.</p>
-<pre class="r"><code>library(xlsx)#teeb paketis olevad funktsioonid aktiivseks. 
-andmed &lt;- read.xlsx(&quot;C:/Users/Martin/KMKT/1praktikum/ANDMED.xls&quot;, sheetIndex = 1) </code></pre>
+<p>Nüüd tuleb natuke oodata kuni R moodulit installib. Seejärel saame lisamooduli laadida. Mooduli laadimine R-is tagab moodulis olevatele funktsioonidele juurdepääsu.</p>
+<pre class="r"><code>library(xlsx) #mooduli aktiviseerimine - tagab mooduli funktsioonidele juurdepääsu</code></pre>
+<p>Seejärel saame funktsiooni <em>read.xlsx</em> abil andmestiku sisse lugeda.</p>
+<pre class="r"><code>kysimustik &lt;- read.xlsx(&quot;KMKT/2praktikum/Kysimustik.xls&quot;, sheetIndex=1)</code></pre>
+<p>Kuna Exceli failides võib olla mitu töölehte, tuleb funktsioonile argumendi <em>sheetIndex</em> abil öelda, mitmendat töölehte me sisselugeda soovime. Selle asemel võib kasutada ka argumenti <em>sheetName</em> ja töölehe nimetust. Funktsiooni <em>read.xlsx</em> puhul on argumendi <em>header</em> väärtus juba vaikimisi <em>TRUE</em>, nii et seda me praegusel juhul täpsustama ei pea. (Kui me ei taha, et R kohtleks esimese rea andmeid muutujate nimedena, tuleks seda talle öelda <em>header=FALSE</em> abil)</p>
+</div>
+</div>
+<div id="spss" class="section level2">
+<h2>SPSS</h2>
+<p>SPSS-i andmefaile saab R-i lugeda lisamooduli <em>foreign</em> funktsiooni <em>read.spss</em> abil. Lisamoodul <em>foreign</em> tuleb R-i installatsiooniga kaasa, seetõtuu pole seda vaja eraldi installida. Küll aga peab selle laadima.</p>
+<pre class="r"><code>library(foreign)
+pisa &lt;- read.spss(&quot;KMKT/2praktikum/PISA2009.sav&quot;, to.data.frame=TRUE, use.value.labels=FALSE)</code></pre>
+<p>Funktsiooni <em>read.spss</em> sagedamini vajaminevad lisaargumendid on:</p>
+<ol style="list-style-type: decimal">
+<li><p><em>to.data.frame=TRUE</em> - ütleb, et soovime andmeid laadida andmetabeli kujul;</p></li>
+<li><p><em>use.value.labels=FALSE</em> - kasulik, kui meil on SPSS-is Likerti tüüpi andmete puhul määratud iga väärtuse jaoks mingi silt nt 1=“täiesti vale”. Sellisel juhul ütleb see argument, et soovime andmeid laadida numbrilisel mitte tekstilisel kujul.</p></li>
+</ol>
+<p>Lõpetuseks veel töökausta määramisest. Põhimõtteliselt on võimalik jätta ka töökaust määramata ja valida fail interaktiivselt. Seda saab teha kui kirjutada sisselugemiseks kasutatavasse funktsiooni faili nime argumendi väärtuseks file.choose(). Näiteks niimoodi:</p>
+<pre class="r"><code>pisa &lt;- read.spss(file.choose(), to.data.frame=TRUE, use.value.labels=FALSE)</code></pre>
+<p>Peaks avanema aken (NB! See ei pruugi olla esiplaanil), mis võimaldab andmefaili valida ja kui me valime praegusel juhul sellesama faili PISA2009.sav, peaks ka lõpptulemus olema sama. On maitse küsimus, kas eelistada töökausta määramist Files-paneeli abil või kasutedes viimati mainitud file.choose() meetodi.</p>
+</div>
 </div>
 
 
