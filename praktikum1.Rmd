@@ -14,7 +14,11 @@ output:
 <script src="hideOutput.js"></script>
 ```{r global_options, include=FALSE, echo = F}
 knitr::opts_chunk$set(fig.width=12, fig.height=8,
-                      eval=FALSE, warning=FALSE, message=FALSE)
+                      eval=TRUE, warning=FALSE, message=FALSE)
+```
+
+```{r, echo = FALSE}
+load("KMKT/1praktikum/1praktikumAndmed.RData")
 ```
 
 # Praktikumi eesmärgid
@@ -37,48 +41,47 @@ Käivitame RStudio. Avanema peaks allolev pilt.
 
 ![Joonis 1. RStudio ülevaade](KMKT/1praktikum/rstudio1.png)
 
-Avame andmefaili 1praktikumAndmed.RData kasutades ülaloleval joonisel osutatud nuppe või RStudio aknas paremal allosas paiknevat paneeli *Files* (need võimalused sobivad rdata-formaadis andmete avamiseks). Soovitan avada ka tühi koodifail (RScript). Seda saab teha valides RStudio menüüribalt *File* -> *New File* -> *R Script*. Koodifail on mõeldud andmeanalüüsi salvestamiseks. Me saame sinna salvestada kõik käsud, mida me tahame R-ile väärtustamiseks saata.  
+Avame andmefaili "1praktikumAndmed.RData" kasutades ülaloleval joonisel osutatud nuppu või RStudio aknas paremal allosas paiknevat paneeli *Files*. Soovitan avada ka tühi koodifail (RScript), valides RStudio menüüribalt *File* -> *New File* -> *R Script*. Koodifaili saate salvestada enda kirjutatud andmeanalüüsi.
 
-Nüüd peaks meil RStudio aknas lahti olemas 4 osa. Erinevate osade funktsioonid on toodud allpool.
+Nüüd peaks meil RStudios olema lahti neli akent. Erinevate akende funktsioonid on toodud allpool.
 ![Joonis 2. RStudio erinevad aknad](KMKT/1praktikum/rstudio2.png)
 
 
 
-**Üleval vasakul** olevasse ossa kirjutame koodi, mille abil ütleme R-ile, mida me tahame, et see andmetega teeks. Kuidas koodi R-ile saatmine käib? Kui soovime saata ainult ühte rida korraga tuleb kõige pealt klõpsata sellel koodireal, mida soovime R-ile saata (nii et kursor hakkab vilkuma sellel real) ja seejärel vajutada koodiredaktori paneeli paremal ülaosas paiknevat nuppu *Run*. Nupu asemel võib kasutada ka klahvikombinatsiooni *Ctrl + Enter* (Maci arvutitel *Cmd + Enter*). Kui soovime saata mitut koodirida korraga, tuleb need koodiredaktoris valida (st teha hiirega siniseks) ja seejärel vajutada *Run*-nuppu või klahvikombinatsiooni.
+**Üleval vasakul** olevasse aknasse kirjutame koodi, mille abil ütleme R-ile, mida andmetega teha. Kuidas käib koodi saatmine R-ile? Kui soovime saata ainult ühte rida korraga, siis tuleb viia kursor sellel koodireal ja seejärel vajutada koodiredaktori paneeli paremal ülaosas paiknevat nuppu *Run*. Nupu asemel võib kasutada ka klahvikombinatsiooni *Ctrl + Enter* (Maci arvutitel *Cmd + Enter*). Kui soovime saata mitut koodirida korraga, siis tuleb need koodiredaktoris valida (st teha hiirega siniseks) ja seejärel vajutada *Run*-nuppu või klahvikombinatsiooni.
 
-**All vasakul** on konsool (*Console*). Seal asubki arvutusi teostav R ise. Kui laseme R-il midagi arvutada, ilmuvad tulemused nähtavale just selles osas. Koodi võib põhimõtteliselt kirjutada ka otse siia, aga enamasti on mugavam kirjutada kood üleval valmis ja seejärel alla konsooli saata. Nii on lihtsam koodi vajadusel parandusi teha ja koodi korduvkasutada.
+**All vasakul** on konsool (*Console*). Seal asubki arvutusi teostav R ise. Kui laseme R-il midagi arvutada, siis ilmuvad tulemused nähtavale just selles osas. Koodi võib põhimõtteliselt kirjutada ka otse siia, aga enamasti on mugavam kirjutada kood koodifaili. Nii on lihtsam koodi parandusi teha ja koodi korduvkasutada.
 
 **All paremal** asub 5 erinevat paneeli:
 
-* *Files*: R-i koodi ja andmefailide avamiseks.  
-**NB!** Selles aknas saate sättida enda töökeskkonda. See annab R'ile teada, missuguse kaustaga parasjagu tööd tehakse. Kausta otsimiseks vajutage sümbolile "...", otsige üles sobiv kaust ja vajutage "OK". Seejärel vajutage nupule *More* ja valige *Set As Working Directory*. Jälgige alati, et töökeskkond oleks kaust hetkel kasutatavate andmetega.   
+* *Files*: R-i koodi- ja andmefailide avamiseks.  
+**NB!** Selles aknas saate sättida enda töökeskkonda. See annab R'ile teada, missuguse kaustaga parasjagu tööd tehakse. Kausta otsimiseks vajutage sümbolile "...", seejärel otsige üles sobiv kaust ja vajutage "OK". Seejärel vajutage nupule *More* ja valige *Set As Working Directory*. Soovitatav on kasutada töökeskkonnana kausta, kus on teie analüüsitavad andmed.      
 * *Plots*: siia kuvatakse tehtud joonised.   
-* *Packages*: selle osa abil saab installida ja laadida lisamooduleid, mis lisavad R-ile täiendavat funktsionaalsust. Lisamoodulid tuleb kõigepealt installida (tuleb teha ainult ühe korra). Seda saab teha vajutades paneelil nuppu *Install* ja kirjutades avanevasse aknasse meid huvitava lisamooduli nime. Kui R on mooduli installinud, tuleb see ka laadida. Laadimiseks tuleb vajaminev moodul *Packages*-paneeli nimekirjast üles otsida ja selle nime eesasuvasse kasti linnukene teha. Lisamooduleid saab installida ja laadida ka R-i koodi abil: *install.packages("lisamooduli nimi")* ja *library("lisamooduli nimi")*.      
-* *Help*: Abiinfo R-i funktsioonide kohta. Kirjutades paneeli otsingukasti meid huvitava R-i funktsiooni nime ja vajutades Enterit, näidatakse infot funktsiooni kasutamise kohta. Abiinfo lehe lõpus on toodud ka näited selle konkreetse funktsiooni kasutamise kohta.  
-* *Viewer*: Selle osa abil saab teha keerulisemat tüüpi andmevisualisatsioone, millel on lisaks joonisele ka kontrollelemendid, mis võimaldavad joonise parameetreid muuta. Seda osa me antud kursusel ei kasuta.  
+* *Packages*: selle osa abil saab installeerida ja laadida lisamooduleid, mis lisavad R-ile täiendavat funktsionaalsust. Lisamoodulid tuleb kõigepealt arvutisse installeerida. Vajutage nuppu *Install* ja kirjutage avenanud aknasse soovitud lisamooduli nimi. Mooduli funktsioonide kasutamiseks tuleb vastav moodul R-is aktiveerida. Aktiveerimseks tuleb moodul *Packages*-paneeli nimekirjast üles otsida ja selle nime eesasuvasse kasti linnukene teha. Lisamooduleid saab installida ja laadida ka R-i koodi abil: *install.packages("lisamooduli nimi")* ja *library("lisamooduli nimi")*.      
+* *Help*: Abiinfo R-i funktsioonide kohta. Siin paneelis saate otsida R-is olevate funktsioonide kohta informatsiooni.    
+* *Viewer*: Selle osa abil saab teha keerulisemat tüüpi andmevisualisatsioone, millel on lisaks joonisele ka kontrollelemendid, mis võimaldavad joonise parameetreid muuta. Seda osa me antud kursusel ei kasuta.   
 
 **Üleval  paremal** asub 2 paneeli:
 
-* *Environment*: selles osas näidatakse parajasti kasutusel olevaid andmeid.   
-* *History*: R-i konsooli käskude ajalugu.
-Natuke lähemalt *Environment* paneelist. Kui avasite alguses andmefaili *1praktikumiAndmed.RData*, peaks paneel välja nägema nagu alloleval pildil. Muutuja *tabel* viitab konkreetse andmetabeli nimele. Erinevalt näiteks SPSS-ist võivad R-i andmefailid sisaldada rohkem kui ühte andmetabelit (ja lisaks andmetabelitele ka teistsuguseid andmestruktuure). Igal andmetabelil on oma nimi ja tabelis olevad andmed saamegi hiljem kätte just selle nime abil. 200 obs of 10 variables näitab, et tabelis on 200 rida ja 10 tulpa.
+* *Environment*: selles osas näidatakse kasutusel olevaid andmeid.   
+* *History*: R-i konsoolile saadetud käskude ülevaade.  
+Natuke lähemalt *Environment* paneelist. Kui avasite alguses andmefaili "1praktikumiAndmed.RData", siis peaks paneel välja nägema nagu alloleval pildil (Joonis 3). Objekt nimega "tabel" viitab konkreetse andmetabeli nimele. 200 *obs* of 10 *variables* näitab, et andmetabelis on 200 rida ja 10 tulpa. Erinevalt näiteks SPSS-ist võivad R-i andmefailid sisaldada rohkem kui ühte andmetabelit (ja lisaks andmetabelitele ka teistsuguseid andmestruktuure). Igal andmetabelil on oma nimi ja andmestikus olevad andmed saamegi hiljem kätte selle nime abil. 
 
 ![Joonis 3. RStudio Global Environment](KMKT/1praktikum/rstudio3.png)
 
 
-Klõpsates tabeli nime ees oleval sinisel nupul peaks avanema allolev pilt.
+Klõpsates andmestiku nime ees oleval sinisel nupul peaks avanema allolev pilt (Joonis 4).
 
 ![Joonis 4. RStudio ülevaade](KMKT/1praktikum/rstudio4.png)
 
 
 
-Meile näidatakse tabelis olevate tulpade nimesid, andmetüüpe ja esimesi andmepunkte. Esimene tulp/muutuja kannab nime "vanus". Andmetüüp on *int* , mis tuleb inglisekeelsest sõnast *integer* ehk täisarv, st. tegemist on tulbaga, milles sisalduvad andmed on täisarvud. (Teine R-is levinud numbriliste andmete tüüp on *num* ehk *numeric*, mis võib sisaldada ka komakohaga arve.) Teine tulp kannab nime "elukoht" ja selle tüübiks on märgitud *Factor* w/ 2 levels „maa“ , „linn“. *Factor* tähistab R-i kontekstis kategooriaid sisaldavat muutujat. Antud juhul on neid kategooriaid 2 tükki: „maa“ ja „linn“. Kõik ülejäänud tabelis olevad muutujad sisaldavad sarnaselt esimese tulbaga täisarvulist tüüpi andmeid (*int*).
+Meile näidatakse tabelis olevate veergude nimesid, andmetüüpe ja esimesi andmepunkte. Esimene veerg/muutuja kannab nime "vanus". Andmetüüp on *int* , mis tuleb inglisekeelsest sõnast *integer* ehk täisarv, st. tegemist on veeruga, milles sisalduvad andmed on täisarvud. (Teine R-is levinud numbriliste andmete tüüp on *num* ehk *numeric*, mis võib sisaldada ka komakohaga arve.) Teine veerg kannab nime "elukoht" ja selle tüübiks on märgitud *Factor* w/ 2 levels „maa“ , „linn“. *Factor* tähistab R-i kontekstis kategooriaid sisaldavat muutujat. Antud juhul on neid kategooriaid 2 tükki: „maa“ ja „linn“. Kõik ülejäänud tabelis olevad muutujad on täisarvulised (*int*).
   
 
 # 2. R-i süntaks  
 Enne andmete juurde asumist teeme väikse kõrvalpõike R-i süntaksiga tutvumiseks. Nagu juba eelnevalt mainisin, siis üldiselt on kasulik kirjutada koodi koodifaili (*Rscript*). Selle saate salvestada enda arvutisse ja avada järgmisel kasutamisel uuesti. Konsoolile kirjutatud koodiread lähevad pärast R-i sulgemist kaduma.  
-Paar nõuannet ka koodi kirjutamise kohta. Esiteks, R-i koodi kirjutamisel te ei pea jätma koodi tühikuid. Koodi loetavuse mõttes on see siiski soovitatav. 
-Teiseks, punkte ja komasid kasutatakse R-is erinevatel juhtudel. Punkte kasutatakse andmete puhul. Komasid kasutatakse aga erinevate elementide eristamiseks. Näiteks $5.12$ on üks number, aga $5,12$ on kaks numbrit. 
+Paar nõuannet ka koodi kirjutamise kohta. Esiteks, R-i koodi kirjutamisel te ei pea jätma koodi tühikuid. Koodi loetavuse mõttes on see siiski soovitatav. Teiseks, punkte ja komasid kasutatakse R-is erinevatel juhtudel. Punkte kasutatakse andmete puhul. Komasid kasutatakse aga erinevate elementide eristamiseks (näiteks $5.12$ on üks number, aga $5,12$ on kaks numbrit). 
 
 ## Aritmeetika
 R-i võib kasutada tavalise kalkulaatorina. Proovige teha järgnevaid tehteid R-i konsoolil.  
@@ -90,7 +93,7 @@ R-i võib kasutada tavalise kalkulaatorina. Proovige teha järgnevaid tehteid R-
 * astmesse tõstmine: 2^4  
 
 ## Muutujate loomine  
-Vahepeal on vajalik luua andmetöötluse käigus uus muutuja, kuhu on salvestatud mingi oluline väärtus, lihtsalt üks veerg andmestikust või terve andmestik. Uue muutuja väärtustamiseks kasutatakse kas noolt "<-" või tavalist võrdusmärki. Muutujate nimede puhul ei luba R tühikuid kasutada. Seega on pikema nime puhul hea kasutada punkti (uus.muutuja), alakriipsu (uus_muutuja) või suurtähti (uusMuutuja).
+Vahepeal on vajalik luua andmetöötluse käigus uus muutuja, kuhu on salvestatud mingi oluline väärtus. Uue muutuja loomaikseks kasutatakse kas noolt "<-" või tavalist võrdusmärki "=". Muutujate nimede puhul ei luba R tühikuid kasutada. Seega on pikema nime puhul hea kasutada punkti ("uus.muutuja"), alakriipsu ("uus_muutuja") või suurtähti ("uusMuutuja").
 ```{r}
 # Need kaks väärtustamist annavad sama tulemuse
 uus_muutuja <- 2
@@ -104,9 +107,9 @@ uus_muutuja * 4
 ## Andmetüübid ja vektorid     
 Põhilised andmetüübid, millega kursuse jooksul kokku puutume:  
   
-* numbrilised (numeric, integer): 2.2, 3  
-* sõned (character): "hello"  
-* tõeväärtused: TRUE, FALSE  
+* numbrilised (*numeric, integer*): 2.2, 3  
+* sõned (*character*): "hello"  
+* tõeväärtused: *TRUE*, *FALSE*  
   
 Miks on need olulised? Kõik andmestikud koosnevad nendest andmetüüpidest. Andmestiku ühte veergu võib käsitleda vektorina, mis koosneb teatud tüüpi elementidest.
 Vaatame kõigepealt, kuidas R-is saab vektoreid luua. Vektorid (erinevalt listidest) võivad sisaldada ainult ühte tüüpi elemente.
@@ -119,7 +122,7 @@ s_vektor <- c("SPSS", "R", "Matlab")
 t_vektor <- c(FALSE, TRUE, FALSE)
 ```
 
-Vektori tüübi kontrollimiseks saame kasutada funktsiooni nimega *class*.
+Objekti tüübi kontrollimiseks saame kasutada funktsiooni nimega *class*.
 ```{r}
 class(num_vektor)
 ```
@@ -167,14 +170,36 @@ v3[v3 > 7]
 
 ## Ülesanded - R-i süntaks    
 1. Tehke kaks erinevat vektorit, kus on vähemalt 10 numbrilist elementi.    
+```{r}
+vektor1 <- c(5,6,2,7,2,8,11,4,9,12)
+vektor2 <- c(3,11,10,2,4,6,3,6,9,4)      
+```
+
 2. Arvutage nende vektori aritmeetiline keskmine ja mediaan.  
-3. Liitke need vektorid ja salvestage tulemus uude muutujasse. Arvutage uue muutuja keskmine, mediaan ja summa.  
+```{r}
+mean(vektor1)
+median(vektor1)
+mean(vektor2)
+median(vektor2)
+```
+
+3. Liitke need vektorid ja salvestage tulemus uude muutujasse. Arvutage uue muutuja keskmine, mediaan ja summa. 
+```{r}
+vektor3 <- vektor1 + vektor2
+mean(vektor3)
+median(vektor3)
+sum(vektor3)
+```
+
 5. Eraldage eelmises ülesandes loodud muutujast väärtused, mis on suuremad kui selle muutuja aritmeetiline keskmine.  
+```{r}
+vektor3[vektor3 > mean(vektor3)]
+```
 
 
 # 3. Andmetega manipuleerimine
 
-Enne alustamist veenduge, et Teil oleks RStudio töökeskkonnas (*Global Environment*) vastav andmetabel olemas (Joonis 3.).  
+Enne alustamist veenduge, et Teil oleks RStudio töökeskkonnas (*Global Environment*) andmestik nimega "tabel" (Joonis 3.).  
 
 Tehke esialgu läbi järgnevad ülesanded:  
 
@@ -185,32 +210,32 @@ Tehke esialgu läbi järgnevad ülesanded:
 3. Kasutage funktsiooni *tail()*, argumendiks pange andmestiku nimi. Mida see funktsioon näitab?   
 4. Kasutage funktsiooni *str()*, argumendiks pange andmestiku nimi. Mida see funktsioon näitab?  
   
-R'i üks suurimaid eeliseid SPSS'i ees on võimalus andmeid kiirelt kohandada enda vajadustele.   
-Siin tutvustame kolme võimalust:
+R'i võimaldab andmeid kiirelt kohandada vastavalt enda vajadustele. Esialgu peame õppima konkreetsete andmete eraldamise suuremast andmestikust.    
+Siin tutvustame kolme võimalust:  
 
 * Dollari märgi abil viitamine  
 * Nurgeliste sulgude kasutamine - R'is annavad nurgelised sulud märku, et mingist objektist/andmestikust tahetakse mingit konkreetset muutujat kätte saada.  
 * Funktsioon *subset* - see funktsioon võimaldab teha sama, mida nurgelised sulud.   
 
 ##Veergude eraldamine  
-R'is saab kergesti kasutada funktsioone muutujate peal eraldi. Et arvutada tabelis oleva muutuja kohta statistilisi näitajaid, peame teadma, kuidas tulbas olevad andmed koodi abil kätte saada. Selleks peame teadma nii andmetabeli nime kui ka tulba nime või tulba järjekorranumbrit. Tulbas vanus olevad andmed saame muutuja nime abil kätte nii:  
 
-Dollari märgi abil:   
+Dollari märgi abil (peame teadma veeru nime):   
 
 ```{r}
-tabel$vanus
+tabel$vanus # võtab andmestikus veeru nimega "vanus"
 ```
 
-Nurgeliste sulgudega:
+Nurgeliste sulgudega (peame teadma veeru asukohta andmestikus):
 
 ```{r, eval = FALSE}
-tabel[,1]
+#[rida, veerg]
+tabel[,1] # võtab andmestikust esimese veeru
 ```
 
-Funktsiooniga *subset*:
+Funktsiooniga *subset* (peame teadma veeru nime):
 
 ```{r , eval = FALSE}
-subset(tabel, select = vanus) # üks veerg
+subset(tabel, select = vanus) # võtab andmestikust veeru nimega vanus  
 subset(tabel, select = c(vanus, elukoht)) # kaks veergu. NB! lisasime c() - see näitab, et anname argumendiks vektori. 
 ```
 
@@ -236,7 +261,8 @@ tabel[1:5,] #esimesed viis rida
 ```
 
 ##Tingimuste kasutamine   
-Kuidas valida ridu, mis vastavad teatud tingimustele? Proovime näiteks võtta andmestikust need read, kus vaadeldava isiku vanus on alla 30.
+Kuidas valida ridu, mis vastavad teatud tingimustele? Proovime näiteks võtta andmestikust need read, kus vaadeldava isiku vanus on alla 30.  
+
 Nurgeliste sulgudega:
 
 ```{r, eval = FALSE}
@@ -249,10 +275,10 @@ Funktsiooniga *subset*:
 subset(tabel, vanus < 30)
 ```
 
-Sageli on vaja võtta andmetest välja read, mis on ühe muutuja suhtes võrdsed. Näiteks püüame eraldada andmetest kõik read, kus elukoha väärtus on "maa". Saame kasutada juba tuttavat ridade ja veergude määratlust:  
+Vahepeal on vaja võtta andmetest välja read, mis on sarnase väärtusega. Näiteks püüame eraldada andmetest kõik read, kus elukoha väärtus on "maa". Saame kasutada juba tuttavat ridade ja veergude määratlust:  
 
 ```{r, eval = FALSE}
-tabel[tabel$elukoht == "maa",] 
+tabel[tabel$elukoht == "maa",] # võtab andmetest ainult need read, kus elukoht on võrdne väärtusega "maa"
 ```
 
 Samasuguse tulemuse saame ka funktsiooniga *subset*  
@@ -264,18 +290,25 @@ subset(tabel, elukoht == "maa")
    
 ##Ülesanded - andmetega manipuleerimine 
 1. Eraldage andmetest veerg "vanus". Looge uus muutuja, kus on ainult see veerg.  
+```{r}
+vanus <- tabel$vanus
+```
 2. Tehke kaks uut andmestikku. Esimesse salvestage maal elavate katseisikute tulemused ja teise salvestage linnas elavate katseisikute tulemused.  
+```{r}
+tabel_maa <- subset(tabel, elukoht == "maa")
+tabel_linn <- subset(tabel, elukoht == "linn")
+```
 
 
 # 4. Kirjeldav Statistika  
-Nüüd, kui teame, kuidas anda R'ile edasi ainult üks muutuja andmestikus, proovime saada selgemat ülevaadet muutujast *vanus*.  
-**Keskmise** vanuse saame andes funktsioonile *mean* argumendiks muutuja *vanus*:
+Nüüd, kui teame, kuidas anda R'ile edasi ainult üks muutuja andmestikust, proovime saada selgemat ülevaadet muutujast "vanus".  
+**Keskmise** vanuse saame, kui anname funktsioonile *mean* argumendiks vastava muutuja nime:
 
 ```{r}
 mean(tabel$vanus)
 ```
 
-**Mediaani** saame funktsiooni *median* abil
+**Mediaani** saame funktsiooni *median* abil:  
 
 ```{r}
 median(tabel$vanus)
@@ -295,13 +328,13 @@ max(tabel$vanus)
 ```
 
 **Puuduvad väärtused**  
-Kui tulbas esineb puuduvaid väärtusi, annab R meile statistiku väärtuseks samuti puuduva väärtuse ehk NA (*not available*):
+Kui veerus esineb puuduvaid väärtusi, siis annab R meile statistiku väärtuseks samuti puuduva väärtuse ehk NA (*not available*):
 
 ```{r}
 mean(tabel$sotsiaalsus)
 ```
 
-Selleks, et puuduvad väärtused arvutustest välja jätta tuleb kirjeldava statistika funktsioonidele ette anda täiendav argument na.rm=TRUE
+Selleks, et puuduvad väärtused arvutustest välja jätta tuleb kirjeldava statistika funktsioonidele ette anda täiendav argument "na.rm=TRUE".
 
 ```{r}
 mean(tabel$sotsiaalsus, na.rm=TRUE)
@@ -314,7 +347,7 @@ Kategooriaid sisaldava tunnuse kirjeldamisel on abiks **sagedustabel**:
 table(tabel$elukoht)
 ```
 
-Protsentuaalse jaotuse saame lisades sagedustabeli ümber funktsiooni *prop.table*:
+Protsentuaalse jaotuse saame, kui lisame sagedustabeli ümber funktsiooni *prop.table*:
 
 ```{r}
 prop.table(table(tabel$elukoht))
@@ -323,8 +356,27 @@ prop.table(table(tabel$elukoht))
    
 ## Ülesanded - kirjeldav statistika 
 1. Leidke sotsiaalsuse, meelekindluse, ekstravertsuse, neurootilisuse ja avatuse keskmised tulemused.  
+```{r}
+mean(tabel$sotsiaalsus, na.rm=TRUE)
+mean(tabel$meelekindlus, na.rm=TRUE)
+mean(tabel$ekstravertsus)
+mean(tabel$neurootilisus)
+```
+
 2. Kasutage funktsiooni *summary()*. Andke argumendiks üks veerg. Andke argumendiks terve tabel. Mida see funktsioon väljastab?  
+```{r}
+summary(tabel$meelekindlus)
+summary(tabel)
+```
+
 3. Millises vahemikus varieeruvad ekstravertsuse skoorid?
+```{r}
+range(tabel$ekstravertsus)
+
+#või:
+min(tabel$ekstravertsus)
+max(tabel$ekstravertsus)
+```
 
 
 

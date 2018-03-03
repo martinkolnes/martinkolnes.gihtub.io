@@ -41,13 +41,13 @@ Kasutame andmestikku PISA.
 
 1. Tehke praktikumi materjalide jaoks arvutis eraldi kaust. Tõstke materjalid sinna kausta ja laadige need RStudiosse.   
 2. Leidke uuringus osalenute keskmine vanus.  
-```{r, eval = F, echo = FALSE}
+```{r, eval = T, echo = T}
 mean(pisa$AGE)# keskmise arvutamiseks sai kasutada funktsiooni mean()
 #summary(pisa)#annab ülevaate tervest andmestikust
 ```
 
 3. Leidke tüdrukute ja poiste keskmine vanus.  
-```{r, eval = F, echo = F}
+```{r, eval = T, echo = T}
 mean(pisa[pisa$Gender==1, "AGE"])
 mean(pisa$AGE[pisa$Gender == 1])
 mean(pisa[pisa$Gender==2, "AGE"])
@@ -56,13 +56,13 @@ sd(pisa[pisa$Gender==2, "AGE"])
 ```
 
 4. Kui palju tüdrukuid ja poisse oli uuringus (1 = tüdruk, 2 = poiss)?   
-```{r, eval = F, echo = FALSE}
+```{r, eval = T, echo = T}
 table(pisa$Gender)
 mean(pisa[pisa$Gender==2, "AGE"])
 ```
 
 5. Kui palju õpilasi oli erinevates klassides (GR - klassid)?  
-```{r, eval = F, echo = FALSE}
+```{r, eval = T, echo = T}
 table(pisa$GR)
 ```
 
@@ -148,6 +148,12 @@ Kui tahate joonist suuremal kujul vaadata, siis vajutage RStudio *Plots*-paneeli
 
 **Ülesanne**  
 1. Tehke histogramm loodusteaduste (PV1SCIE) tulemustega.  
+```{r}
+ggplot(pisa, aes(x = PV1SCIE))+
+        geom_histogram()+
+        labs(title = "Loodusteaduste testi tulemuste jaotus", x ="Alatesti skoor" , y = "Sagedus")+
+        theme_bw()
+```
 
   
 ##Tulpdiagramm (*barplot*)
@@ -218,7 +224,7 @@ describe(subset(pisa$PV1READ, pisa$Gender == 2))#meeste andmed
 ** Ülesanne **  
 2. Missugused on tunnuse JOYREAD asümmeetrijakordaja ja ekstsess sugude lõikes? Kas neid võib pidada normaaljaotusele vastavaks?  
 
-```{r, echo = F, eval =F}
+```{r, echo = T, eval =T}
 describe(subset(pisa$JOYREAD, pisa$Gender == 1))#naiste andmed
 describe(subset(pisa$JOYREAD, pisa$Gender == 2))#meeste andmed
 ```
@@ -230,12 +236,19 @@ ggplot(andmed, aes(x=tunnus))+
         geom_histogram()+
         facet_wrap(~kategoriseeriv tunnus)
 ```
+```{r}
+ggplot(pisa, aes(x=JOYREAD))+
+        geom_histogram()+
+        facet_wrap(~Gender)+
+        theme_bw()
+```
 
 # Korrelatsioonanalüüs
 Kui tahate arvutada korrelatsiooni kahe muutuja vahel, siis soovitan kasutada funktsiooni *cor.test()*. Vaikimisi teeb see funktsioon Pearsoni korrelatsioonanalüüsi. Selle seade muutmiseks peab lisama argumendi "method = "spearman"".
 ```{r}
 cor.test(pisa$PV1MATH, pisa$PV1READ)
 ```
+Antud juhul on p-väärtus < 2.2e-16 ehk p-väärtus on väiksem kui $2.2 * 10^-16$. Sellist kirjapilti kasutatakse väga väikeste väärtuste esitamiseks.     
 
 Kui tahate aga arvutada korrelatsiooni mitme muutuja kohta korraga, siis soovitan kasutada funktsiooni *corr.test()* pakatist *psych*. Ka selle funtksiooni puhul saab korrelatsioonianalüüsi meetodit muuta, kui lisada argument "method = "spearman"".
 ```{r, warning =F, message=F}
@@ -279,7 +292,10 @@ t.test(pisa$PV1READ~pisa$Gender)
 ```
 
 **Ülesanne**  
-4. Uurige hüpoteesi: poste ja tüdrukute keskmised tulemused matemaatika testis on erinevad.  
+4. Uurige hüpoteesi: poiste ja tüdrukute keskmised tulemused matemaatika testis on erinevad.  
+```{r}
+t.test(pisa$PV1MATH~pisa$Gender)
+```
   
 ##Karpdiagramm (*boxplot*)
 Gruppide võrdlemisel saab kasutada karpdiagrammi. Vaatame matemaatiak tulemuste jaotusi sugude lõikes karpdiagrammi abil.  
@@ -292,13 +308,13 @@ ggplot(pisa, aes(y = PV1MATH, x = as.factor(Gender)))+
 
 
 Mida karpdiagrmmi osad tähistavad? Karbi keskel olev joon on grupi mediaanväärtus (pooled väärtused on sellest suuremad ja pooled väiksemad). Karp ise tähistab kvartiilhaaret ehk keskmist 50\% väärtustest.
-Juhul kui eraldi punktidena välja toodud äärmuslikke väärtusi ei esine, tähistavad vuntsid vastavalt grupi kõige suuremat ja kõige väiksemat väärtust. äärmuslike erindite erinemise korral tähistab vunts kõige suuremat/väiksemat "mõistlikku" väärtust (st viimane andmepunkt, mis jääb karbi servast mitte rohkem kui 1,5-kordse kvartiilhaarde võrra üles- või allapoole).
+Juhul kui eraldi punktidena välja toodud äärmuslikke väärtusi ei esine, tähistavad vuntsid vastavalt grupi kõige suuremat ja kõige väiksemat väärtust. Äärmuslike erindite esinemise korral tähistab vunts kõige suuremat/väiksemat "mõistlikku" väärtust (st viimane andmepunkt, mis jääb karbi servast mitte rohkem kui 1,5-kordse kvartiilhaarde võrra üles- või allapoole).
 Kuidas gruppidevahelisi erinevusi tõlgendada? Kui kahe grupi karbid omavahel ei kattu, võib üsna julgelt öelda, et need grupid erinevad vaadeldava tunnuse osas. Kui karbid kattuvad ja mõlema grupi puhul jääb mediaan teise grupi karbi sisse, võib öelda et grupid ei erine tunnuse osas. Kui karbid kattuvad, aga vähemalt ühe grupi mediaan jääb väljapoole teise grupi karpi, võib aga ei pruugi oluline seos esineda.
 Sellisel juhul tuleks erinevust täpsemalt uurida mõne muu meetodiga nt t-testi või ANOVA-ga.
 Lisaks gruppidevahelistele erinevustele aitab karpdiagramm gruppide siseselt aimu saada ka jaotuse sümmeetrilisuse kohta. Kui karbi mediaanist ülespoole jääv osa on suurem kui allapoole jääv osa või üks vunts suurem kui teine, ei ole tunnus päris sümmeetiriliselt jaotunud.
 
 ## Keskmised koos usalduspiiridega  
-T-testi tulemuse illustreerib aga paremini joonis, kus keskmised tulemused koos usalduspiiridega. Siinkohal soovitan kasutada funktsiooni *plotmeans* paketist *gplots*. Seda joonist saab teha ka funktsiooniga *ggplot*, aga seal vajab see rohkem eeltööd.      
+T-testi tulemuse illustreerib aga paremini joonis, kus on esitatud keskmised tulemused koos usalduspiiridega. Siinkohal soovitan kasutada funktsiooni *plotmeans* paketist *gplots*. Seda joonist saab teha ka funktsiooniga *ggplot*, aga seal vajab see rohkem eeltööd (http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/).      
 ```{r, warning =F, message=F}
 library(gplots) # enne tuleb pakett arvutisse insatalleerida
 plotmeans(PV1MATH ~ Gender, data = pisa, frame = FALSE)
@@ -306,14 +322,14 @@ plotmeans(PV1MATH ~ Gender, data = pisa, frame = FALSE)
 
 # Ülesanded - Joonised
 1. Histogramm matemaatika alatesti tulemuste kohta (lisage joonisele pealkiri):
-```{r, eval = F,echo = F}
+```{r, eval = T,echo = T}
 ggplot(pisa, aes(PV1MATH))+
         geom_histogram(col = "blue", fill = "gray")+
         labs(title = "Mamtemaatika tulemused")
 ```
 
-2. Tehke karpdiagramm, mis illustreerib meeste ja naiste matemaatika alatestide skoore
-```{r, eval =F, echo =F }
+2. Tehke karpdiagramm, mis illustreerib poiste ja tüdrukute matemaatika alatestide skoore
+```{r, eval =T, echo =T }
 ggplot(pisa, aes(x = as.factor(Gender), y = PV1MATH))+ #kui joonis ei tee eraldi tulpasi, siis tuleb lisada kategoriseerivale tunnusele funtksioon as.factor()
         geom_boxplot(fill = "grey80", colour = "#3366FF")+ #värvisin karpide sisu hallikaks ja karpide ääre siniseks
         scale_x_discrete(labels = c("tüdrukud", "poisid"))+
@@ -322,7 +338,7 @@ ggplot(pisa, aes(x = as.factor(Gender), y = PV1MATH))+ #kui joonis ei tee eraldi
 ```
 
 3. Näidake matemaatika ja lugemise alatestide tulemuste seost (lisage joonisele regressioonisirge). Arvutage ka korrelatsioonikordaja.
-```{r, eval =F, echo = F}
+```{r, eval =T, echo = T}
 ggplot(pisa, aes(x= PV1MATH, y = PV1READ))+
     geom_point(shape=1) +    # shape = 1 - tühjad ringid
     geom_smooth(method=lm, se=TRUE)    # lisab regressioonisirge, se = TRUE - lisab usalduspiire
@@ -330,27 +346,27 @@ ggplot(pisa, aes(x= PV1MATH, y = PV1READ))+
 ```
 
 4. Näidake lugemise ja loodusteaduste alatestide tulemuste seos (lisage joonisele regressioonisirge). Arvutage ka korrelatsioonikordaja.
-```{r, eval =F, echo = F}
+```{r, eval =T, echo = T}
 ggplot(pisa, aes(x= PV1READ, y = PV1SCIE))+
         geom_point(shape=1) +    # shape = 1 - tühjad ringid
         geom_smooth(method=lm, se=TRUE) +   # lisab regressioonisirge, se = TRUE - lisab usalduspiire
         theme_classic() 
 ```
 
-5. Tehke tulpdiagramm lugemise alatesti tulemuste kohta erinevate klasside lõikes.
-```{r, eval =F , echo =F}
+* 5. Tehke tulpdiagramm lugemise alatesti keskmiste tulemuste kohta erinevate klasside lõikes.
+```{r, eval =T , echo =T}
 ggplot(pisa, aes(y=PV1READ, x = GR))+
         geom_bar(aes(group = GR), stat = "summary", fun.y = "mean") +
         labs(x ="klass" , y = "lugemise alatesti keskmine skoor")
 ```
-```{r, eval =F, echo =F}
+```{r, eval =T, echo =T}
 #kontrollime funktsiooniga tapply() kas saime joonisele õiged tulemused:
 tapply(pisa$PV1READ, pisa$GR, mean, na.rm =TRUE)
 ```
 
-6. Tehke eraldi histogramm naiste ja meeste matemaatika alatesti tulemuste kohta:
+6. Tehke eraldi histogramm tüdrukute ja poiste matemaatika alatesti tulemuste kohta:
 
-```{r, eval = F, echo =F}
+```{r, eval = T, echo =T}
 #Selle ülesande lahendamiseks on mitu võimalust. 
 # Esiteks saate teha uued andmestikud funktsiooniga subset ja kasutada neid andmestikke jooniste koostamisel:
 pisa_tydrukud <- subset(pisa, Gender == 1)

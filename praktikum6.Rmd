@@ -1,5 +1,5 @@
 ---
-title: 'Struktuurivõrrandite mudelid'
+title: 'Eksploratiivne faktoranalüüs'
 author: "Martin Kolnes, Karin Täht"
 output:
   html_document:
@@ -9,362 +9,290 @@ output:
       collapsed: false
       smooth_scroll: false
 ---
-```{r, echo = F}
-HolzingerSwineford1939 <- read.csv2("KMKT/6praktikum/HolzingerSwineford1939.csv")
-suur.viisik <- read.csv2("KMKT/6praktikum/suur.viisik.csv")
-illness.cov <- read.csv2("KMKT/6praktikum/illness.cov.csv")
-PoliticalDemocracy <- read.csv2("KMKT/6praktikum/PoliticalDemocracy.csv", sep =",")
+
+# Faktoranalüüs ja peakomponentide analüüs
+Nagu ilmselt teate, on olemas 2 lähedast meetodit: **faktoranalüüs** ja **peakomponentide analüüs**. Mõlema eesmärgiks on taandada suurem muutujatekogum väikseks arvuks liitmuutujateks. Sageli annavad mõlemad sarnase lõpptulemuse, kuid vahel võivad meetodite tulemused ka erineda. 
+
+**Faktoranalüüsi** eesmärk on kirjeldada mingit suuremat hulka tunnuseid väiksema arvu hüpoteetiliste tunnuste ehk faktorite kaudu.  
+**Peakomponentide analüüsi** eesmärk on välja selgitada väiksem hulk komponente, mis vastutavad esialgsete muutujate varieeruvuse  eest.   
+Faktoranalüüs ja peakomponentide analüüs on matemaatilises mõttes erinevad. Faktoranalüüsi käigus eeldatakse, et mõõdetud muutujate varieeruvuse eest vastutavad tekkivad ühisfaktorid ja unikaalsed faktorid. Peakomponentide analüüsi käigus tekitatakse uued muutujad lihtsalt kui lineaarkombinatsioonid mõõdetud muutujatest (vaadake loengu konspektist jooniseid).
+Faktoranalüüsi on mõistlik kasutada, kui uurija on huvitatud faktoritest, mis vastutavad teatud hulga mõõdetud muutujate varieeruvuse eest. Peakomponentide analüüsi tuleks kasutada, kui uurija soovib lihtsalt andmeid taandada.
+
+
+
+# Faktoranalüüs 
+Faktoranalüüsi tegemiseks on R-is vähemalt paar erinevat võimalust. Antud praktikumis kasutame lisamooduli *psych* faktoranalüüsi funktsioone. Installime kõigepealt vajalikud lisamoodulid *psych* ja *GPArotation* (see on vajalik faktormudeli pööramiseks).
+
+```{r, eval = F, warning=F, message=F}
+install.packages("psych")
+install.packages("GPArotation")
+```
+```{r, warning=F, message=F}
+library(psych)
+library(GPArotation)
 ```
 
-**Struktuurivõrrandite mudelid** (SEM) on üsna mitmekesine meetodite rühm, mis omab sarnasusi nii faktor- kui regressioonanalüüsiga. Nagu uurivas faktoranalüüsis saame vaadeldud muutujate kaudu defineerida liitmuutujaid ehk faktoreid. Struktuurivõrrandite mudeliste kontekstis nimetatakse neid tüüpiliselt **latentseteks muutujateks**. Aga mudelisse saab lisada veel muid vaadeldud muutujaid (mis ei osale latentsete muutujate defineerimises) ja uurida muutujatevahelisi regressioonseoseid.   
-Kinnitav faktoranalüüs on selline struktuurivõrrandite mudel, mis sisaldab ainult latentsete muutujate osa ja milles puuduvad regressioonseosed. Samas saab teha ka sellise mudeli (nn teeanalüüs, ingl k *path analysis*), mis sisaldab ainult vaadeldud muutujaid ja nende vahelisi regressioonseoseid ilma igasuguste latentsete muutujateta. Selles praktikumis kasutame R-i lisamoodulit *lavaan* (nimetus tuleb sõnadest *latent variable analysis*).
-
-```{r, warning= F, message=F, eval = F}
-install.packages("lavaan")
+Vaatame alustuseks suheliselt lihtsat faktormudelit, mille puhul teame, et sellel on 2-faktoriline struktuur. Laadige R'i andmestik nimega *bfi*.
+```{r}
+bfi <- read.csv("KMKT/6praktikum/bfi.csv")
 ```
 
-Kasutame esialgu lavaani mooduliga kaasa tulevat klassikalist näidisandmestikku nimega *HolzingerSwineford1939*, mis sisaldab 7. ja 8. klassi õpilaste kohta üheksat vaimse võimekuse alatesti skoori. Laadime lavaani lisamooduli ja vaatame andmestiku esimesi ridu.
+See andmestik on kaasas lisamooduliga *psych*. Tegemist on 2800 inimese vastustega 25-le Suure Viisiku isiksuseomadusi puudutavele väitele. Väited ise on ära toodud tabelis nimega *bfi.dictionary*. (Lisamoodulis paiknevaid näidisandmestikke pole RStudio Environment-paneelis näha, aga neid saab näha kirjutades tabeli nime konsoolile.) Jätame alles kümne esimese väite andmed, mis puudutavad kahte isiksuseomadust: sotsiaalsust ja meelekindlust.
 
-```{r, warning=F, message= F}
-library(lavaan)
-head(HolzingerSwineford1939)
+```{r}
+bfi2 <- bfi[,1:10]
 ```
 
-Nagu näha kannavad meid huvitavad muutujad nimesid x1 kuni x9, mis meile kuigi palju ei ütle. Alloleva käsu abil peaks RStudio akna alumises parempoolses osas avanema andmestiku täpsem kirjeldus, milles on ära toodud alatestide sisu.
+## Liiga nõrgad ja liiga tugevad seosed
+Faktoranalüüsi alguspunktiks on analüüsi kaasatavate muuutjate vaheliste korrelatsioonide maatriks. Mõistliku faktorlahendi eelduseks on paraja tugevusega korrelatsioonide kogumid maatriksis. See tähendab, et muutujad, mis seostuvad teistega liiga nõrgalt või liiga tugevalt, võivad osutuda probleemseks. **Bartletti test** näitab, kas maatriksis on liiga palju nõrku korrelatsioone. (Täpsemalt öeldes võrdleb see korrelatsioonimaatriksit sellise maatriksiga, millel on väljaspool peadiagonaali nullid.) Bartletti testi saab kasutada *psych* mooduli funktsiooni *cortest.bartlett* abil.
 
-```{r, eval =F}
-help(HolzingerSwineford1939)
+```{r}
+cortest.bartlett(bfi2)
 ```
-Selle käsu jooksutamine peaks avama *Help* akna selle andmestiku kirjeldusega. Seal on ära toodud ka muutujate nimed:  
+
+Praegusel juhul on p-väärtus alla 0.05. P-väärtus üle 0.05 näitab probleeme nõrkade korrelatsiooniseoste rohkusega. Sellisel juhul tuleks vaadata korrelatsioonimaatriksit ennast ning katsuda üles leida muutujad, mille puhul esineb vaid üksikuid korrelatsioone väärtusega üle 0.3-e. Nende muutujate puhul tuleks kaaluda faktoranalüüsist välja jätmist. Korrelatsioonimaatriksi saab funktsiooni *cor* abil (mille argument *use="complete"* jätab arvutustest välja puuduvate väärtustega andmeread). Funktsioon round selle ümber aitab ümmardada korrelatsioonikordajad kahe komakohani.
+```{r}
+bfi2matrix <- round(cor(bfi2, use="complete"), 2)
+bfi2matrix
+```
+
+Korrelatsioonimaatriksi determinandi abil saame uurida vastupidise probleemi ehk liiga tugevate korrelatsioonide esinemist.
+
+```{r}
+det(bfi2matrix)
+```
+
+Probleeme multikollineaarsusega (ehk liiga tugevate muuutjate vaheliste seostega) näitab determinandi väärtus alla $0.00001-e$ (ehk $10^{-5}$). Kui probleemne multikollineaarsus siiski kinnitust leiab, tuleks korrelatsioonimaatriksist üles otsida kordajad üle 0.9 ja üks vastavatest muutujatest välja jätta. Vahel võib probleeme valmistada ka olukord, kus 3 muutujat korreleeruvad kõik omavahel 0.6 kanti.
+
+## Faktormudeli koostamine  
+Faktoranalüüsi siseselt olemas erinevaid faktorite leidmise meetode. Üheks peamiseks valikukriteeriumiks võiks olla, kas me soovime üldistada leitavat faktorstruktuuri suuremale populatsioonile (eeldusel, et meie valim koosneb populatsioonist juhuslikult valitud inimestest) või piirduda ainult selle valimiga, mille peal arvutusi tegema hakkame. Populatsioonile üldistamist võimaldavatest on tuntuim suurima tõepära (*maximum likelihood*) meetod. Kui üldistamise vajadust pole, võib kasutada peatelgede meetodi (*principal axis*) või eelmainitud peakomponentide analüüsi. Peatelgede meetodi soovitatakse eelistada ka siis, kui analüüsi kaasatavates andmetes esineb normaaljaotusest kõrvalekalduvaid muutujaid.
   
-- id - Identifier  
-- sex - Gender  
-- ageyr - Age, year part  
-- agemo - Age, month part  
-- school - School (Pasteur or Grant-White)   
-- grade - Grade  
-- x1 - Visual perception  
-- x2 - Cubes  
-- x3 - Lozenges  
-- x4 - Paragraph comprehension  
-- x5 - Sentence completion  
-- x6 - Word meaning  
-- x7 - Speeded addition  
-- x8 - Speeded counting of dots  
-- x9 - Speeded discrimination straight and curved capitals  
+Teeme *psych* mooduli funktsiooni *fa* abil 2-faktorilise mudeli kasutades faktorite leidmiseks suurima tõepära meetodi ja faktorite pööramiseks varimax-meetodi. Laseme välja arvutada ka faktorskoorid. Salvestame mudeli nimega *fa.mudel1*.
 
-#Näide 1. Kinnitava faktoranalüüsi mudeli rakendamine  
-Lavaani mooduli funktsioonidega tutvumiseks teeme alustuseks suhteliselt lihtsa **kinnitava faktoranalüüsi mudeli**, milles üheksa vaadeldud muutuja abil defineerime 3 latentset muutujat (faktorit). Antud juhul on tegemist suhteliselt lihtsa mudeliga, aga tihti võivad mudelid minna üsna keeruliseks. Sellest tulenevalt on reeglina mõistlik enne andmete analüüsimise kallale asumist teha mudelisse kaasatavate muutujate vaheliste seoste kohta skeem (nt paberi peal). Praegusel juhul näeks mudeli diagramm välja järgnev.
+```{r}
+fa.mudel1 <- fa(bfi2, nfactors=2, rotate="varimax", fm="ml", scores=TRUE)
+```
 
-<div style="width:400px; height=400px">
-![Joonis 1. ](KMKT/6praktikum/plot1.png)
-</div>
+Funktsiooni *fa* esimeseks argumendiks on tabeli nimi, milles paiknevad toorandmed. ülejäänud funktsiooni *fa* argumendid tähendavad järgmist:
+
+* *nfactors* - faktorite arv.  
+* *fm* - faktorite leidmise meetod. *fm=ml* suurima tõepära meetod (mõistlik kui soovida üldistada faktorstruktuuri antud valimilt tervele populatsioonile), *fm=pa* peatelgede meetod (järeldused piiratud antud valimiga).  
+* *rotate* - kas pöörata faktorlahendit ja millise meetodiga. *rotate= none* jätab pööramata, *rotate=varimax* pöörab faktoreid ortogonaalselt, *rotate= oblimin* pöörab faktoreid kaldnurkselt
+(see on vaikimisi väärtus).  
+* *scores* - kui soovime arvutada faktorskoore, tuleks sellele argumendi väärtuseks märkida *scores=TRUE*.  
 
 
-Jooniselt on näha, et vaadeldud muutujad x1-x3 mõõdavad latentset muutujat nimega *visual*, x4-x6 latentset muutujat nimega *textual* ja x7-x9 latentset muutujat nimega *speed*. Vastavalt tavale tähistavad SEM-i diagrammidel nelinurgad **vaadeldud muutujaid** ja ringid või ellipsid **latentseid muutujaid**. Latentsete muutujate vahelised kaared tähistavad nendevahelisi korrelatsioone. Väikesed noolekesed muutujate juures tähistavad dispersioone, mis samuti kuuluvad mudeli poolt välja arvutatavate parameetrite hulka. Vaadeldud muutujate puhul on tegemist jääkdispersiooniga ehk selle osaga muutuja variatiivsusest, mis ei ole määratud latentse faktori poolt. Latentsetele muutujatele on vaja anda ka skaala ja selleks fikseeritakse iga faktori puhul ühe sellele laaduva vaadeldud muutuja laadung. Seda tähistavad number 1-d mõne noole juures.
+Faktoranalüüsile võib toorandmete asemel ette anda ka korrelatsioonimaatriksi ja osalejate arvu (st toorandmete ridade arvu). See variant tuleb kasuks väga suurte andmestike korral (rohkem kui 100 000 rida), mille puhul toorandmetega faktoranalüüs võib kujuneda üsna ajamahukaks. Kuna me oleme eelnevalt salvestanud korrelatsioonimaatriksi nimega "bfi2matrix"", siis praegusel juhul annaks allolev koodirida sama tulemuse kui ülaltoodud. Selle lähenemise puuduseks on aga, et vastajate kohta ei saa arvutada faktorskoore, mis näitavad vastaja asukohta faktoril ja mida on võimalik kasutada mingites edasistes arvutustes.
 
-  
-Mudeli diagramm aitab ka hinnata, kas analüüsi kaasatavas andmestikus on piisavalt infot, et arvutada välja kõik need mudeli parameetrid, mida meil vaja läheb. Jooniselt saame kokku lugeda, et meil on vaja hinnata 6 faktorlaadungit (9 vaadeldavat muutujat miinus need 3, mille laadungid on fikseeritud), 3 korrelatsiooni ja 12 dispersiooni. See teeb kokku 21 parameetrit. Maksimaalne parameetrite arv sõltub mudelisse kaasatavate vaadeldud muutujate arvust ja seda saab arvutada valemi p(p+1)/2 abil, milles "p" on mudelisse kaasatavate vaadeldud muutujate arv. Praegusel juhul anname mudelile ette 9 muutujat ja  sellest tulenevalt maksimaalne vabade parameetrite arv mudelis oleks $9(9+1)/2=45$. Järelikult pole antud juhul meil probleemi sellega, et tahaksime mudelil lasta hinnata liiga suurt arvu vabu parameetreid. 
+```{r, eval = F}
+#Faktoranalüüs korrelatsioonimaatriksiga
+fa.mudel1.maatriksiga <- fa(bfi2matrix, n.obs=2800, nfactors=2, rotate="varimax", fm="ml")
+```
 
-SEM eeldab ka, et analüüsi kaasatavad muutujad oleksid normaaljaotusega ja et nad ei oleks liiga tugevalt seotud (ühte meetodi multikollineaarsuse kindlakstegemiseks vaatasime eelmises praktikumis). Lisaks sellele võib SEM-i puhul probleeme tekitada see, kui analüüsi kaasatavad muutujad on väga erinevatel numbrilistel skaaladel (nt mõned muutujad ühekohalised komakohtadega arvud ja teised kolmekohalised arvud). Erinevalt uurivast faktoranalüüsist, mis teostab arvutusi standardiseeritud korrelatsioonikordajate peal, kasutab SEM kovariatsioonikordajaid, mis sisaldavad infot ka muutujate skaala kohta. Väga erinevate suurusjärkude korral tasub korrutada või jagada mõned muutujad mingi koefitsiendiga, et kõik muutujad oleksid enam-vähem sarnastes suurusjärkudes. ühe- ja kolmekohaliste arvudest koosnevate muutujate näite puhul saab ühekohalised muutujad korrutada läbi 100-ga.
+# Peakomponentide analüüs
+Peakomponentide analüüsi saab teha funktsiooni *principal* abil. Selle argumendid on samad mis funktsioonil *fa* (välja arvatud puuduv faktorite leidmise meetodi argument *fm*). Ülaltoodud faktoranalüüsi mudelile analoogse peakomponentide mudeli saaksime teha nii:
+```{r}
+pc.mudel1 <- principal(bfi2, nfactors=2, rotate="varimax", scores=TRUE)
+```
 
-#Mudeli kirjeldamine
-Järgnevalt peaksime mudeli viima R-ile ja lavaanile arusaadavale kujule. Võimalik, et teil on varasemast praktikumist meeles, kuidas käis mudelite kirjeldamine lineaarsete mudelite puhul funktsioonis *lm*. Lavaani mudeli kirjeldamise süntaks on sellele üsna sarnane.  
 
-**1.** regressioonseose tähistus  
-$sõltuv muutuja \sim sõltumatu.muutuja$
- 
-**2.** Latentse muutuja defineerimine (kus x1, x2 ja x3 on latentsele tunnusele laaduvad vaadeldud muutujad):   
 
-$latentne.muutuja =\sim x1 + x2 + x3$
+# Faktormudeli väljund
+Faktormudeli *fa.mudel1* väljundi saame kätte sellesama nime abil. Samas on ehk natuke kavalam kasutada funktsiooni *print.psych*, millele saame argumendi *cut* abil anda piirväärtuse, millest väiksemad faktorlaadungid ära peidetakse. Mitteoluliste laadungite peitmine teeb faktormudeli tõlgendamise reeglina lihtsamaks. Peidame ära 0.3-st väiksemad laadungid. Samuti saame argumendi *sort=TRUE* abil reastada laadungid faktorite siseselt suuruse järgi.
 
-**3.** Muutujate-vahelise korrelatsiooni saame mudelisse kahekordse tilde abil: 
+```{r}
+print.psych(fa.mudel1, cut=0.3, sort=TRUE)
+```
+
+Väljundis on esimesena näha **faktorlaadungite** tabel (Standardized loadings...). Laadung näitab väite ja faktori vahelise korrelatsioonikordaja väärtust (kaldnurkse pööramise korral regressioonikordaja). Iga väite/muutuja puhul tuleks vaadata, millisele faktorile see tugevalt laadub. Rusikareegilina võib oluliseks pidada laadungit absoluutväärtusega $0.3-0.4$ (sõltuvalt valimi suurusest). Seejärel tuleks faktoreid tõlgendada. Faktorite tähendus moodustub neile tugevalt laaduvatest muutujatest. Mis on ühele faktorile tugevalt laaduvate muutujate ühisosa? Antud juhul näeme, et sotsiaalsusega seotud väidete (tunnused A1-A5) suuremad laadungid ongi koondunud ühte faktorisse ja meelekindluse väited (C1-C5) teise faktorisse. Mida suurem laadungi absoluutväärtus, seda olulisem on muutuja faktori tõlgendamisel. Arvesse tuleks võtta ka faktorlaadungi märki. Nt väide A1 seostub faktoriga negatiivselt (tabelist bfi.dictionary võib näha, et väite sisu on *Am indifferent to the feelings of others*), samas kui nt A2 (*Inquire about others' well-being*) seostub faktoriga positiivselt. Sarnane on lugu ka meelekindluse väidete puhul. Väited C4 (*Do things in a half-way manner*) ja C5 (*Waste my time*) seostuvad faktoriga negatiivselt, samas kui ülejäänud väited positiivselt.
+
+
+Lisaks laadungitele on tabeli paremas servas veel paar tulpa. Tulbas nimega *h2* paiknevad **kommunaliteedid**, mis näitavad kui suure osa muutuja variatiivususest faktorid summaarselt ära kirjeldavad. Kui mõne väite kommunaliteet on teistest oluliselt väiksem, tasub kaaluda selle analüüsist välja jätmist, kuna pole teistega lineaarselt seotud. Tulbas *u2* olevad arvud näitavad iga muutuja unikaalse variatiivsuse hulka (st nad on see osa tunnuse varitiivsusest, mis kommunaliteedist üle jääb). Funktsiooni *fa* väljundis on laadungite tabelil veel üks tulp *com* (ehk *complexity*, keerukus). Näitaja iseloomustab faktorite arvu, mida antud faktorlahendis muutuja kirjeldamiseks vaja läheb. Allpool on ära toodud ka keskmine keerukus, mida saab kasutada erinevate faktormudelite võrdlemiseks. Kuna me tahame, et faktorstruktuur oleks võimalikult lihtne (st iga muutuja seostuks ainult ühe faktoriga), siis mida lähemal on keskmine keerukus 1-le, seda parem faktormudel.
+
+
+Faktorlaadungite tabeli all näeme faktorite **omaväärtusi** (*SS loadings ehk sum of squared loadings*). Samuti näeme, kui suure osa andmete hajuvusest iga faktor seletab (*Proportion Var*) ja kui suure osa faktorite poolt seletatavast hajuvusest mingi faktor seletab(*Proportion Explained*). Lisaks on kaks viimast näitajat ära toodud ka kumulatiivselt. Kui tahame teada, kui suure osa andmete hajuvusest antud mudeli faktorid ära kirjeldavad, tuleks vaadata rea *Cumulative var* kõige parempoolsemat väärtust.
+
    
-$muutuja1 \sim \sim  muutuja2$
+Omaväärtuste ja seletusprotsentide tabelist allapoole on ära toodud veel mudeli sobitusastme näitajad.
+Funktsiooni *fa* puhul on näitajaid oluliselt rohkem, kui funktsiooni *principal* puhul. Näitaja *Fit based upon off diagonal values* põhineb mudeli jääkide ja tegelike korrelatsioonide suhtelise suuruse võrlemisel. Jäägid kujutavad endast mudeli järgi taastatud korrelatsioonimaatriksi ja tegeliku korrelatsioonimaatriksi vahelisi erinevusi. Antud näitaja on saadud jagades jääkide ruutsumma tegelike korrelatsioonide ruutsummaga ja lahutades saadud arvu 1-st. Väärtused üle 0.95-e näitavad mudeli head sobitusastet.
 
-Neid kolme tüüpi seoseid läheb mudelite kirjeldamisel kõige sagedamini vaja. Antud juhul näeks meie 3-faktoriline mudel välja järgnev:
 
+# Faktorite pööramine: ortogonaalne ehk täisnurkne ja kaldnurkne
+Pööramise eesmärgiks on saavutada võimalikult lihtne faktorstruktuur, kus iga muutuja laaduks tugevalt ainult ühele faktorile ja teistele nõrgalt. Matemaatiliselt pööramine faktorlahendi põhiolemust ei muuda: summaarne seletusprotsent ja tunnuste kommunaliteedid jäävad samaks. Kuid faktorlahend muutub lihtsamini tõlgendatavaks ja omaväärtused jaotuvad faktorite vahel ühtlasemalt. Teeme uue faktormudeli, mille jätame pööramata ja vaatame praegu ainult selle laadungeid.
 ```{r}
-mudel1 <- "
-visual =~ x1 + x2 + x3
-textual =~ x4 + x5 + x6
-speed =~ x7 + x8 + x9"
+fa.mudel2 <- fa(bfi2, nfactors=2, rotate="none")
+fa.mudel2$loadings
 ```
 
-Mudeli kirjeldus peab paiknema jutumärkide (või ülakomade) vahel ja iga mudeli valem omaette real. Pikemate mudelite korral on vahel selguse huvides kasulik mudelit liigendada, jättes valemite vahele tühje ridu või kommentaare. Nagu mujalgi R-i koodis on kommentaarid "#" sümboliga algavad read.
+Nagu näha laaduvad pea kõik väited kõige tugevamalt esimesele faktorile ja samuti kalduvad mitmed
+väited laaduma üsna võrdselt mõlemale faktorile. Sellist olukorda on keeruline tõlgendada.
 
-#Mudeli väljund
-Olles mudeli ära kirjeldanud saame sobitada mudeli oma andmetele kasutades funktsiooni *cfa* (nagu *confirmatory factor analysis*), millele anname ette mudeli kirjelduse ja argumendi *data* abil tabeli nime, millest vastavaid muutujaid otsida.
-
-```{r}
-fit1 <- cfa(mudel1, data=HolzingerSwineford1939)
-```
-
-Seejärel saame funktsiooni *summary* abil uurida mudeli väljundit. Lavaani mudelite puhul tasub enamasti funktsiooile *summary* anda veel 2 argumenti: *fit.measures=TRUE* annab meile lisaks hii-ruudule veel täiendavaid mudeli sobitusastme näitajaid, ning *standardized=TRUE* annab lisaks standardiseerimata mudeli koefitsientidele meile need ka standardiseeritud kujul. (Reeglina huvitavadki meid rohkem standardiseeritud kordajad.)
+Eristatakse kahte tüüpi pööramist: ortogonaalset ehk täisnurkset ja mitteortogonaalset ehk kaldnurkset.
+Enne pööramist on faktorid sõltumatud, nad ei ole omavahel korreleeritud. **Ortogonaalne pööramine** jätabki olukorra selliseks. Faktorite vahelised korrelatsioonid ei ole lubatud ja kõiki faktoreid pööratakse ühepalju. **Kaldnurkse pööramise** puhul on faktorite vahelised korrelatsioonid lubatud ja iga faktorit võib pöörata erineval määral. Otsus kumba pööramist eelistada, peaks tuginema eelkõige teoreetilistele kaalutlustele.
+Kui me eeldame, et faktorid peaksid olema üksteisest sõltumatud, tuleks eelistada ortogonaalset
+pööramist. Kui aga teooria ütleb, et faktorid on omavahel korreleeritud, on mõistlik valida kaldnurkne pööramine. Esimese mudeli puhul kasutasime pööramiseks ortogonaalset *varimax* meetodi. Teeme veel ühe faktormudeli kasutades seekord pööramiseks kaldnurkset *oblimin* meetodi ja vaatame selle väljundit. Kaldnurkse pööramise puhul on omaväärtuste ja seletusprotsentide tabeli all näha faktoritevaheliste korrelatsioonide tabel (*With factor correlations of*)
 
 ```{r}
-summary(fit1, fit.measures=TRUE, standardized=TRUE)
+fa.mudel3 <- fa(bfi2, nfactors=2, rotate="oblimin", fm="ml")
+print.psych(fa.mudel3, cut=0.3)
 ```
 
-Mudeli väljundi ülaosas on näha valimi suurus ning hii-ruut-statistik (*Minimum Function Test Statistic*) koos vabadusastmete arvu ja p-väärtusega. Hii-ruut testib antud juhul nn täpse sobitumise hüpoteesi, mille kohaselt ei erine mudeli põhjal arvutatud kovaritasioonimaatriks andmestiku põhjal arvutatud kovariatsioonimaatriksist. **Me tahame, et hii-ruut oleks võimalikult väike ja p-väärtus võimalikult suur.** Kui me tüüpiliselt tahame, et p-väärtus oleks alla 0.05-e, siis praegu tahame, et see oleks 0.05-st suurem. Hii-ruudu puhul tuuakse sageli välja, et see on tundlik valimi suuruse suhtes: suurte valimite korral kipub p-väärtus isegi heade mudelite korral jääma < 0.05. Arvamused lähevad lahku, kui suurt valimit lugeda antud juhul suureks: mõnede arvates esineb seda probleemi alles tuhandetesse küündivate valimite puhul, teiste arvates võib see hakkata rolli mängima kohe kui valimi suurus ületab paarisaja inimese piiri. üsna kindel on aga see, et paarisaja osalejaga valimite puhul see probleemiks olla ei tohiks. Praegusel juhul näitab hii-ruut, et mudel andmetele kuigi hästi ei sobi. 
+Nagu näha on esimese ja teise faktori vaheline korrelatsioon 0.32. Faktorite-vahelist korrelatsiooni 0.3 peetakse üldiselt piiriks, millest ülespoole on mõistlik kasutada kaldnurkset pööramist. Paistab, et praegusel juhul võiks selle kasutamine olla üsna õigustatud.
+
+
+# Faktorskoorid
+Kui me ülalpool tegime mudeli nimega *fa.mudel1*, tellisime funktsioonilt *fa* ka faktorskooride arvutamise. Skoorid näitavad, kus iga vastaja antud faktoril paikneb. Skooride arvutamiseks kasutatakse inimeste vastuseid väidetele ja faktorlaadungeid. ülimalt lihtsustades võib öelda, et inimese faktorskoor saadakse korrutades iga väite vastuse selle väite laadungiga ning need korrutised liidetakse kokku. (Tegelikkuses on arvutused natuke keerulisemad. Kõigepealt arvutatakse välja faktorskoori koefitsiendid, mis saadakse laadungite maatriski korrutamisel algse korrelatsioonimaatriksi pöördmaatriksiga ning neid koefitsiente hakatakse siis korrutama ja kokku liitma.)
+
+
+Faktorskoore saab kasutada edasistes arvutustes, nt võime uurida, kas faktor seostub mingite teiste muutujatega. Skoorid saame mudelist kätte lisades mudeli nime lõppu dollari märgi ja *scores*. Salvestame skoorid eraldi tabelisse ja vaatame esimesi ridu.
+```{r}
+skoorid <- data.frame(fa.mudel1$scores)
+head(skoorid)
+```
+
+R on pannud faktoritele mittemidagiütlevad nimed ML2 ja ML1. Eelnevalt nägime faktorlaadungite
+tabelist, et esimesele faktorile laadusid tugevamalt meelekindluse väited ja teisele sotsiaalsuse väited. Nimetame selguse huvides faktorid ümber: paneme meelekindluse faktorile nimeks C (nagu *Conscientiousness*) ja sotsiaalsuse faktorile A (nagu *Agreeableness*).
+```{r}
+colnames(skoorid) <- c("C", "A")
+```
+
+### Ülesanne 1
+Andmestikus nimega *bfi*, millest andmed algselt pärinesid, on olemas ka info vastajate soo ja vanuse kohta. Vaadake t-testi abil, kas meeste ja naiste sotsiaalsuse skoorid erinevad.
+(Vihje: skoorid on tabelis nimega A) 
+
+```{r, echo = F, eval = F}
+t.test(skoorid$A ~ bfi$gender)
+```
+
+Erinevus on statistiliselt oluline. T-testi väljundi kahelt viimaselt realt näeme, et numbriga 1 kodeeritud grupi keskmine sotsiaalsuse skoor on u -0.25 ja numbriga 2 tähistatud grupi keskmine skoor on u 0.11 ehk kõrgem. Tabelist bfi.dictionary võime näha, et väärtus 1 tähistab muutuja *gender* puhul mehi ja väärtus 2 naisi. 
+
+### Ülesanne 2
+Uurige regressioonimudeli abil, kas sotsiaalsuse skoorid seostuvad vastaja vanusega.
+```{r, echo =F, eval =F}
+summary(lm(skoorid$A ~ bfi$age))
+```
+
+
+# Vahelepõige: Cronbachi alfa
+Faktoranalüüsi kasutatakse eriti sageli küsimustikuandmete analüüsimiseks. Kui oleme kindlaks teinud, millised väited mingile faktorile laaduvad, tahame vahel arvutada küsimustiku alaskaalade kohta ka reliaablusnäitajaid nagu Cronbachi alfa. Selle jaoks on *psych* moodulis olemas funktsioon alpha, millele tuleks ette anda alaskaala väidete toorandmed. Näiteks praegusel juhul teame, et sotsiaalsuse väited paiknevad tabeli *bfi2* tulpades 1-5 ja sotsiaalsuse alaskaala alfa saaksime nii:
+```{r}
+alpha(bfi2[,1:5])
+```
+
+
+üldjuhul saab programm ise aru, kui alaskaala mõnede väidete vastused seostuvad teistega negatiivselt ja võtab seda arvesse. Aga kindluse mõttes võime funktsioonile alpha argumendi *keys* abil ette anda ka väidete suuna. Tagurpidi väiteid tähistab -1 ja õiges suunas väiteid 1.
+```{r}
+alpha(bfi2[,1:5], keys=c(-1, 1, 1, 1, 1))
+```
+
+Väljundi ülaosas olev *raw* alpha ongi sotsiaalsuse alaskaala Cronbachi alfa. Tabelis *Reliability if an item is dropped* on näha, mis juhtuks skaala alfaga, kui väide välja jätta. Kui selles on näha väiteid, mille alfa väärtus on suurem kui terve skaala oma, siis nende välja jätmine parandaks skaala üldist reliaablust.
+
+
+# Faktorite arvu määramine
+Kaks tuntumat faktorite arvu määramise kriteeriumit on Kaiseri ja Cattelli kriteerium.   
+**Kaiseri kriteerium** (mida võib üldiselt pidada neist halvemaks ja sobivaks eelkõige peakomponentide analüüsi puhul) ütleb, et alles tuleks jätta sama palju faktoreid, kui on ühest suuremaid omaväärtusi. Ainult omaväärtused saame faktormudelist kätte lisades mudelinime lõppu dollari märk ja *values*.
+```{r}
+fa.mudel1$values
+```
+
+**Cattelli kriteerium** ütleb, et alles tuleks jätta faktorid, mis jäävad omaväärtuste graafikul nn jõnksupunktist ülespoole. Kriteeriumi hindamiseks vajaliku faktormudeli omaväärtuste graafiku saame teha andes omaväärtused ette funktsioonile plot. Funktsiooni argument type = b  (b nagu *both*) ütleb, et tahame joonisele nii omaväärtusi tähistavaid punkte, kui ka neid ühendavaid jooni.
+```{r}
+plot(fa.mudel1$values, type="b")
+```
+
+R-is saame faktorite arvu määramiseks kasutada *psych* mooduli funktsiooni *fa.parallel* abil ka **paralleelanalüüsi**. Seda meetodi peetakse üldiselt paremaks kui Kaiseri ja Cattelli kriteeriumi. Meetod genereerib juhuslikult teatud hulga sama suuri andmestikke ja võrdleb nende omaväärtusi meie poolt analüüsitava andmestiku omaväärtustega. Alles jäetakse faktorid, mille omaväärtused on suuremad kui juhuslikult genereeritud andmestike omaväärtused.
+```{r}
+fa.parallel(bfi2)
+```
+
+Nagu näha, soovitab paralleelanalüüs meile faktorite arvuks 4. Samas kui vaatame paralleelanalüüsi funktsiooni poolt tehtud joonist, näeme, et 3. ja 4. faktori omaväärtused (vaadata tuleks praegusel juhul alumist joontest) ületavad kriitilist punktiirjoont vaid üsna napilt. Seega nende lisamine annaks mudelile seletusjõudu juurde vaid üsna vähe. Faktorite arvu määramisel tuleks arvestada ka faktorite tõlgendatavusega.
+Halvasti tõlgendatavatest faktoritest pole reeglina hiljem palju kasu. Paremini tõlgendatav
+väiksema faktorite arvuga mudel on eelistatavam kui suurema faktorite arvuga halvemini tõlgendatavam mudel, millel samas võivad olla paremad sobitusastme näitajad.
+
+## Ülesanded 3
+Lugege R'i andmefail nimega "omadused". Selles sisalduvateks tunnusteks on 159 inimese enesekohased hinnangud 16-le omadusele, lisaks on tabelis ära toodud vastaja vanus.
   
-Järgnevalt on ära toodud täiendavad sobitusastme näitajad, mida me funktsioonilt *summary* tellisime argumendi *fit.measures abil*. Sobitusastme näitajad võib laias laastus jagada kahte rühma: lisanduva sobitusastme indeksid (*incrementalt indices*) ja absoluutse sobitusastme indeksid (*absolute fit indices*). Esimesed mõõdavad sobitusastme paranemist võrreldes sellise mudeliga, milles vaadeldud muutujate vahelised korrelatsioonid puuduvad. Teised mõõdavad, kui hästi suudab meie poolt koostatud mudel taastada tegelike andmete põhjal arvutatud kovariatsioonimaatriksi. Lisanduva sobitusastme indeksistest on väljundis toodud TLI (*Tucker-Lewis index*) ja CFI (*comparative fit index*). Nende puhul näitavad mudelis head sobitusastet väärtused 0.95 ja üles. Absoluutse sobitusastme indeksitest on ära toodud RMSEA (*root mean square error of approximation*) ja SRMR (*standardized root mean square residual*), mille puhul head sobitusastet näitavad väärtused 0.05 ja alla. RMSEA puhul on ära toodud ka 90\% usalduspiirid. Hea mudeli korral oleks alumine piir alla 0.05 ja ülemine mitte üle 0.10. Ka kõigi nende näitajate põhjal võime öelda, et sellisel kujul antud mudel andmetega ei sobi.
+1. Uurige Bartletti testi ja korrelatsioonimaatriksi determinandi abil, kas andmestikul on probleeme liiga nõrkade või liiga tugevate muutujatevaheliste seoste rohkusega. (Kuna soovime faktoranalüüsi kaasata ainult omaduste hinnangud ja mitte vastaja vanust, oleks mõistlik vanus välja jätta. Seda saab teha andes funktsioonidele ette mitte terve tabeli omadused vaid tabeli ilma 17. tunnuseta: omadused[,-17])
+```{r}
+omadused <- read.csv("KMKT/6praktikum/omadused.csv")
+```
 
-Sobitusastme indeksite järel tuleb viimasena tabel mudeli parameetrite hinnangutega. Tabelis on kõigepealt toodud fakorlaadungid (alajaotus *Latent variables*), seejärel faktorite vahelised seosed (alajaotus *Covariance*) ja dispersioonid (*Variances*). Standardiseerimata parameetrid on tulbas nimega *Estimates* ja standardiseeritud parameetrid tulbas nimega *Std.all*. Lisaks sellele on tabelis toodud ka standardvead (*Std.err*), z-väärtused (mis on standardiseerimata parameeter jagatuna st.veaga) ning p-väärtused. (Tulbas *Std.lv* on parameetrite väärtused, siis kui standardiseerida ainult latentsed muutujad).
 
-Nagu näha on muutujate x1, x4 ja x7 standardiseerimata laadung 1.000 ja mõned näitajad on neist ridadest puudu. See tuleb sellest, struktuurivõrrandite mudelite puhul tuleb latentsele muutjale anda skaala. Kõige sagedamini kasutatav võimalus selleks on anda mõne laaduva vaadeldud muutuja skaala fikseerides selle sandardiseerimata laadungi 1-ga. Lavaan on seda automaatselt teinud, fikseerides iga latentse muutuja puhul esimese indikaatori standardiseerimata laadungi. Kuidas parameetreid tõlgendada? Standardiseerimata laadungid on tõlgendatavad regressioonikoefitsientidena. Kui muutuja x2 standardiseerimata laadung faktorile visual on 0.554 siis võib faktori väärtuse 1-punktilise suurenemise korral oodata, et x2 suureneb 0.554 punkti võrra.
+```{r}
+bfom <- omadused[,-17]
+cortest.bartlett(bfom)#bartlett test näitab, kas maatriksis on liiga palju nõrku korrelatsioone; p-väärtus üle 0.05
+#näitab, et nõrkade korrleatsiooniseoste rohkust - probleeme selle rohkusega
+#Vaatame ka korrelatsioonimaatriksit - nt, kui on näha, et on probleeme, siis tasub cor() abil nõrgad seosed üles otsida:
+#cor(na.omit(bfom))
+ommatrix <- round(cor(bfom, use="complete"), 2)
+ommatrix
 
-Ainult ühele faktorile laaduvate vaadeldud muutujate puhul võib standardiseeritud laadungeid tõlgendada faktori ja muutuja vahelise korrelatsioonikordajana. Nagu korrelatsioonikordaja puhul ikka saame seda ruutu võttes kindlaks teha kui suure osa tunnuse variatiivsusest seos ära määrab. Tunnuse x2 puhul on korrelatsioon faktoriga visual 0.424 ja faktor määrab ära 0.42422=0.179 ehk umbes 18 protsenti tunnuse x2 variatiivsusest. Muutujate puhul, mis laaduvad rohkem kui ühele faktorile (praeguses mudelis meil selliseid pole) ei saa standardiseeritud laadungeid tõlgendada korrelatsioonikordajatena vaid standardiseeritud regressioonikordajatena, mille puhul hoitakse korreleeritud faktoreid kontrolli all. Neid ruutu võttes ei saa kindlaks teha seletatava variatiivsuse osakaalu.   
+#multikolineaarsuse testimine: 
+det(ommatrix)# korrelatsioonimaatriksi determinandi abil saame uurida vastupidise probleemi ehk liiga tugevate
+# korrelatsioonide esinemist
+# Probleemi olemasolu näitab deteminandi väärtus alla 0.00001-e.
+```
 
-Alajaotuses *Covariances* olevad standardiseerimata parameetrid kujutavad endas faktorite vahelisi kovariatsioonikordjaid ja standardiseeritud parameetrid korrelatsioonikordajaid. Antud mudeli puhul võib näiteks näha et faktori visual korrelatsioon faktoriga textual on 0.459 ja faktoriga speed 0.471. Vaadeldud muutujate puhul näitavad dispersioonid (*Variances*) standardiseeritud kujul seda osa tunnuse variatiivsusest, mida faktor ei seleta. Nt tunnuse x2 puhul ei suuda faktor visual seletada tervelt 82.1 protsenti variatiivsusest. 
   
-    
-Parameetrite tabeli puhul tasub ka kontrollida, et ei esineks negatiivseid jääkdispersioone ja standardiseeritud parameetreid absoluutväärtusega > 1. Selliseid väärtusi ei ole võimalik tõlgendada ja nende esinemine annab märku probleemidest mudeli või andmetega (nt liiga väike valim või liiga tugevalt korreleeritud muutujad).  
-Mudeli väljundit saab tellida ka osade kaupa. Seda võib vaja minna näiteks siis kui soovime teada saada mõnda sellist sobitusastme näitjat, mida funktsioon *summary* välja ei trükkinud. Nt üks suhteliselt sageli raporteeritav sobitusastme näitaja on GFI (*goodness of fit index*, hea väärtus 0.95 ja üles). Selle ja suure hulga muid sobitusindekseid saame kätte funktsiooni *fitMeasures* abil:
-
-```{r, eval = F}
-fitMeasures(fit1)
-```
-
-
-Aga eraldi saab tellida ka standardiseerimata parameetrite hinnanguid...
-
-```{r, eval = F}
-parameterEstimates(fit1)
-```
-
-... ja standardiseeritud hinnanguid.
-
-```{r, eval = F}
-standardizedSolution(fit1)
-```
-
-Kui mudel andmetega ei sobi, siis üks võimalus probleeme diagnoosida, on vaadata mudeli jääkide maatriksit. Jäägid kujutavad endast erinevusi tegelike andmete põhjal arvutatud ja mudeli põhjal taastatud kovariatsioonikordajate vahel. Jääke, mida struktuurivõrrandite mudelite puhul uurida saab, on erinevat tüüpi. Vaatame selliseid, mida nimetatakse **korrelatsioonijääkideks** (ehk siis kovariatsioonikordajad arvutatakse ümber korrelatsioonideks, mida on lihtsam tõlgendada). Korrelatsioonijäägid saame funktsiooni *residuals* abil, määrates argumendi *type* väärtuseks "cor". Tabelist peaksime üles otsima jääkkorrelatsioonid absoluutväärtusega > 0.10. Need nii-öelda suured jäägid näitavad meile, milliste muutujate vaheliste seoste seletamisega mudel väga hästi hakkama ei saa.
-
-```{r}
-residuals(fit1, type="cor")
-```
-
-Antud juhul näeme, et muutuja x3 omab suurt jääkkorrelatsiooni muutujaga x5, muutuja x7 muutujatega x1 ja x2 ning muutuja x9 muutujatega x1 ja x3. Kui muutuja omab suuri jääk korrelatsioone mõnele teisele faktorile laaduvate muutujatega, on võimalik, et muutuja mõõdab rohkem kui ühte konstrukti ja tal tuleks lubada laaduda rohkem kui ühele faktorile. Teine võimalus on, et muutujate vahelisi seoseid seoseid ei põhjusta mitte ainult mudeli faktor(id), vaid ka mingi muu tegur (me ei pruugi isegi teada mis täpselt). Sellise võimaluse arvesse võtmiseks saab mudelis määrata mõnede muutujate jääkdispersioonid omavahel korreleeruma. Teeme proovi mõttes uue mudeli, milles määrame ka muutujatevahelised korrelatsioonid, mida faktorid ei seleta.
-
-
-```{r}
-mudel2 <- "
-# latentsed muutujad
-visual =~ x1 + x2 + x3
-textual =~ x4 + x5 + x6
-speed =~ x7 + x8 + x9
-# jääkdispersioonide vahelised korrelatsioonid
-x7 ~~ x1 + x2
-x9 ~~ x1 + x3
-x3 ~~ x5"
-```
-
-
-Vaadake selle mudeli väljundit. Kas sobitusastme indeksid läksid paremaks või mitte?
-```{r}
-fit2 <- cfa(mudel2, data=HolzingerSwineford1939)
-summary(fit2, fit.measures=TRUE, standardized=TRUE)
-```
-
-# Parameetrite hindamise (arvutamise) meetoditest
-Funktsiooni *cfa* vaikemeetodiks on ML(*maximum likelyhood*). ML arvutusmeetodi eeldusteks on: tunnuste mitmemõõtmeline normaaljaotus (iga komponentidelineaarkombinatsioon on normaaljaotusega), tunnused vähemalt intervall skaalal.
-
-ML-i analoog on GLS (*generalized least squares*), mis on arvutuslikult lihtsam, headuse näitajad tulevad samad, eriti kui n on suur. ML ja GLS sobivad ainult mitmemõõtmelise normaaljaotuse korral, või juhtudel, kui kõrvalekalded on suhteliselt väikesed. 
-
-Mittenormaaljaotuslike andmete korral kaks enim kasutatavat parameetrite arvutamise meetodit: RML(*Robust ML*) ja WLS (*weighted least squares*) ei ole soovitatav väga suurte valimite korral. Eelistada pigem just väikeste valimite korral(vt. leongu konspekti).
-
-Me saame muuta meetodi valikut argumendiga *estimator*:
-
-```{r}
-fit2 <- cfa(mudel1, data=HolzingerSwineford1939, estimator = "GLS")
-fit3 <- cfa(mudel1, data=HolzingerSwineford1939, estimator = "WLS")
-```
-
-
-#Näide 2: regressiooniseostega mudeli rakendamine
-Proovime teha ka sellist mudelit, mis sisaldab lisaks latentsetele muutujatele ka regressioonseoseid. Selleks vaatame teist lavaaniga kaasa tulevat näidisandmestikku nimega *PoliticalDemocracy*. See tabel sisaldab 75 riigi kohta 11 poliitilist ja majanduslikku arengut puudutavat näitajat. Muutujad y1 kuni y4 on vastavalt ajakirjandusvabaduse tase, vaba politilise opositsiooni olemasolu, vabade valimiste toimumine ja valitud parlamendi efektiivsus mõõdetuna aastal 1960. Muutujad y5 kuni y8 on samad näitajad mõõdetuna aastal 1965. Muutujad x1 kuni x3 on vastavalt riigi sisemajanduse koguprodukt, energiatarbimine elaniku kohta ja tööstussektoris töötava tööjõu osakaal mõõdetuna aastal 1960. Andmestiku tutvustus avaneb alljärgneva käsuga:
-
-```{r, eval = F}
-help(PoliticalDemocracy)
-```
-
-Üritame andmetele sobitada alljärgneval joonisel kujutatud mudelit. Defineerime kolm latentset muutujat. 
-Tunnused x1 kuni x3 mõõdavad latentset muutujat *maj60* (st majanduslik arengutase aastal 1960), tunnused *y1* kuni *y4* mõõdavad latentset muutujat *dem60* (st demokraatia aastal 1960) ning tunnused *y5* kuni *y8* mõõdavat latentset muutujat *dem65* (st demokraatia aastal 1965). Latentsete muutujate vahel on regressioonseosed. Demokraatiat aastal 1960 mõjutab majanduse arengutase aastal 1960. Demokraatiat aastal 1965 mõjutavad nii majandus kui demokraatia aastal 1960. Latentsed muutujad ei suuda antud juhul seletada kõiki demokraatia indikaatorite vahelisi seoseid. Seetõttu on mudelisse lisatud ka nende jääkdispersioonide vahelised korrelatsioonid. Muutuja *y1* korreleerub *y5*-ga, *y2* korreleerub *y4*-ga ja *y6*-ga, *y3* korreleerub *y7*-ga, *y8* korreleerub *y4*-ga ja *y6*-ga. Mudelisse lisatud 11 vaadeldud muutujat võimaldavad hinnata $11(11+1)/2 = 66$ vaba parameetrit. Meil on vaja hinnata 31 parameetrit: 8 faktorlaadungit, 14 dispersiooni, 3 regressiooni- ja 6 korrelatsioonikordajat. (Nagu esimese näite puhul fikseeritakse ka praegu iga latentse muutuja puhul esimese indikaatori standardiseerimata laadung, selleks et omistada latentsele muutujale skaala. Seetõttu ei olegi meil vaja hinnata 11 vaid ainult 8 faktorlaadungit). Järelikult infot on piisavalt. Lavaanis näeks selline mudel välja järgnevalt:
-
-
-<div style="width:400px; height=400px">
-![Joonis 2.](KMKT/6praktikum/plot2.png)
-</div>
-
-```{r}
-mudel3 <- "
-# defineerime latentsed tunnused
-maj60 =~ x1 + x2 + x3
-dem60 =~ y1 + y2 + y3 + y4
-dem65 =~ y5 + y6 + y7 + y8
-
-# regressioonseosed latentsete tunnuste vahel
-dem60 ~ maj60
-dem65 ~ maj60 + dem60
-# jääkdispersioonide vahelised korrelatsioonid
-y1 ~~ y5
-y2 ~~ y4 + y6
-y3 ~~ y7
-y4 ~~ y8
-y6 ~~ y8"
-```
-
-Sobitame mudeli andmetele ja uurime väljundit. Kuna mudel sisaldab ka regressioonseoseid, siis kasutame sobitamiseks funktsiooni sem. Kas mudel sobib andmetega?
-
-```{r}
-fit3 <- sem(mudel3, data=PoliticalDemocracy)
-summary(fit3, fit.measures=TRUE, standardized=TRUE)
-```
-
-
-#Modifikatsiooniindeksid
-Modifikatsiooniindeksid näitavad, kui palju väheneks mudeli hii-ruut statistik mingi vaba parameetri mudelisse lisamisel. (Mida väiksem hiiruut, seda paremini mudel andmetega sobib.) Hoiatusena tuleks märkida, et indeksite puhul on tegemist umbkaudsete oletustega. Statistikaprogramm ei proovi kõigi nende parameetrite mudelisse lisamist ka tegelikult läbi, vaid kasutab nende hindamiseks mingit suhteliselt jämedat rusikareeglit.
-
-Defineerime sama 3-faktorilise mudeli:
-
-```{r}
-HS.model <- "visual =~ x1 + x2 + x3
-textual =~ x4 + x5 + x6
-speed =~ x7 + x8 + x9"
-```
-
-
-Sobitame mudeli andmetele ja vaatame mudeli väljundit.
-
-```{r}
-fit1 <- cfa(HS.model, data=HolzingerSwineford1939)
-summary(fit1, fit.measures=TRUE)
-```
-
-
-Nagu näha, ei sobi mudel andmetega väga hästi. Hii-ruudu p-väärtus on alla 0.05-e, TLI ja CFI on alla 0.95-e ning RMSEA ja SRMR on üle 0.05-e. Järgnevalt vaatame mudeli modifikatsiooniindeksite tabelit ja otsime sellest üles kõige suurema indeksiga parameetri.
-
-```{r}
-modindices(fit1)
-```
-
-**Modifikatsiooniindeksite** tabelis näitavad 3 esimest tulpa lavaani mudeli defineerimise tähistust kasutades, millise parameetri kohta indeks käib.  
-**Tulbas lhs** (sõnadest left hand side) on parameetri kohta käiva valemi vasakpoolne muutuja ja tulbas rhs (*right hand side*) on sama valemi parempoolne muutuja.   
-**Tulp op** (operator) näitab meile, millist tüüpi seosega on tegu: =$\sim$ on latentsele muutujale laadumine ning $\sim$ $\sim$ puhul on tegemist muutujatevahelise korrelatsiooniga.   
-Parameetri modifikatsiooniindeksi väärtus on toodud **tulbas mi**. Antud juhul puudutavad tabeli 24 esimest rida seoseid, mis on mudelis juba vabade parameetritena olemas ja pole seetõttu väga huvitavad. Aga 25. real olev visual =$\sim$ x4 ja tulbas mi olev väärtus 1.211 tähendavad seda, et kui me lubaksime muutujal x4 laaduda ka faktorile *visual*, võiksime oodata, et mudeli hii-ruut väheneb umbes 1.2 võrra.   
-Lisaks modifikatsiooniindeksile arvutatakse välja ka **parameetri oodatav väärtus** (tulp epc, *expected parameter change*) ja selle standardiseeritud väärtus (meid huvitab eelkõige tulp sepc.all). Mudelisse tasub vabade parameetritena lisade eelkõige neid, mille puhul on suured nii *mi* kui *epc* väärtused. Modifikatsiooniindeksite puhul loetakse statistiliselt oluliseks väärtusi üle 3.84. Väiksema indeksi väärtusega parameetrite mudelisse lisamine üldiselt ära ei tasu. Indeksid ei ole üksteisest sõltumatud. See tähendab, et kui tabelis on mitu olulist indeksit, siis ei saa me neid korraga mudelisse lisada ja oodata, et hii-ruut kahaneb nende indeksite summa võrra. Kui me seda teeksime, võivad erinevused oodatavate ja tegelike muutuste vahel olla väga suured. Seega tuleks indeksite poolt soovitatavaid parameetreid mudelisse lisada ühekaupa. Otsime tabelist üles kõige suurema modifikatsiooniindeksiga parameetri ja lisame selle mudelisse. Praegusel juhul on kõige suurema indeksiga parameeter 30. real, mis ütleb, et kui lubaksime muutujal x9 laaduda ka faktorile visual võiks oodata et hii-ruut kahaneb umbes 36 võrra. Teeme uue mudeli, milles see muutus on sisse viidud, sobitame andmetele ja vaatame väljundit.
-
-```{r}
-HS.model2 <- "visual =~ x1 + x2 + x3 + x9
-textual =~ x4 + x5 + x6
-speed =~ x7 + x8 + x9"
-fit2 <- cfa(HS.model2, data=HolzingerSwineford1939)
-summary(fit2, fit.measures=TRUE)
-```
-
-Selle mudeli sobitusastme näitajad on läinud natuke paremaks. CFI ja SRMR on isegi ületanud selle väärtuse piiri, mida võib pidada heaks, teised näitajad aga mitte. Nüüd vaatame selle uue mudeli modifikatsiooniindekseid ja otsime sealt üles kõige suurema indeksiga parameetri.
-
-```{r}
-modindices(fit2)
-```
-
-
-Kõige suurem mi väärtus on real 60, mis ütleb, et lisades mudelisse muutujate *x3* ja *x5* jääkdispersioonide vahelise korrelatsiooni, võiksime oodata hii-ruudu kahanemist umbes 8.6-e võrra. Lisame jälle uue parameetri mudelisse, sobitame mudeli andmetele ja uurime väljundit.
-
-```{r}
-HS.model3 <- "visual =~ x1 + x2 + x3 + x9
-textual =~ x4 + x5 + x6
-speed =~ x7 + x8 + x9
-x3 ~~ x5"
-fit3 <- cfa(HS.model3, data=HolzingerSwineford1939)
-summary(fit3, fit.measures=TRUE)
-```
-
-Sobitusastmenäitajad on läinud veel natuke paremaks. Nüüd on ka TLI üle 0.95-e, kuid hii-ruut ja RMSEA veel väga head sobivust ei näita. Uurime jällegi uue mudeli modifiktatsiooniindekseid ja otsime üles suurima.
-
-```{r}
-modindices(fit3)
-```
-
-Suurim väärtus tulbas *mi* on real 71, mis ütleb, et et lisades mudelisse muutujate *x4* ja *x7* jääkdispersioonide vahelise korrelatsiooni, võiksime oodata hii-ruudu kahanemist umbes 8 võrra. Lisame taas uue parameetri mudelisse, sobitame mudeli andmetele ja uurime väljundit.
-
-```{r}
-HS.model4 <- "visual =~ x1 + x2 + x3 + x9
-textual =~ x4 + x5 + x6
-speed =~ x7 + x8 + x9
-x3 ~~ x5
-x4 ~~ x7"
-fit4 <- cfa(HS.model4, data=HolzingerSwineford1939)
-summary(fit4, fit.measures=TRUE)
-```
-
-
-Sobitusastme näitajad on jällegi natuke paranenud. Nüüd on ka RMSEA alla 0.05, kuid hii-ruut pole jätkuvalt veel head taset saavutanud. Põhimõtteliselt võiksime parameetrite lisamise protsessi samal viisil jätkata. Selle kohta, kas parameetrite lisamine muutis sobitusastet oluliselt paremaks, saame arvutada ka p-väärtuse. Seda saame teha funktsiooni anova abil, millele anname ette mudelid, mida omavahel võrrelda soovime. Seda funktsiooni saame aga kasutada ainult hierarhiliste mudelite võrdlemiseks. Hierarhilised on mudelid siis, kui üks mudel sisaldub teises ja me saame ühe teisest tuletada vabade parameetrite lisamise teel.
-
-```{r}
-anova(fit3, fit4)
-```
-
-
-Antud juhul näeme tabeli kõige parempoolsemast tulbast, et p-väärtus on hästi väike (0.004 ehk <0.01), mis tähendab, et neljas mudel on oluliselt kolmandast parem. Mudelite indeksite alusel modifitseerimisele tuleks üldiselt läheneda väga ettevaatlikult. Mudeli märkimisväärse muutmisega kaasneb oht, et me ülesobitame mudeli just sellele konkreetsele andmestikule ja leitud mudelit ei ole hiljem võimalik üldistada teistele valimitele. Igal valimi juures on mõningad omapärasused ja kui me oma mudelit mingi valimi andmete põhjal muudame, on oht, et muutused kajastavad just neid omapärasusi ning mitte üldiselt esinevaid seoseid meid huvitavate muutujate vahel.
-
-
-# Ülesanded
-
-
-1. Andmefailis "suur.viisik" on 30 Suure Viisiku kitsama alaomaduse skoori ehk iga isiksuseomaduse kohta 6 alaomadust. Tehke selle andmestiku kohta 5-faktoriline kinnitava faktoranalüüusi mudel, nii nagu Suure Viisiku teooria seda ette näeb. Hinnake sellise mudeli sobivust antud andmetele. Mudeli koostamiseks on vaja teda tabelis olevate muutujate nimesid. Need saab katte funktsiooni names abil.
-```{r}
-names(suur.viisik)
-```
-
-Uurige ka mudeli parameetrite tabelit. Vaadake iga faktori puhul, millised vaadeldud muutujatest laaduvad faktorile kõige tugevamalt ja millised kõige nõrgemalt? Millised faktorid on omavahel kõige tugevamalt ja millised kõige nõrgemalt korreleeritud? Uurige jääkdispersioonide abil, milliseid vaadeldud muutujad seletab antud mudel kõige halvemini?
-```{r}
-mudelBig5 <- "
-# defineerime latentsed tunnused
-neurootilisus =~ N1 + N2 + N3 + N4 + N5 + N6
-ekstravertsus =~ E1 + E2 + E3 + E4 + E5 + E6
-avatus =~ O1 + O2 + O3 + O4 + O5 + O6
-sotsiaalsus =~ A1 + A2 + A3 + A4 + A5 + A6
-meelekindlus =~ C1 + C2 + C3 + C4 + C5 + C6 "
-fitBig5 <- cfa(mudelBig5, data=suur.viisik)
-summary(fitBig5)
-```
-
-2. Teine ülesanne on laenatud Rex Kline'i raamatust Principles and *Practice of Structural Equation Modeling* ja kasutatavad andmed parinevad algselt uurimusest, mille autoriteks on Roth jt (1989). Maatriks nimega *illness.cov* sisaldab 5 muutuja vahelisi kovariatsioonikordajaid. Muutujad vastavad
-viie küsimustiku skoorile ja nende sisu on järgmine:
+2. Üritage kindlaks määrata mõistlik faktorite arv. Kui me faktorite arvu ette ei tea, võiks alustuseks teha mõne suurema faktorite arvuga mudeli. Vaadake omaväärtusi ja tehke omaväärtuste graafik. Millist faktorite arvu soovitavad Kaiseri ja Cattelli kriteeriumid? Millist faktorite arvu soovitab paralleelanalüüs? Kui päris ühest vastust ei saa, proovige teha paar erinevat mudelit ja vaadake nende faktorlaadungite tabelit. Milline mudel oleks kõige lihtsamini tõlgendatav?
   
-2.1 *exercise* - kui palju vastaja spordiga tegeleb;  
-2.2 *fitness* - kui heaks hindab vastaja oma füüsilist vormi;  
-2.3 *hardiness* - milliseks hindab vastaja oma vaimset sitkust;  
-2.4 *stress* - milliseks hindab vastaja oma stressitaset viimase kuu jooksul;  
-2.5 *illness* - mil määral on vastajal viimasel ajal esinenud erinevate haiguste füüsilisi sümptome;  
-
-
-Struktuurvõrrandite mudeli koostamiseks võib toorandmete asemel kasutada ka kovariatsioonimaatriksit.  Maatriksi põhjal mudeli sobitamise koodirida on koodifailis juba olemas. Teie ülesandeks  on koostada selle ette alloleva joonise põhjal mudeli kirjeldus. Kas antud mudel sobib andmetega?
-
-<div style="width:400px; height=400px">
-![Joonis 3.](KMKT/6praktikum/plot3.png)
-</div>
-
-Kas kõik mudelis esinevad seosed on statistiliselt olulised? Lisage mudelisse täiendav regressioonseos, milles sõltumatuks muutujaks on *fitness* ja sõltuvaks muutujaks *stress*. Mis juhtub mudeli sobitusastmega?
- 
- 
-```{r, eval = F}
-illness.cov <- read.csv("illness.cov.csv", header = TRUE, sep = ";",row.names=1, stringsAsFactors = FALSE)
-mudel5 <- "
-# regressioonseosed latentsete tunnuste vahel
-exercise ~ hardiness
-fitness ~ exercise + stress
-illness ~ fitness + stress
-stress ~ fitness + hardiness
-# jääkdispersioonide vahelised korrelatsioonid
-hardiness ~~ exercise
-"
-
-# Kuna praegu tugineb analüüs kovariatsioonimaatriksile, mitte toorandmetele
-# ja sellisel juhul kasutab mudeli sobitamise käsk natuke teisi argumente, 
-# siis on sobitamine siin praegu ära tehtud
-fit5 <- sem(mudel5, sample.cov=illness.cov, sample.nobs=373, fixed.x=FALSE)
-summary(fit5)
+```{r}
+#omaväärtused saame faktormudelist kätte, kui lisame mudelinime lõppu dollari märgi ja values:
+#mudeli teeme psych mooduli abil, kasutame funktsiooni fa:
+om.m1 <- fa(omadused, nfactors=3, rotate ="varimax", fm="ml", scores =TRUE)
+om.m1$values
+plot(om.m1$values, tyoe ="b")
+fa.parallel(omadused)
 ```
+
+  
+3. Kas esineb muutujaid, mida tasuks välja jätta (ei laadu ühelegi faktorile tugevalt, laadub rohkem kui ühele enam-vähem võrdselt, teistest muutujatest oluliselt madalam kommunaliteet)?
+```{r}
+print.psych(om.m1, cut=0.3, sort=TRUE)
+```
+
+4. Proovige nii täisnurkset kui kaldnurkset pööramist. Millised on kaldnurkse pööramise puhul faktoritevahelised korrelatsioonid? Kas nende põhjal oleks kaldnurkselt pööratud faktorlahend antud juhul õigustatud?
+```{r}
+#pööramata:
+fa.2 <- fa(omadused, nfactors=3, rotate ="none")
+fa.2$loadings
+
+#kaldnurkne pööramine
+fa.3 <- fa(omadused, nfactors=3, rotate ="oblimin")
+fa.3$loadings
+
+#ortogonaalne pööramine 
+fa.4 <- fa(omadused, nfactors=3, rotate ="varimax")
+fa.4$loadings
+```
+
+5. Kui olete parima mudeli välja valinud, katsuge faktoreid tõlgendada ja pange neile nimed.
+  
+6. Kui suure osa kogu andmestiku variatiivsusest need faktorid ära kirjeldavad?
+```{r}
+# Lisaks laadungitele on tabeli paremas servas veel paar tulpa. Tulbas nimega h2 paiknevad kommunaliteedid,
+# mis naitavad kui suure osa muutuja variatiivususest faktorid summaarselt ara kirjeldavad.
+print.psych(fa.4, cut=0.3, sort=TRUE)
+```
+
+7. Arvutage välja faktorskoorid. Uurige regressioonimudeli abil, kas mõne faktori skoorid seostuvad vastaja vanusega.
+```{r}
+skoorid <- data.frame(fa.4$scores)
+head(skoorid)
+str(omadused)
+summary(lm(skoorid$MR1~ omadused$vanus))
+summary(lm(skoorid$MR2~ omadused$vanus))
+summary(lm(skoorid$MR3~ omadused$vanus))
+```
+
+8. Arvutage välja faktoritele vastavate alaskaalade Cronbachi alfad. Kas nende väärtusi võib pidada rahuldavaks?
+```{r}
+
+alpha(subset(bfom, select = c(vastutustundetu, hooletu, j_rjekindlusetu, p_simatu, korralik, ettevaatlik)),check.keys=TRUE)# jagada kolmeks
+alpha(subset(bfom, select =  c(eraldihoidev, seltskondlik, loid, vaikne, kartlik, salatseja)),check.keys=TRUE)# jagada kolmeks
+alpha(subset(bfom, select = c(h_irimatu, muretu, pingevaba, enesekindel)),check.keys=TRUE)# jagada kolmeks
+
+```
+
+
+
