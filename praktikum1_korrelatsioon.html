@@ -300,6 +300,9 @@ div.tocify {
       <a href="praktikum2.html">2. Praktikum - joonised</a>
     </li>
     <li>
+      <a href="praktikum3.html">3. Praktikum - ANOVA</a>
+    </li>
+    <li>
       <a href="praktikum4.html">4. Praktikum - regressioon</a>
     </li>
     <li>
@@ -395,13 +398,8 @@ Eelnevad koodiread saame panna ka ühele reale (sellisel juhul ei loo me tööke
 ## 0.470886</code></pre>
 <p>Funktsioon <em>corr.test()</em> on psych paketi komplektis. See võimaldab võtta korrelatsiooni mitme muutuja vahel korraga. Selle funktsiooni väljund annab infomratsiooni ka korrelatsioonide olulisuse kohta.</p>
 <pre class="r"><code># install.packages(&quot;psych&quot;)
-library(&quot;psych&quot;) #nüüd saame kasutada paketi funktsioone</code></pre>
-<pre><code>## 
-## Attaching package: &#39;psych&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:ggplot2&#39;:
-## 
-##     %+%, alpha</code></pre>
-<pre class="r"><code>corr.test(tabel[,7:9])</code></pre>
+library(&quot;psych&quot;) #nüüd saame kasutada paketi funktsioone
+corr.test(tabel[,7:9])</code></pre>
 <pre><code>## Call:corr.test(x = tabel[, 7:9])
 ## Correlation matrix 
 ##             avatus depressioon traitanx

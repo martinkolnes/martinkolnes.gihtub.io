@@ -8,8 +8,6 @@ output:
     toc_float:
       collapsed: no
       smooth_scroll: no
-  word_document:
-    toc: yes
 ---
 
 ```{r, warining = F, message = F, echo =F}
