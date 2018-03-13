@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Martin Kolnes, Karin Täht" />
+
+
+<title>Keskmiste võrdlemine mitme grupi puhul</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Kodu</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Praktikumide materjalid
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="praktikum1.html">1. Praktikum - sissejuhatus</a>
+    </li>
+    <li>
+      <a href="praktikum2.html">2. Praktikum - joonised</a>
+    </li>
+    <li>
+      <a href="praktikum4.html">4. Praktikum - regressioon</a>
+    </li>
+    <li>
+      <a href="praktikum5.html">5. Praktikum - logistiline regressioon</a>
+    </li>
+    <li>
+      <a href="praktikum6.html">6. Praktikum - eksploratiivne faktoranaluus</a>
+    </li>
+    <li>
+      <a href="praktikum7.html">7. Praktikum - Struktuurvorrandite mudelid</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Lisamaterjalid
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lisa_andmente_importimine.html">Andmete importimine</a>
+    </li>
+    <li>
+      <a href="praktikum1_korrelatsioon.html">Korrelatsioon</a>
+    </li>
+    <li>
+      <a href="praktikum1_subsetting.html">Andmete eraldamine</a>
+    </li>
+    <li>
+      <a href="praktikum2_ttestid.html">Keskmiste vordlemine</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="lugemist.html">Soovitused</a>
+</li>
+<li>
+  <a href="about.html">Kontakt</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Keskmiste võrdlemine mitme grupi puhul</h1>
+<h4 class="author"><em>Martin Kolnes, Karin Täht</em></h4>
+
+</div>
+
+
+<div id="eesmargid" class="section level1">
+<h1>Eesmärgid</h1>
+<p>Selle praktikumi eesmärgiks on läbi teha järgmised tegevused:</p>
+<ul>
+<li>õppida kasutama funktsiooni <em>ezAnova()</em>;<br />
+</li>
+<li>keskmiste võrdlemine mitme grupi puhul – ühesuunaline, faktoriaalne ja korduvmõõtmiste ANOVA.</li>
+</ul>
+<p>Laadige alla <a href="https://drive.google.com/open?id=1zOkd5pDsCSSttVholW6elXdu2Pl7VGko">praktikumi andmed</a>.</p>
+</div>
+<div id="kordamine" class="section level1">
+<h1>Kordamine</h1>
+<p>Andmefail “iqdata”. Tegemist on simuleeritud andmestikuga, kus muutujateks on eriala, IQ skoor ning vanus. Andmestiku allikas: <a href="http://staff.bath.ac.uk/pssiw/stats2/page16/page16.html" class="uri">http://staff.bath.ac.uk/pssiw/stats2/page16/page16.html</a></p>
+<ol style="list-style-type: decimal">
+<li><p>Kuidas jaotuvad IQ skoorid? Tehke histogramm ja arvutage asümmeetriakordaja ning ekstsess.</p></li>
+<li><p>Kui palju andmeid/vastajaid on igas grupis (muutuja nimega “group”)?</p></li>
+<li><p>Arvutage iga grupi keskmine IQ tulemus.</p></li>
+<li><p>Tehke histogramm, kus on gruppide tulemused kuvatud eraldi.</p></li>
+</ol>
+</div>
+<div id="anova" class="section level1">
+<h1>ANOVA</h1>
+<p>R-is on ANOVA tegemiseks mitmeid erinevaid funktsioone:</p>
+<ul>
+<li>aov()<br />
+</li>
+<li>anova(lm())<br />
+</li>
+<li>Anova(lm())<br />
+</li>
+<li>Anova(aov())<br />
+</li>
+<li>ezAnova()</li>
+</ul>
+<p>Need funktsioonid kasutavad erinevaid meetodeid ruutude summa arvutamiseks ja seetõttu võivad anda natuke erinevaid tulemusi (rohkem infot selle teema kohta leiate lehelt - <a href="https://www.r-bloggers.com/anova-%E2%80%93-type-iiiiii-ss-explained/">https://www.r-bloggers.com/anova-%E2%80%93-type-iiiiii-ss-explained/</a>). Need funktsioonid võivad erineda ka kasutamise poolest. Näiteks osade funktsioonide puhul peab korduvmõõtmistega andmestiku enne analüüsimist agregeerima.<br />
+Soovitan Teil ANOVA arvutamiseks kasutada paketi “ez” funktsiooni <em>ezAnova()</em>. Seda funktsiooni on lihtne kasutada ja see annab sarnase väljundi SPSS’iga tehtud analüüsile. Selle funktsiooni puhul saab ka kergesti muuta ruutude summa arvutamise meetodit. Selle funktsiooni puhul ei pea korduvmõõtmistega andmestikku enne analüüsimist agregeerima.</p>
+<p>Selle funktsiooni kasutamiseks installeerige endale moodul “ez”:</p>
+<pre class="r"><code>install.packages(&quot;ez&quot;)</code></pre>
+<p>Aktiveerige RStudios see moodul, et saaksite kasutada seal olevaid funktsioone.</p>
+<pre class="r"><code>library(ez)</code></pre>
+<div id="uhesuunaline-anova" class="section level2">
+<h2>Ühesuunaline ANOVA</h2>
+<p>Sageli hõlmavad eksperimentaalsed uuringud enam kui kahe grupi või tingimuse võrdlusi. Näiteks võib ravimiuurijaid huvitada, kas (a) ravim on parem kui platseebo ning (b) kui suur doos ravimit on parima mõjuga? Tihtipeale võrreldakse sellistes olukordades nt kolme gruppi – platseebot saanud, madala ning kõrge doosiga eksperimentaalsed rühmad.<br />
+Mitme grupi võrdlemisel saab kasutada dispersioonanalüüsi.</p>
+<p>(Parameetrilise) ANOVA läbiviimiseks on mitmed eeldused:</p>
+<ol style="list-style-type: decimal">
+<li>Vaatlused on teineteisest sõltumatud;<br />
+</li>
+<li>Sõltuv muutuja on GRUPPIDE LÕIKES normaaljaotuslik.</li>
+<li>Hajuvused on sarnased (Levene’s Test for Homogeneity of Variances näitab statistiliselt olulise erinevuse puudumist; ezAnova funktsioon annab meile ka selle testi tulemuse).</li>
+</ol>
+<p>Vaatame, kuidas teha ühesuunalist ANOVA’t “ez” paketiga.<br />
+Tavalise ühesuunalise ANOVA puhul kasutatakse järgmisi argumente:</p>
+<pre class="r"><code>ezANOVA(
+    data = andmestiku nimi,
+    dv = sõltuv muutuja,
+    wid = veerg, kus on katseisiku tunnus,
+    between = sõltumatu muutuja,
+    type = 3 # ruutude summa arvutamise meetod
+)</code></pre>
+<p>Andmestiku “iqdata” puhul:</p>
+<pre class="r"><code>iq_anova &lt;- ezANOVA(data = iqdata,
+                    dv  = iq,
+                    wid = subject,
+                    between = group,
+                    type = 3,
+                    detailed = TRUE)
+
+print(iq_anova)</code></pre>
+<pre><code>## $ANOVA
+##        Effect DFn DFd       SSn      SSd          F            p p&lt;.05
+## 1 (Intercept)   1  42 71840.089 1604.533 1880.47432 1.657565e-36     *
+## 2       group   2  42  1529.378 1604.533   20.01637 7.843384e-07     *
+##         ges
+## 1 0.9781532
+## 2 0.4880093
+## 
+## $`Levene&#39;s Test for Homogeneity of Variance`
+##   DFn DFd      SSn      SSd        F          p p&lt;.05
+## 1   2  42 113.6444 874.6667 2.728506 0.07690009</code></pre>
+<p>ANOVA tulemus on väljundis esimesel kohal. Sealt leiame vastuse küsimusele, kas gruppide vahel on statistiliselt olulised erinevused või mitte. Kui p &lt; .05 on meie mudel statistiliselt oluline ning edasi tasub vaadata post hoc teste, et välja selgitada, kus täpsemalt on erinevus(ed). Veerus nimega “ges” on ära tood ka efekti suurus – <em>generalized eta squared</em> (.02 – väike; .13 – keskmine; .26 – suur).</p>
+<p><strong>Post-hoc testid</strong><br />
+ANOVA näitab, kas esineb gruppide vahelisi erinevusi, kuid ei näita, milliste gruppide vahel need erinevused on. Nende erinevuste uurimiseks peame tegema veel lisaks post-hoc testid. Selleks saame kasutada funktsiooni <em>pariwise.t.test</em>:<br />
+<em>pariwise.t.test(y, x, p.adju = …)</em>, kus y on sõltuv muutuja, x on sõltumatu muutuja; argumendiga <em>p.adju</em> saame määrata meetodi p-väärtuse korrektsiooni arvutamiseks (see funktsioon võimaldab kasutada järgmisi meetodeid: “holm”, “hochberg”, “hommel”, “bonferroni”, “BH”, “BY”, “fdr”, “none”).</p>
+<pre class="r"><code>pairwise.t.test(iqdata$iq, iqdata$group, p.adj = &quot;holm&quot;)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  iqdata$iq and iqdata$group 
+## 
+##                   Physics student Maths student
+## Maths student     0.98            -            
+## Chemistry student 6.3e-06         6.3e-06      
+## 
+## P value adjustment method: holm</code></pre>
+<p><strong>Joonis</strong></p>
+<pre class="r"><code>library(gplots)
+plotmeans(iq~group, data=iqdata)</code></pre>
+<p><img src="praktikum3_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<div id="kruskall-wallise-test" class="section level3">
+<h3>Kruskall-Wallise test</h3>
+<p>ANOVA mitteparameetriliseks analoogiks on Kruskall-Wallise test. Selle analüüsi tegemiseks saame kasutada funktsiooni kruskal.test(): kruskal.test (y ~ x, data = andmed), kus y on sõltuv muutuja ja x on sõltumatu muutuja.</p>
+<pre class="r"><code>kruskal.test(iq ~group, data = iqdata) </code></pre>
+<pre><code>## 
+##  Kruskal-Wallis rank sum test
+## 
+## data:  iq by group
+## Kruskal-Wallis chi-squared = 29.205, df = 2, p-value = 4.552e-07</code></pre>
+<p>Nüüd peame ka post-hoc testide puhul kasutama mitteparameetrilist testi (Mann-Whitney U test). R-is saame seda teha funktsiooniga <em>pairwise.wilcox.test</em>:<br />
+<em>pairwise.wilcox.test(y, x)</em>, kus y on sõltuv muutuja ja x on sõltumatu muutuja.</p>
+<pre class="r"><code>pairwise.wilcox.test(iqdata$iq, iqdata$group, p.adj = &quot;holm&quot;) </code></pre>
+<pre><code>## Warning in wilcox.test.default(xi, xj, paired = paired, ...): cannot
+## compute exact p-value with ties
+
+## Warning in wilcox.test.default(xi, xj, paired = paired, ...): cannot
+## compute exact p-value with ties
+
+## Warning in wilcox.test.default(xi, xj, paired = paired, ...): cannot
+## compute exact p-value with ties</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using Wilcoxon rank sum test 
+## 
+## data:  iqdata$iq and iqdata$group 
+## 
+##                   Physics student Maths student
+## Maths student     0.84            -            
+## Chemistry student 9.7e-06         9.7e-06      
+## 
+## P value adjustment method: holm</code></pre>
+</div>
+</div>
+<div id="kahesuunaline-anova" class="section level2">
+<h2>Kahesuunaline ANOVA</h2>
+<p>Kuidas aga lahendada olukorda, kus on mitu erinevat sõltumatut muutujat, millel omakorda on mitu taset? Sellist olukorda võiks näitlikustada ravimiuuringuga, kus vaadatakse kahe erineva ravimi mõju kahe erineva doosiga. Saaksime järgneva uuringu ülesehituse: 2 (ravim 1, ravim2) x 2 (madal doos, kõrge doos) eksperiment. Eeltoodud kujul raporteeritakse tihtipeale faktoriaalset eksperimenti.<br />
+Faktoriaalse lahenduse puhul saab rääkida peaefekti(de)st ja interaktsioonist (koosmõjust ). Eeltoodud näite puhul tähendab peaeefekt seda, et nt ainult ravimitüübist oleneb, kas ravil on efekti või ei – seevastu ravimi doos ei ole oluline; realistlikum on ehk teistpidi – doos on oluline, ent ravimitüüp mitte. Interaktsioon tähendab aga nt seda, et ravimite efektiivsus sõltub doosist – nt ravim1 on efektiivne siis, kui doos on kõrge, ravim2 on aga efektiivne siis, kui doos on madal.</p>
+<p>Kasutame andmefail “drugtrial”. Tegemist on simuleeritud ravimiuuringu andmestikuga, mis sisaldab muutujatena uuritava identifitseerimisindeksi, sugu, ravimi annust ning ravijärgset skoori. Andmestiku allikas: <a href="http://staff.bath.ac.uk/pssiw/stats2/page16/page16.html" class="uri">http://staff.bath.ac.uk/pssiw/stats2/page16/page16.html</a></p>
+<p>Faktoriaalse ANOVA puhul kasutatakse järgmisi argumente:</p>
+<pre class="r"><code>ezANOVA(
+    data = andmestiku nimi,
+    dv = sõltuv muutuja,
+    wid = veerg, kus on katseisiku tunnus,
+    between = c(esimene sõltumatu muutuja, teine sõltumatu muutuja),
+    type = 3 # ruutude summa arvutamise meetod
+)</code></pre>
+<p>Andmestiku “drugtrial” puhul:</p>
+<pre class="r"><code>drug_anova &lt;- ezANOVA(data = drugtrial,
+                    dv  = score,
+                    wid = subject,
+                    between = c(gender, dose),
+                    type = 3)
+
+print(drug_anova)</code></pre>
+<pre><code>## $ANOVA
+##        Effect DFn DFd         F            p p&lt;.05        ges
+## 2      gender   1  44 37.493546 2.223837e-07     * 0.46007994
+## 3        dose   1  44  2.413819 1.274327e-01       0.05200648
+## 4 gender:dose   1  44 15.443432 2.967220e-04     * 0.25980048
+## 
+## $`Levene&#39;s Test for Homogeneity of Variance`
+##   DFn DFd      SSn      SSd        F          p p&lt;.05
+## 1   3  44 7.229167 37.08333 2.859176 0.04762463     *</code></pre>
+<p><strong>Post-hoc testid</strong><br />
+Enne Post-hoc testide arvutamist peaksime siinkohal vaatama üle, missuguseid gruppe me tahaksime omavahel võrrelda. Me saame kahe sõltumatu muutuja kombineerimisel 4 gruppi: <em>female high</em>, <em>female low</em>, <em>male high</em>, <em>male low</em>. Nende gruppide võrdlemiseks peaksime tegema andmetesse ühe lisaveeru, kus on kõik kombinatsioonid olemas. Selle saame teha funktsiooni <em>paste()</em> abil.</p>
+<pre class="r"><code>drugtrial$dummy &lt;- paste(drugtrial$gender, drugtrial$dose)</code></pre>
+<pre class="r"><code>pairwise.t.test(drugtrial$score, drugtrial$dummy, p.adjust = &quot;holm&quot;)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  drugtrial$score and drugtrial$dummy 
+## 
+##            female high female low male high
+## female low 0.2000      -          -        
+## male high  4.8e-08     1.2e-05    -        
+## male low   0.0070      0.2000     0.0014   
+## 
+## P value adjustment method: holm</code></pre>
+<p><strong>Joonis</strong></p>
+<pre class="r"><code>library(gplots) # enne tuleb pakett arvutisse insatalleerida
+plotmeans(score~interaction(gender,dose), data=drugtrial, connect=list(c(1,3,5),c(2,4,6)))</code></pre>
+<p><img src="praktikum3_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+</div>
+<div id="korduvmootmiste-anova" class="section level2">
+<h2>Korduvmõõtmiste ANOVA</h2>
+<p>Korduvmõõtmiste ANOVA (<em>Repeated measures ANOVA</em>) on sarnane tavalise ANOVA-ga (<em>One Way ANOVA</em>). Tavalise ANOVA-ga võrdlesime erinevusi sõltumatute gruppide vahel. Korduvmõõtmiste ANOVA-ga saame võrrelda erinevusi sõltuvate gruppide korral. Eksperimentaalpsühholoogias kohtab seda analüüsi üsna sageli, sest eelistatakse kasutada katsedisaine, kus kõik katseisikud teevad kõik tingimused läbi (sõltuvate gruppidega katsedisain).</p>
+<p>Kasutame andmefaili “recalldata”. Selles katses esitati inimestele erinev emotsionaalse väärtusega sõnu ja paluti neid hiljem meenutada. Näeme andmestikus, et iga katseisik on läbinud kõik katsetingimused („Pos“ – positiivse tähendusega sõnad, „Neg“ – negatiivse tähendusega sõnad, „Neu“ – neturaalse tähendusega sõnad).</p>
+<p>Vaatame, kas nende tingimuste puhul erines meenutamiste arv.</p>
+<p>Korduvmõõtmiste ANOVA puhul kasutatakse järgmisi argumente:</p>
+<pre class="r"><code>ezANOVA(
+    data = andmestiku nimi,
+    dv = sõltuv muutuja,
+    wid = veerg, kus on katseisiku tunnus,
+    within = sõltumatu muutuja,
+    type = 3 # ruutude summa arvutamise meetod
+)</code></pre>
+<p>Andmestiku “recalldata” puhul:</p>
+<pre class="r"><code>recall_anova &lt;- ezANOVA(data = recalldata,
+                    dv  = score,
+                    wid = subject,
+                    within = condition,
+                    type = 3)
+
+print(recall_anova)</code></pre>
+<pre><code>## $ANOVA
+##      Effect DFn DFd        F            p p&lt;.05       ges
+## 2 condition   2  58 14.36539 8.558285e-06     * 0.2693313
+## 
+## $`Mauchly&#39;s Test for Sphericity`
+##      Effect         W         p p&lt;.05
+## 2 condition 0.9973646 0.9637292      
+## 
+## $`Sphericity Corrections`
+##      Effect       GGe        p[GG] p[GG]&lt;.05      HFe        p[HF]
+## 2 condition 0.9973715 8.757373e-06         * 1.070945 8.558285e-06
+##   p[HF]&lt;.05
+## 2         *</code></pre>
+<p><strong>Post-hoc</strong> testid<br />
+Antud andmete puhul peame kasutama sõltuvate gruppidega t-teste, sest kõik katseisikud läbisid kõik katsetingimused. Selle testi tegemiseks kasutame funktsiooni pairwise.t.test(), aga seekord lisame argumendi “paired=TRUE”: pairwise.t.test(y,x,paired=TRUE), kus y on sõltuv muutuja ja x on sõltumatu muutuja.</p>
+<pre class="r"><code>pairwise.t.test(recalldata$score, recalldata$condition, paired = TRUE)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using paired t tests 
+## 
+## data:  recalldata$score and recalldata$condition 
+## 
+##     Neg     Neu   
+## Neu 4.8e-05 -     
+## Pos 0.0037  0.0627
+## 
+## P value adjustment method: holm</code></pre>
+</div>
+</div>
+<div id="ulesanded" class="section level1">
+<h1>Ülesanded</h1>
+<p>Kasutage andmestikku “maad”.<br />
+1. Lisage andmetesse uus muutuja, mis jaotab maad SKP alusel kolme gruppi: madal, keskmine, kõrge. Rühmitame andmeid nn. kvantiilide meetodil, mis tagab, et igasse rühma satub võrdne arv riike. Kasutage selleks allolevat koodi:</p>
+<pre class="r"><code>maad$SKP_grupid = NA # loome andmetesse uue veeru
+# Arvutame 0,33 ja 0,66 kvantiili väärtused
+quantile(maad$SKP, na.rm = TRUE, probs = c(0.33, 0.66))</code></pre>
+<pre><code>##     33%     66% 
+## 14.9364 31.1124</code></pre>
+<pre class="r"><code>#lisame loodud veergu väärtusi:
+# kõik riigid, mille SKP on alla 0,33 kvantiili kodeeritakse väärtusega &quot;1&quot;
+maad$SKP_grupid[maad$SKP &lt; 14.9364] = &quot;1&quot;
+# kõik riigid, mille SKP on üle 0,33 kvantiili ja alla 0,66 kvantiili kodeeritakse väärtusega &quot;2&quot;
+maad$SKP_grupid[maad$SKP &gt; 14.9364 &amp; maad$SKP &lt; 31.1124] = &quot;2&quot;
+# kõik riigid, mille SKP on üle 0,66 kvantiili kodeeritakse väärtusega &quot;3&quot;
+maad$SKP_grupid[maad$SKP &gt; 31.1124] = &quot;3&quot;</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li><p>Võrrelge PISA testi tulemusi saadud gruppide lõikes. Tehke ka post-hoc testid ja joonis.</p></li>
+<li><p>Lisage andmetesse uus muutuja, mis jaotab maad demokraatia indeksi põhjal kahte gruppi: alla keskmise, üle keskmise. Kasutage selleks allolevat koodi:</p></li>
+</ol>
+<pre class="r"><code>maad$dem_grupid = NA # loome andmetesse uue veeru
+#lisame loodud veergu väärtusi:
+#kõik riigid, mille demokraatia indeks on alla keskmise kodeeritakse väärtusega &quot;1&quot;
+maad$dem_grupid[maad$demokraatia_indeks &lt; mean(maad$demokraatia_indeks,na.rm =TRUE)] = &quot;1&quot;
+#kõik riigid, mille demokraatia indeks on võrdne või üle keskmise kodeeritakse väärtusega &quot;2&quot;
+maad$dem_grupid[maad$demokraatia_indeks &gt;= mean(maad$demokraatia_indeks,na.rm =TRUE)] = &quot;2&quot;</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li><p>Tehke kahe faktoriga ANOVA, kus sõltuvaks muutujaks on PISA test ja sõltumatuteks muutujaktes regioon ning demokraatia indeksi alusel loodud grupid.</p></li>
+<li><p>Tehke eelmise ülesande põhjal post-hoc testid ja joonis.</p></li>
+</ol>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

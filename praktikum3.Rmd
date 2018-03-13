@@ -1,0 +1,331 @@
+---
+title: "Keskmiste võrdlemine mitme grupi puhul"
+author: "Martin Kolnes, Karin Täht"
+output:
+  html_document:
+    css: style.css
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+  word_document:
+    toc: yes
+---
+
+```{r, warining = F, message = F, echo =F}
+#Andmed:
+library(ez)
+load("KMKT/3praktikum/3praktikumAndmed.RData")
+
+```
+
+# Eesmärgid
+
+Selle praktikumi eesmärgiks on läbi teha järgmised tegevused: 
+
+* õppida kasutama funktsiooni *ezAnova()*;  
+* keskmiste võrdlemine mitme grupi puhul – ühesuunaline, faktoriaalne ja korduvmõõtmiste ANOVA.  
+  
+Laadige alla [praktikumi andmed](https://drive.google.com/open?id=1zOkd5pDsCSSttVholW6elXdu2Pl7VGko).  
+
+
+# Kordamine  
+
+Andmefail "iqdata". Tegemist on simuleeritud andmestikuga, kus muutujateks on eriala, IQ skoor ning vanus. Andmestiku allikas: http://staff.bath.ac.uk/pssiw/stats2/page16/page16.html  
+
+1. Kuidas jaotuvad IQ skoorid? Tehke histogramm ja arvutage asümmeetriakordaja ning ekstsess. 
+```{r, echo =F, eval =F}
+library(ggplot2)
+ggplot(data=iqdata, aes(x= iq))+
+        geom_histogram()
+library(psych)
+describe(iqdata$iq)
+```
+
+2. Kui palju andmeid/vastajaid on igas grupis (muutuja nimega "group")?  
+```{r, echo =F, eval =F}
+table(iqdata$group)
+```
+
+3. Arvutage iga grupi keskmine IQ tulemus.  
+```{r, echo =F, eval =F}
+mean(iqdata[iqdata$group == "Physics student", "iq"])
+mean(iqdata[iqdata$group == "Maths student", "iq"])
+mean(iqdata[iqdata$group == "Chemistry student", "iq"])
+
+#Korraga:
+aggregate(iq~group, data = iqdata, mean)
+```
+
+4. Tehke histogramm, kus on gruppide tulemused kuvatud eraldi.  
+```{r, echo =F, eval =F}
+library(ggplot2)
+ggplot(data=iqdata, aes(x= iq))+
+        geom_histogram()+
+        facet_wrap(~group)
+```
+
+
+# ANOVA  
+R-is on ANOVA tegemiseks mitmeid erinevaid funktsioone:   
+
+* aov()  
+* anova(lm())  
+* Anova(lm())  
+* Anova(aov())  
+* ezAnova()   
+
+Need funktsioonid kasutavad erinevaid meetodeid ruutude summa arvutamiseks ja seetõttu võivad anda natuke erinevaid tulemusi (rohkem infot selle teema kohta leiate lehelt - https://www.r-bloggers.com/anova-%E2%80%93-type-iiiiii-ss-explained/). Need funktsioonid võivad erineda ka kasutamise poolest. Näiteks osade funktsioonide puhul peab korduvmõõtmistega andmestiku enne analüüsimist agregeerima.  
+Soovitan Teil ANOVA arvutamiseks kasutada paketi “ez” funktsiooni *ezAnova()*. Seda funktsiooni on lihtne kasutada ja see annab sarnase väljundi SPSS’iga tehtud analüüsile. Selle funktsiooni puhul saab ka kergesti muuta ruutude summa arvutamise meetodit. Selle funktsiooni puhul ei pea korduvmõõtmistega andmestikku enne analüüsimist agregeerima.
+ 
+
+Selle funktsiooni kasutamiseks installeerige endale moodul "ez":   
+```{r, echo = T, eval =F}
+install.packages("ez")
+```
+Aktiveerige RStudios see moodul, et saaksite kasutada seal olevaid funktsioone.
+```{r, echo = T, eval =F}
+library(ez)
+```
+
+## Ühesuunaline ANOVA  
+Sageli hõlmavad eksperimentaalsed uuringud enam kui kahe grupi või tingimuse võrdlusi. Näiteks võib ravimiuurijaid huvitada, kas (a) ravim on parem kui platseebo ning (b) kui suur doos ravimit on parima mõjuga? Tihtipeale võrreldakse sellistes olukordades nt kolme gruppi – platseebot saanud, madala ning kõrge doosiga eksperimentaalsed rühmad.   
+Mitme grupi võrdlemisel saab kasutada dispersioonanalüüsi.  
+
+(Parameetrilise) ANOVA läbiviimiseks on mitmed eeldused:  
+
+1. Vaatlused on teineteisest sõltumatud;  
+2. Sõltuv muutuja on GRUPPIDE LÕIKES normaaljaotuslik. 
+3. Hajuvused on sarnased (Levene's Test for Homogeneity of Variances näitab statistiliselt olulise erinevuse puudumist; ezAnova funktsioon annab meile ka selle testi tulemuse).   
+
+Vaatame, kuidas teha ühesuunalist ANOVA't "ez" paketiga.  
+Tavalise ühesuunalise ANOVA puhul kasutatakse järgmisi argumente:  
+```{r, eval = F}
+ezANOVA(
+    data = andmestiku nimi,
+    dv = sõltuv muutuja,
+    wid = veerg, kus on katseisiku tunnus,
+    between = sõltumatu muutuja,
+    type = 3 # ruutude summa arvutamise meetod
+)
+```
+
+Andmestiku "iqdata" puhul:   
+```{r}
+iq_anova <- ezANOVA(data = iqdata,
+                    dv  = iq,
+                    wid = subject,
+                    between = group,
+                    type = 3,
+                    detailed = TRUE)
+
+print(iq_anova)
+```
+
+ANOVA tulemus on väljundis esimesel kohal. Sealt leiame vastuse küsimusele, kas gruppide vahel on statistiliselt olulised erinevused või mitte. Kui p < .05 on meie mudel statistiliselt oluline ning edasi tasub vaadata post hoc teste, et välja selgitada, kus täpsemalt on erinevus(ed). Veerus nimega "ges" on ära tood ka efekti suurus – *generalized eta squared* (.02 – väike; .13 – keskmine; .26 – suur).
+
+**Post-hoc testid**    
+ANOVA näitab, kas esineb gruppide vahelisi erinevusi, kuid ei näita, milliste gruppide vahel need erinevused on. Nende erinevuste uurimiseks peame tegema veel lisaks post-hoc testid. Selleks saame kasutada funktsiooni *pariwise.t.test*:  
+*pariwise.t.test(y, x, p.adju = …)*, kus y on sõltuv muutuja, x on sõltumatu muutuja; argumendiga *p.adju* saame määrata meetodi p-väärtuse korrektsiooni arvutamiseks (see funktsioon võimaldab kasutada järgmisi meetodeid: "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none").
+
+```{r}
+pairwise.t.test(iqdata$iq, iqdata$group, p.adj = "holm")
+```
+**Joonis**   
+```{r, warning =F, message=F}
+library(gplots)
+plotmeans(iq~group, data=iqdata)
+```
+
+### Kruskall-Wallise test   
+ANOVA mitteparameetriliseks analoogiks on Kruskall-Wallise test. Selle analüüsi tegemiseks saame kasutada funktsiooni kruskal.test():
+kruskal.test (y ~ x, data = andmed), kus y on sõltuv muutuja ja x on sõltumatu muutuja.
+```{r}
+kruskal.test(iq ~group, data = iqdata) 
+```
+
+Nüüd peame ka post-hoc testide puhul kasutama mitteparameetrilist testi (Mann-Whitney U test). R-is saame seda teha funktsiooniga *pairwise.wilcox.test*:  
+*pairwise.wilcox.test(y, x)*, kus y on sõltuv muutuja ja x on sõltumatu muutuja.
+```{r}
+pairwise.wilcox.test(iqdata$iq, iqdata$group, p.adj = "holm") 
+```
+
+
+
+
+## Kahesuunaline ANOVA
+Kuidas aga lahendada olukorda, kus on mitu erinevat sõltumatut muutujat, millel omakorda on mitu taset? Sellist olukorda võiks näitlikustada ravimiuuringuga, kus vaadatakse kahe erineva ravimi mõju kahe erineva doosiga. Saaksime järgneva uuringu ülesehituse: 2 (ravim 1, ravim2) x 2 (madal doos, kõrge doos) eksperiment. Eeltoodud kujul raporteeritakse tihtipeale faktoriaalset eksperimenti.  
+Faktoriaalse lahenduse puhul saab rääkida peaefekti(de)st   ja interaktsioonist (koosmõjust ). Eeltoodud näite puhul tähendab peaeefekt seda, et nt ainult ravimitüübist oleneb, kas ravil on efekti või ei – seevastu ravimi doos ei ole oluline; realistlikum on ehk teistpidi – doos on oluline, ent ravimitüüp mitte. Interaktsioon tähendab aga nt seda, et ravimite efektiivsus sõltub doosist – nt ravim1 on efektiivne siis, kui doos on kõrge, ravim2 on aga efektiivne siis, kui doos on madal.
+
+
+Kasutame andmefail "drugtrial". Tegemist on simuleeritud ravimiuuringu andmestikuga, mis sisaldab muutujatena uuritava identifitseerimisindeksi, sugu, ravimi annust ning ravijärgset skoori. Andmestiku allikas: http://staff.bath.ac.uk/pssiw/stats2/page16/page16.html  
+
+Faktoriaalse ANOVA puhul kasutatakse järgmisi argumente:  
+```{r, eval = F}
+ezANOVA(
+    data = andmestiku nimi,
+    dv = sõltuv muutuja,
+    wid = veerg, kus on katseisiku tunnus,
+    between = c(esimene sõltumatu muutuja, teine sõltumatu muutuja),
+    type = 3 # ruutude summa arvutamise meetod
+)
+```
+
+Andmestiku "drugtrial" puhul:   
+```{r}
+drug_anova <- ezANOVA(data = drugtrial,
+                    dv  = score,
+                    wid = subject,
+                    between = c(gender, dose),
+                    type = 3)
+
+print(drug_anova)
+```
+
+**Post-hoc testid**   
+Enne Post-hoc testide arvutamist peaksime siinkohal vaatama üle, missuguseid gruppe me tahaksime omavahel võrrelda. Me saame kahe sõltumatu muutuja kombineerimisel 4 gruppi: *female high*, *female low*, *male high*, *male low*. Nende gruppide võrdlemiseks peaksime tegema andmetesse ühe lisaveeru, kus on kõik kombinatsioonid olemas. Selle saame teha funktsiooni *paste()* abil. 
+```{r}
+drugtrial$dummy <- paste(drugtrial$gender, drugtrial$dose)
+```
+
+```{r}
+pairwise.t.test(drugtrial$score, drugtrial$dummy, p.adjust = "holm")
+```
+
+
+**Joonis**     
+```{r, eval =F, echo =F}
+interaction.plot(drugtrial$dose, drugtrial$gender,drugtrial$score)
+```
+
+
+```{r}
+library(gplots) # enne tuleb pakett arvutisse insatalleerida
+plotmeans(score~interaction(gender,dose), data=drugtrial, connect=list(c(1,3,5),c(2,4,6)))
+```
+
+```{r, echo =F, eval =F}
+group_plot = ezPlot(
+         data = drugtrial,
+         dv = .(score),
+         wid = .(subject),
+         between = .(dose, gender),
+         x = .(dose),
+         do_lines = FALSE,
+         split = .(gender),
+         x_lab = 'Group',
+         y_lab = 'RT (ms)'
+)
+print(group_plot)
+```
+
+
+## Korduvmõõtmiste ANOVA
+Korduvmõõtmiste ANOVA (*Repeated measures ANOVA*) on sarnane tavalise ANOVA-ga (*One Way ANOVA*). Tavalise ANOVA-ga võrdlesime erinevusi sõltumatute gruppide vahel. Korduvmõõtmiste ANOVA-ga saame võrrelda erinevusi sõltuvate gruppide korral. Eksperimentaalpsühholoogias kohtab seda analüüsi üsna sageli, sest eelistatakse kasutada katsedisaine, kus kõik katseisikud teevad kõik tingimused läbi (sõltuvate gruppidega katsedisain). 
+
+Kasutame andmefaili "recalldata". Selles katses esitati inimestele erinev emotsionaalse väärtusega sõnu ja paluti neid hiljem meenutada. Näeme andmestikus, et iga katseisik on läbinud kõik katsetingimused („Pos“ – positiivse tähendusega sõnad, „Neg“ – negatiivse tähendusega sõnad, „Neu“ – neturaalse tähendusega sõnad). 
+
+Vaatame, kas nende tingimuste puhul erines meenutamiste arv. 
+
+Korduvmõõtmiste ANOVA  puhul kasutatakse järgmisi argumente:  
+```{r, eval = F}
+ezANOVA(
+    data = andmestiku nimi,
+    dv = sõltuv muutuja,
+    wid = veerg, kus on katseisiku tunnus,
+    within = sõltumatu muutuja,
+    type = 3 # ruutude summa arvutamise meetod
+)
+```
+
+
+Andmestiku "recalldata" puhul:   
+```{r}
+recall_anova <- ezANOVA(data = recalldata,
+                    dv  = score,
+                    wid = subject,
+                    within = condition,
+                    type = 3)
+
+print(recall_anova)
+```
+
+**Post-hoc** testid  
+Antud andmete puhul peame kasutama sõltuvate gruppidega t-teste, sest kõik katseisikud läbisid kõik katsetingimused. Selle testi tegemiseks kasutame funktsiooni pairwise.t.test(), aga seekord lisame argumendi “paired=TRUE”:
+pairwise.t.test(y,x,paired=TRUE), kus y on sõltuv muutuja ja x on sõltumatu muutuja.
+
+```{r}
+pairwise.t.test(recalldata$score, recalldata$condition, paired = TRUE)
+```
+
+
+# Ülesanded  
+
+Kasutage andmestikku "maad".  
+1. Lisage andmetesse uus muutuja, mis jaotab maad SKP alusel kolme gruppi: madal, keskmine, kõrge. Rühmitame andmeid nn. kvantiilide meetodil, mis tagab, et igasse rühma satub võrdne arv riike. Kasutage selleks allolevat koodi:
+```{r}
+maad$SKP_grupid = NA # loome andmetesse uue veeru
+# Arvutame 0,33 ja 0,66 kvantiili väärtused
+quantile(maad$SKP, na.rm = TRUE, probs = c(0.33, 0.66))
+#lisame loodud veergu väärtusi:
+# kõik riigid, mille SKP on alla 0,33 kvantiili kodeeritakse väärtusega "1"
+maad$SKP_grupid[maad$SKP < 14.9364] = "1"
+# kõik riigid, mille SKP on üle 0,33 kvantiili ja alla 0,66 kvantiili kodeeritakse väärtusega "2"
+maad$SKP_grupid[maad$SKP > 14.9364 & maad$SKP < 31.1124] = "2"
+# kõik riigid, mille SKP on üle 0,66 kvantiili kodeeritakse väärtusega "3"
+maad$SKP_grupid[maad$SKP > 31.1124] = "3"
+```
+
+2. Võrrelge PISA testi tulemusi saadud gruppide lõikes. Tehke ka post-hoc testid ja joonis.
+```{r, echo =F, eval =F}
+rt_anova <- ezANOVA(data = maad,
+                    dv  = pisa,
+                    wid = riik,
+                    between = c(SKP_grupid),
+                    type = 3)
+
+print(rt_anova)
+pairwise.t.test(maad$pisa, maad$SKP_grupid, p.adj = "holm")
+plotmeans(pisa~SKP_grupid, data=maad)
+```
+3. Lisage andmetesse uus muutuja, mis jaotab maad demokraatia indeksi põhjal kahte gruppi: alla keskmise, üle keskmise. Kasutage selleks allolevat koodi:
+```{r}
+maad$dem_grupid = NA # loome andmetesse uue veeru
+#lisame loodud veergu väärtusi:
+#kõik riigid, mille demokraatia indeks on alla keskmise kodeeritakse väärtusega "1"
+maad$dem_grupid[maad$demokraatia_indeks < mean(maad$demokraatia_indeks,na.rm =TRUE)] = "1"
+#kõik riigid, mille demokraatia indeks on võrdne või üle keskmise kodeeritakse väärtusega "2"
+maad$dem_grupid[maad$demokraatia_indeks >= mean(maad$demokraatia_indeks,na.rm =TRUE)] = "2"
+```
+
+4. Tehke kahe faktoriga ANOVA, kus sõltuvaks muutujaks on PISA test ja sõltumatuteks muutujaktes regioon ning demokraatia indeksi alusel loodud grupid. 
+```{r, echo =F, eval =F}
+rt_anova <- ezANOVA(data = maad,
+                    dv  = pisa,
+                    wid = riik,
+                    between = c(regioon, dem_grupid),
+                    type = 3)
+
+print(rt_anova)
+```
+
+5. Tehke eelmise ülesande põhjal post-hoc testid ja joonis.
+```{r, eval =F, echo =F}
+maad$dummy <- ifelse(is.na(maad$regioon)|is.na(maad$dem_grupid), NA, paste(maad$regioon, maad$dem_grupid))
+
+maad$dummy <- paste(maad$regioon, maad$dem_grupid)
+maad$dummy[maad$dummy == "euroopa NA"] = NA
+maad$dummy[maad$dummy == "muu NA"] = NA
+```
+
+```{r, echo =F, eval =F}
+pairwise.t.test(maad$pisa, maad$dummy, p.adjust = "holm")
+```
+
+
+```{r, echo =F, eval =F}
+library(gplots) # enne tuleb pakett arvutisse insatalleerida
+plotmeans(pisa~interaction(dem_grupid,regioon), data=maad, connect=list(c(1,3,5),c(2,4,6)))
+```
+
+
