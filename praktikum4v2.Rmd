@@ -4,10 +4,12 @@ author: "Martin Kolnes, Karin Täht"
 output:
   html_document:
     css: style.css
-    toc: true
+    toc: yes
     toc_float:
-      collapsed: false
-      smooth_scroll: false
+      collapsed: no
+      smooth_scroll: no
+  word_document:
+    toc: yes
 ---
 
 Laadige alla [praktikumi andmed](https://drive.google.com/open?id=1QJQfP9tCL5nBlSQadJmnznyYuN33_Pmf).  
@@ -42,7 +44,7 @@ corr.test(pisa[,c("PVMATH", "PVREAD", "PVSCIE")])
 ```
 
 
-Regressioonanalüüs on üks kõige sagedamini kasutatavaid statistilisi meetode. Selle eesmärgiks on tuletada valem, mis seostab omavahel sõltuva muutuja ja ühe või mitu sõltumatut muutujat ehk prediktorit. Tuletatud valemit võib kasutada sõltuva muutuja väärtuste ennustamiseks prediktorite väärtuste põhjal. Aga enamasti kasutatakse seda määramaks kindlaks, kas ja millised sõltumatud muutujad omavad olulist seost sõltumatu muutujaga.
+Regressioonanalüüs on üks kõige sagedamini kasutatavaid statistilisi meetodeid. Selle eesmärgiks on tuletada valem, mis seostab omavahel sõltuva muutuja ja ühe või mitu sõltumatut muutujat ehk prediktorit. Tuletatud valemit võib kasutada sõltuva muutuja väärtuste ennustamiseks prediktorite väärtuste põhjal. Aga enamasti kasutatakse seda määramaks kindlaks, kas ja millised sõltumatud muutujad omavad olulist seost sõltumatu muutujaga.
 Oletame, et oleme inimeste kohta mõõtnud kahte näitajat, nimetagem neid X ja Y. Me tahame ennustada Y väärtusi (sõltuv muutuja) X-i väärtuste kaudu (sõltumatu muutuja). Sellisel juhul saame nendevahelise regressioonseose valemi kirjutada nii: 
 $$Y = b_{0} + b_{1}X + e$$   
 Y ja X tähistavad selles vastavalt inimeste sõltuva ja sõltumatu tunnuse väärtusi. $b_0$ on vabaliige, mis ütleb, milline on sõltuva muutuja Y väärtus, kui sõltumatu muutuja X väärtus on 0. $b_1$ on regressioonikordaja, mis ütleb, kui palju muutub sõltuv muutuja Y juhul kui sõltumatu muutuja X väärtus muutub ühe ühiku võrra. $b_0$ ja $b_1$ nimetame mudeli parameetriteks, need on inimeste jaoks ühised. $e$ on mudeli viga (nimetatakse ka jääkideks või hälveteks). Mudel ei suuda reeglina andmeid seletada täielikult ja $e$ ongi mudeli ja tegelike andmete vaheline erinevus mingi konkreetse inimese puhul. Regressioonianalüüsi puhul anname statistikaprogrammile ette inimeste X ja Y väärtuse ning saame tagasi b-de väärtuse ja iga inimese kohta ka $e$ väärtuse.
@@ -83,7 +85,7 @@ Esimene osa **Call** lihtsalt kordab üle, millised muutujad on mudelisse kaasat
 **Residuals** toob ära mõned näitajad mudeli jääkide kohta. Mudeli jäägid kujutavad endast erinevust andmete ja mudeli vahel. Tegemist on selle osaga andmetest, mida mudel ära seletada ei suuda. Teatavasti peaksid regressioonimudeli jäägid olema normaaljaotusega ja mediaan peaks olema 0-i ligiduses. See tähendab, et 1. kvartiil (1Q) ja 3. kvartiil (3Q) peaksid olema vastasmärgilised aga absoluutväärtuselt sarnased. Samamoodi ka Min ja Max, kuigi nende puhul on suuremad erinevused üsna tavalised. Kui erinevused on väga suured, võib tekkida probleeme mudeli üldistamisel teistele valimitele. Jääke vaatame hiljem lähemalt, see rida siin võimaldab ainult kiirpilku. 
 
    
-Tabelis **Coefficients** on kirjas mudeli parameetrid koos nende statistilise usaldusväärsuse näitajatega. Esimesel real (Intercept) tulbas **Estimate** on toodud mudeli vabaliikme väärtus (antud juhul 29.203). Seda võib tõlgendada nii, et kui sõltumatu muutuja väärtuseks on 0, siis mudel ennustab loodusteaduste alatesti skooriks just selle numbri. Teisel real tulbas **Estimate** on toodud sõltumatu tunnuse PVMATH (matemaatika alatesti tulemus) regressioonikordaja, mille väärtuseks on 0.976. See tähendab, et kui sõltumatu tunnus muutub ühe ühiku võrra, muutub sõltuv tunnus 0.976 ühiku võrra. Antud juhul on kordaja positiivne, mis tähendab, et kui sõltumatu muutuja suureneb, kasvab ka sõltuv muutuja. Negatiivne kordaja tähendab, et sõltumatu muutuja suurenedes sõltuv muutuja hoopis väheneb. Kui prediktor omab olulist seost sõltuva muutujaga, peaks kordaja olema nullist erinev. Tulbas **Std. Error** on toodud regressioonikordaja standardviga. Standardviga näitab, kui erinevad oleksid antud regressioonikordaja väärtused erinevates valimites. Väike standardviga tähendab, et ka teistes valimites võib oodata antud valimi omale sarnast kordajat. Tulbas **t-value** on toodud t-väärtus mis kujutab, endast regresioonikordaja ja standardvea suhet. Olulist seost omavate prediktorite puhul peaks regressioonikordaja olema standardveaga võrreldes võimalikult suur. Laias laastus võib õelda, et vähemalt 2 korda suurem ehk siis t > 2. (Sellest järeldub ka, et väikese standardvea korral võib ka väike reg.kordaja olla oluline). Tulbas **Pr(>|t|)** on toodud p-väärtus, mis kontrollib hüpoteesi, et t väärtus pole 0-st oluliselt erinev. Antud juhul tähistab *** lõpus, et p < 0.001, mis viitab, et tõenäosus, et t pole 0-st erinev on alla 0.1\% ehk väga väike ja sellest tulenevalt võib õelda, et sõltumatu tunnus PVMATH (ehk matemaatika alatesti tulemus) omab statistiliselt usaldusväärset seost loodusteaduste alatesti skooriga. 
+Tabelis **Coefficients** on kirjas mudeli parameetrid koos nende statistilise usaldusväärsuse näitajatega. Esimesel real (Intercept) tulbas **Estimate** on toodud mudeli vabaliikme väärtus (antud juhul 29.203). Seda võib tõlgendada nii, et kui sõltumatu muutuja väärtuseks on 0, siis mudel ennustab loodusteaduste alatesti skooriks just selle numbri. Teisel real tulbas **Estimate** on toodud sõltumatu tunnuse PVMATH (matemaatika alatesti tulemus) regressioonikordaja, mille väärtuseks on 0.976. See tähendab, et kui sõltumatu tunnus muutub ühe ühiku võrra, muutub sõltuv tunnus 0.976 ühiku võrra. Antud juhul on kordaja positiivne, mis tähendab, et kui sõltumatu muutuja suureneb, kasvab ka sõltuv muutuja. Negatiivne kordaja tähendab, et sõltumatu muutuja suurenedes sõltuv muutuja hoopis väheneb. Kui prediktor omab olulist seost sõltuva muutujaga, peaks kordaja olema nullist erinev. Tulbas **Std. Error** on toodud regressioonikordaja standardviga. Standardviga näitab, kui erinevad oleksid antud regressioonikordaja väärtused erinevates valimites. Väike standardviga tähendab, et ka teistes valimites võib oodata antud valimi omale sarnast kordajat. Tulbas **t-value** on toodud t-väärtus mis kujutab, endast regressioonikordaja ja standardvea suhet. Olulist seost omavate prediktorite puhul peaks regressioonikordaja olema standardveaga võrreldes võimalikult suur. Laias laastus võib öelda, et vähemalt 2 korda suurem ehk siis t > 2. (Sellest järeldub ka, et väikese standardvea korral võib ka väike reg.kordaja olla oluline). Tulbas **Pr(>|t|)** on toodud p-väärtus, mis kontrollib hüpoteesi, et t väärtus pole 0-st oluliselt erinev. Antud juhul tähistab *** lõpus, et p < 0.001, mis viitab, et tõenäosus, et t pole 0-st erinev on alla 0.1\% ehk väga väike ja sellest tulenevalt võib õelda, et sõltumatu tunnus PVMATH (ehk matemaatika alatesti tulemus) omab statistiliselt usaldusväärset seost loodusteaduste alatesti skooriga. 
   
 Tabeli järel on selgitus selle kohta, milline tärnide arv tabeliridade lõpus, tähistab millist statistilise olulisuse nivood. Seejärel on toodud näitaja **Residual standard error**, mis kujutab endast põhimõtteliselt mudeli jääkide standardhälvet, aga üldiselt see meid väga ei huvita. 
   
@@ -124,7 +126,7 @@ Teeme uue regressioonimudeli, milles jääb sõltuva muutujana alles loodusteadu
 
 
 ### Eeldus - multikollineaarsus  
-Lisaks paarisregresiooni eeldustele peame vaatama mitmese regressiooni puhul ka prediktorite vahelisi korrelatsioone. Regressioonanalüüsi puhul tahame, et sõltumatud tunnused oleksid võimalikult tugevalt seotud sõltuva tunnusega, kuid samas võimalikult vähe seotud omavahel.
+Lisaks paarisregressiooni eeldustele peame vaatama mitmese regressiooni puhul ka prediktorite vahelisi korrelatsioone. Regressioonanalüüsi puhul tahame, et sõltumatud tunnused oleksid võimalikult tugevalt seotud sõltuva tunnusega, kuid samas võimalikult vähe seotud omavahel.
 Üheks probleemiks, mis esineda võib, on multikollineaarsus ehk olukord, kui mudeli prediktorid on omavahel liiga tugevalt korreleeritud. Probleemse multikollineaarsuse avastamiseks võime vaadata prediktorite-vahelisi korrelatsioone.
 ```{r}
 library("psych") #soovitan kasutada funktsiooni corr.test, mis asub antud paketis
@@ -144,11 +146,11 @@ Nagu näha on mudeli valemi paremal poolel olevad sõltumatud muutujad omavahel 
 summary(pisa.mudel2)
 ```
   
-Vaatame mudeli üldist sobitusastet näitavat determinatsioonikordajat $R^2$ (Multiple R-squared) väljundi alaosas. Selle väärtuseks on 0.06357. Korrutades selle 100-ga saame, et mudel seletab ära umbes 6.4\% sõltuva muutja hajuvusest. 
+Vaatame mudeli üldist sobitusastet näitavat determinatsioonikordajat $R^2$ (Multiple R-squared) väljundi alaosas. Selle väärtuseks on 0.06357. Korrutades selle 100-ga saame, et mudel seletab ära umbes 6.4\% sõltuva muutuja hajuvusest. 
   
-Järgmisena uurime tabelis **Coefficients** tulbas **Estimates** olevaid mudeli parameetrite väärtusi. Vabaliikme väärtus on 533.688. See tähendab, et kui kõigi kolme prediktori väärtus juhtub olema 0, võime oodata sellist loodusteaduste testi skoori. Kõik kolm prediktorit omavad olulist seost sõltuva muutujaga. Tunnuse JOYSCIE (teaduse nautimine) regresioonikordaja on 22.028. Mitmese regressiooni korral näitavad regressioonikordajad, millisel määral iga prediktor mõjutab sõltuvat muutujat eeldusel, et teised prediktorid samal ajal ei muutu. See tähendab, et kui JOYSCIE suureneb ühe ühiku võrra, võime oodata, et testiskoor suureneb 22.028 ühiku võrra. Seda eeldusel, et kahe ülejäänud prediktori väärtused jäävad samaks. Tunnuse INTSCIE (huvi teaduse vastu) regressioonikordaja on 8.895. Kui see muutuja suureneb ühe punkti võrra, võib eeldada testiskoori 8.9-punktist kasvu (jällegi eeldusel, et ülejäänud sõltumatud muutujad on konstantsed). Tunnuse INSTSCIE (motivatsioon teaduse õppimiseks) regressioonikordaja on mingil põhjusel negatiivne (-11.315). Kui see muutuja suureneb ühe punkti võrra, langeb testiskoor umbes 11.3 punkti võrra.  
+Järgmisena uurime tabelis **Coefficients** tulbas **Estimates** olevaid mudeli parameetrite väärtusi. Vabaliikme väärtus on 533.688. See tähendab, et kui kõigi kolme prediktori väärtus juhtub olema 0, võime oodata sellist loodusteaduste testi skoori. Kõik kolm prediktorit omavad olulist seost sõltuva muutujaga. Tunnuse JOYSCIE (teaduse nautimine) regressioonikordaja on 22.028. Mitmese regressiooni korral näitavad regressioonikordajad, millisel määral iga prediktor mõjutab sõltuvat muutujat eeldusel, et teised prediktorid samal ajal ei muutu. See tähendab, et kui JOYSCIE suureneb ühe ühiku võrra, võime oodata, et testiskoor suureneb 22.028 ühiku võrra. Seda eeldusel, et kahe ülejäänud prediktori väärtused jäävad samaks. Tunnuse INTSCIE (huvi teaduse vastu) regressioonikordaja on 8.895. Kui see muutuja suureneb ühe punkti võrra, võib eeldada testiskoori 8.9-punktist kasvu (jällegi eeldusel, et ülejäänud sõltumatud muutujad on konstantsed). Tunnuse INSTSCIE (motivatsioon teaduse õppimiseks) regressioonikordaja on mingil põhjusel negatiivne (-11.315). Kui see muutuja suureneb ühe punkti võrra, langeb testiskoor umbes 11.3 punkti võrra.  
 
-Kõigi prediktorite kohta on ära toodud standardvead (tulbas **Std. Error**), t-statistikud (regressioonikordaja jagatud standardveaga) ning p-väärtused, mille abil saame otsustada, kas tegemist on statistiliselt usaldusväärse prediktoriga. P-väärtused on jällegi tootud teaduslikku tähistust kasutades, aga nad kõik on väga väikesed ja seega on kõik prediktorid statistiliselt olulised. Kui selline tähistus tundub silmale natuke keeruline, siis olulisusele viitavad ka ridade lõpus olevad tärnid. Tärnide arvule vastavad olulisusenivood on toodud Coefficients tabeli all.
+Kõigi prediktorite kohta on ära toodud standardvead (tulbas **Std. Error**), t-statistikud (regressioonikordaja jagatud standardveaga) ning p-väärtused, mille abil saame otsustada, kas tegemist on statistiliselt usaldusväärse prediktoriga. P-väärtustest näeme, et kõik prediktorid on statistiliselt olulised. 
 
 
 Teades mudeli parameetrite väärtusi saaksime vajadusel kirja panna muutujate-vahelisi seoseid väljendava regressioonivõrrandi (ümmardades parameetrid ühe komakohani): 
@@ -157,7 +159,7 @@ $$loodusteaduste testi skoor = 533.688 + 22.028 * teaduse nautimine + 8.895 * hu
 
 # Prediktorite võrdlemine  
   
-### Standradiseeritud regressioonikordaja ehk beeta-kordaja   
+### Standardiseeritud regressioonikordaja ehk beeta-kordaja   
 Prediktorite olulisuse võrdlemiseks kasutatakse sageli standardiseeritud regressioonikordajad ehk niinimetatud beeta-kordajad. Need ütlevad, mitme standardhälbe võrra muutub sõltuv muutuja, kui prediktor muutub ühe standardhälbe võrra (ja ülejäänud prediktorid jäävad samaks).
 
 Standardhälbe ühikute kasutamine muudab eri muutujate kordajad otseselt võrreldavaks, kuna neid ei mõjuta see, kui prediktoreid on mõõdetud erinevates ühikutes. R-is saame need kätte lisamooduli *QuantPsyc* funktsiooni *lm.beta* abil, millele anname mudeli nime. Kasutamiseks tuleks kõigepealt see lisamoodul installida...
@@ -175,7 +177,7 @@ library(QuantPsyc)
 lm.beta(pisa.mudel2)
 ```
 
-Näeme, et JOYSCIE **beeta-kordaja** on umbes 0.24 ja teiste muutujade omad 0.10-kanti. (Mõju suuruse võrdlemisel on oluline kordaja absoluutväärtus, miinusmärk INSTSCIE kordaja ees näitab mõju suunda.) Seega võime öelda, et JOYSCIE mõju loodusteaduste alatesti skoorile on laias laastus 3 korda suurem kui kahel ülejäänud muutujal.
+Näeme, et JOYSCIE **beeta-kordaja** on umbes 0.24 ja teiste muutujate omad 0.10-kanti. (Mõju suuruse võrdlemisel on oluline kordaja absoluutväärtus, miinusmärk INSTSCIE kordaja ees näitab mõju suunda.) Seega võime öelda, et JOYSCIE mõju loodusteaduste alatesti skoorile on laias laastus 3 korda suurem kui kahel ülejäänud muutujal.
 
 ### Usalduspiirid  
   
