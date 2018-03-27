@@ -335,6 +335,9 @@ div.tocify {
     <li>
       <a href="praktikum2_ttestid.html">Keskmiste vordlemine</a>
     </li>
+    <li>
+      <a href="lisa_joonis.html">Joonis - keskmised</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -382,13 +385,8 @@ ggplot(data=iqdata, aes(x= iq))+
         geom_histogram()</code></pre>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <p><img src="praktikum3_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
-<pre class="r"><code>library(psych)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;psych&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:ggplot2&#39;:
-## 
-##     %+%, alpha</code></pre>
-<pre class="r"><code>describe(iqdata$iq)</code></pre>
+<pre class="r"><code>library(psych)
+describe(iqdata$iq)</code></pre>
 <pre><code>##    vars  n  mean   sd median trimmed  mad min max range  skew kurtosis
 ## X1    1 45 39.96 8.44     40   40.62 7.41  20  52    32 -0.71    -0.37
 ##      se
