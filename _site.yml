@@ -29,7 +29,9 @@ navbar:
     - text: Andmete eraldamine
       href: praktikum1_subsetting.html      
     - text: Keskmiste vordlemine
-      href: praktikum2_ttestid.html      
+      href: praktikum2_ttestid.html   
+    - text: Joonis - keskmised
+      href: lisa_joonis.html  
   - text: Soovitused  
     href: lugemist.html
   - text: Kontakt

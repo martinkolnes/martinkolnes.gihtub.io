@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Martin Kolnes" />
+
+
+<title>Joonis - keskmised koos usalduspiiridega</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Kodu</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Praktikumide materjalid
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="praktikum1.html">1. Praktikum - sissejuhatus</a>
+    </li>
+    <li>
+      <a href="praktikum2.html">2. Praktikum - joonised</a>
+    </li>
+    <li>
+      <a href="praktikum3.html">3. Praktikum - ANOVA</a>
+    </li>
+    <li>
+      <a href="praktikum4v2.html">4. Praktikum - regressioon</a>
+    </li>
+    <li>
+      <a href="praktikum5.html">5. Praktikum - logistiline regressioon</a>
+    </li>
+    <li>
+      <a href="praktikum6.html">6. Praktikum - eksploratiivne faktoranaluus</a>
+    </li>
+    <li>
+      <a href="praktikum7.html">7. Praktikum - Struktuurvorrandite mudelid</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Lisamaterjalid
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lisa_andmente_importimine.html">Andmete importimine</a>
+    </li>
+    <li>
+      <a href="praktikum1_korrelatsioon.html">Korrelatsioon</a>
+    </li>
+    <li>
+      <a href="praktikum1_subsetting.html">Andmete eraldamine</a>
+    </li>
+    <li>
+      <a href="praktikum2_ttestid.html">Keskmiste vordlemine</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="lugemist.html">Soovitused</a>
+</li>
+<li>
+  <a href="about.html">Kontakt</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Joonis - keskmised koos usalduspiiridega</h1>
+<h4 class="author"><em>Martin Kolnes</em></h4>
+<h4 class="date"><em>27 märts 2018</em></h4>
+
+</div>
+
+
+<p>Usalduspiiridega jooniseid saab teha ka paketiga “ggplot2”. Selleks tuleb aga enne joonise tegemist arvutada usalduspiiride väärtused. <a href="https://drive.google.com/open?id=1RdKMk-GRB70M-F3dS-LTCkxyjO7yzmh5">Andmed</a></p>
+<div id="naide-1" class="section level1">
+<h1>Näide 1</h1>
+<ol style="list-style-type: decimal">
+<li>Arvutame keskmised ja usalduspiirid:</li>
+</ol>
+<pre class="r"><code>library(Rmisc) #sisaldab funktsiooni summarySE
+pld &lt;- summarySE(pisa, measurevar=&quot;PV1MATH&quot;, groupvars=c(&quot;Gender&quot;)) #teeme uue objekti, sest tahame seda kasutada hiljem joonise tegemiseks
+pld</code></pre>
+<pre><code>##   Gender   N  PV1MATH       sd       se       ci
+## 1      1 345 498.0201 77.59233 4.177431 8.216522
+## 2      2 401 512.1252 77.33138 3.861745 7.591852</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Kasutame saadud tulemusi joonise tegemiseks:</li>
+</ol>
+<pre class="r"><code>library(ggplot2)
+# Standard error of the mean
+ggplot(pld, aes(y=PV1MATH,x=Gender)) + 
+    geom_errorbar(aes(ymin=PV1MATH-se, ymax=PV1MATH+se), width=.1) +
+    geom_line() +
+    geom_point()+
+    theme_classic()        </code></pre>
+<p><img src="lisa_joonis_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="naide-2" class="section level1">
+<h1>Näide 2</h1>
+<pre class="r"><code>pld &lt;- summarySE(drugtrial, measurevar=&quot;score&quot;, groupvars=c(&quot;gender&quot;,&quot;dose&quot;))
+pld</code></pre>
+<pre><code>##   gender dose  N    score        sd        se        ci
+## 1   male  low 12 4.583333 1.0836247 0.3128155 0.6885023
+## 2   male high 12 7.083333 0.9003366 0.2599048 0.5720466
+## 3 female  low 12 3.583333 2.2343733 0.6450080 1.4196531
+## 4 female high 12 2.500000 1.7320508 0.5000000 1.1004926</code></pre>
+<pre class="r"><code># Standard error of the mean
+ggplot(pld, aes(y=score, x=dose, colour=gender)) + 
+    geom_errorbar(aes(ymin=score-se, ymax=score+se), width=.1) +
+    geom_line() +
+    geom_point()+
+    theme_classic()  </code></pre>
+<pre><code>## geom_path: Each group consists of only one observation. Do you need to
+## adjust the group aesthetic?</code></pre>
+<p><img src="lisa_joonis_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+---
+title: "Joonis - keskmised koos usalduspiiridega "
+author: "Martin Kolnes"
+date: "27 märts 2018"
+output: html_document
+---
+
+```{r, echo = FALSE, message = F, warning=F}
+load("KMKT/joonised/joonised.Rdata")
+```
+
+
+Usalduspiiridega jooniseid saab teha ka paketiga "ggplot2". Selleks tuleb aga enne joonise tegemist arvutada usalduspiiride väärtused. 
+[Andmed](https://drive.google.com/open?id=1RdKMk-GRB70M-F3dS-LTCkxyjO7yzmh5)    
+
+# Näide 1
+
+1. Arvutame keskmised ja usalduspiirid:  
+```{r, message = F, warning=F}
+library(Rmisc) #sisaldab funktsiooni summarySE
+pld <- summarySE(pisa, measurevar="PV1MATH", groupvars=c("Gender")) #teeme uue objekti, sest tahame seda kasutada hiljem joonise tegemiseks
+pld
+```
+
+2. Kasutame saadud tulemusi joonise tegemiseks:   
+```{r, message = F, warning=F}
+library(ggplot2)
+# Standard error of the mean
+ggplot(pld, aes(y=PV1MATH,x=Gender)) + 
+    geom_errorbar(aes(ymin=PV1MATH-se, ymax=PV1MATH+se), width=.1) +
+    geom_line() +
+    geom_point()+
+    theme_classic()        
+```
+
+# Näide 2
+```{r, message = F, warning=F}
+pld <- summarySE(drugtrial, measurevar="score", groupvars=c("gender","dose"))
+pld
+```
+
+
+```{r}
+# Standard error of the mean
+ggplot(pld, aes(y=score, x=dose, colour=gender)) + 
+    geom_errorbar(aes(ymin=score-se, ymax=score+se), width=.1) +
+    geom_line() +
+    geom_point()+
+    theme_classic()  
+
+```
+
