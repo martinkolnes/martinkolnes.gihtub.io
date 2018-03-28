@@ -276,9 +276,10 @@ pld</code></pre>
 <li>Kasutame saadud tulemusi joonise tegemiseks:</li>
 </ol>
 <pre class="r"><code>library(ggplot2)
-# Standard error of the mean
+# Keskmised ja 95% usalduspiirid (&quot;ci&quot; veerg tabelist)
+
 ggplot(pld, aes(y=PV1MATH,x=Gender)) + 
-    geom_errorbar(aes(ymin=PV1MATH-se, ymax=PV1MATH+se), width=.1) +
+    geom_errorbar(aes(ymin=PV1MATH-ci, ymax=PV1MATH+ci), width=.1) +
     geom_line() +
     geom_point()+
     theme_classic()        </code></pre>
@@ -293,11 +294,13 @@ pld</code></pre>
 ## 2   male high 12 7.083333 0.9003366 0.2599048 0.5720466
 ## 3 female  low 12 3.583333 2.2343733 0.6450080 1.4196531
 ## 4 female high 12 2.500000 1.7320508 0.5000000 1.1004926</code></pre>
-<pre class="r"><code># Standard error of the mean
+<pre class="r"><code>pd &lt;- position_dodge(0.1) # seda saame kasutada joonise koostamisel, et vältida usalduspiiride kattumist
+
+# Keskmised ja 95% usalduspiirid (&quot;ci&quot; veerg tabelist)
 ggplot(pld, aes(y=score, x=dose, colour=gender)) + 
-    geom_errorbar(aes(ymin=score-se, ymax=score+se), width=.1) +
-    geom_line() +
-    geom_point()+
+    geom_errorbar(aes(ymin=score-ci, ymax=score+ci), width=.1, position = pd) +
+    geom_line(position = pd) + # &quot;position = pd&quot; peab olema igas kihis, muidu ühe grupi elemendid ei kattu
+    geom_point(position = pd)+
     theme_classic()  </code></pre>
 <pre><code>## geom_path: Each group consists of only one observation. Do you need to
 ## adjust the group aesthetic?</code></pre>
