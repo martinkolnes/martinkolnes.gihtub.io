@@ -10,15 +10,7 @@ output:
       smooth_scroll: false
 ---
 
-# Praktikumi eesmärgid
-
-* Eelnevate teemade kordamine: lineaarne regressioon, regressioonanalüüsi eeldused    
-* Binaarne logistiline regressioon - funktsiooniga *glm()*    
-* Multinomiaalne logistiline regressioon - funktsiooniga *mlogit()*   
-
-# Kordamine
-
-1. Laadige andmefailid (*neeme.csv*, *cowles.csv*, *ESS.csv*, *pisa.csv*) R'i. Määrake igale andmestikule R'is iseloomulik nimi.  
+Laadige alla [praktikumi andmed](https://drive.google.com/open?id=1JlHhXSz-B8wejK43wo231dK--WUv6WgJ).  
 ```{r, echo = F}
 neeme <- read.csv("KMKT/5praktikum/neeme.csv")[,-1]
 cowles <- read.csv("KMKT/5praktikum/cowles.csv")[,-1]
@@ -26,21 +18,33 @@ ESS <- read.csv("KMKT/5praktikum/ESS.csv")[,-1]
 pisa <- read.csv("KMKT/5praktikum/pisa.csv")[,-1]
 ```
 
-2. Teeme PISA andmestiku alusel regressioonanalüüsi mudeli, kus sõltuvaks tunnuseks on  matemaatika testi tulemus (PVMATH) ja prediktoriteks enese-tõhusus teaduses (SCIEEFF; *science self-efficacy*), mina-pilt
-loodusteadustes (SCSCIE; *science self-concept*).
+# Kordamine
+1. Tehke PISA andmestiku alusel regressioonanalüüs, kus sõltuvaks tunnuseks on  matemaatika testi tulemus (PVMATH) ja prediktoriteks enese-tõhusus teaduses (SCIEEFF; *science self-efficacy*) ja mina-pilt loodusteadustes (SCSCIE; *science self-concept*).
 
 ```{r, echo = FALSE, eval = F}
 model.yl1 <- lm(PVMATH ~ SCIEEFF + SCSCIE, data = pisa)
 summary(model.yl1)
 ```
+2. Arvutage ka standardiseeritud regressioonikordajad ja mudeli parameetrite usalduspiirid.
+```{r, eval = F, echo =F}
+library(QuantPsyc)
+lm.beta(model.yl1)
+confint(model.yl1)
+```
 
+3. Kas mudeli jäägid jaotuvad normaalajaotusel vastavalt?
+```{r, eval = F, echo =F}
+hist(model.yl1$residuals)
+library(psych)
+describe(model.yl1$residuals)
+```
 
 # Logistiline regressioon  
 Kui lineaarse regressiooni puhul oli sõltuv tunnus numbriline, siis logistilise regressiooni puhul on sõltuv tunnus kategoriaalne. Logistiline mudel ennustab prediktorite väärtuste abil võimalust kuuluda mingisse kategooriasse. Binaarne logistiline regressioon on selline, mille puhul on sõltuval tunnusel ainult 2 taset (nt kas inimesel esineb konkreetne haigus või mitte). Multinomiaalse logistilise regressiooni puhul on sõltuva muutuja tasemeid rohkem kui 2.
 
 # Binaarne logistiline regressioon - ühe prediktoriga mudel  
 
-Andmetabelis nimega *cowles* on lisamoodulist *car* pärinev näidisandmestik, mis käsitleb seost tudengite isiksuseomaduste ja psühholoogilistes uurimustes osalemise valmiduse vahel. Andmestik koosneb neljast muutujast:
+Andmetabel nimega "cowles" käsitleb seost tudengite isiksuseomaduste ja psühholoogilistes uurimustes osalemise valmiduse vahel. Andmestik koosneb neljast muutujast:
 
 * *neuroticism* - Eysencki isiksuseküsimustku neurootilisuse alaskaala skoor;
 * *extraversion* - ekstravertsuse alaskaala skoor;
@@ -122,14 +126,6 @@ NagelkerkeR2(cowles.mudel1)
 
 **Pseudo-determinatsioonikordaja** väärtused ongi tüüpiliselt üsna madalad. Kordajat kasutatakse tüüpiliselt selleks, et hinnata, kas prediktorite lisamine tegi mudelit paremaks.  
 
-##Tingimuslik tihedusfunktsiooni joonis (conditional density plot)  
-Kui meil on ühe numbrilise prediktoriga logistiline mudel (nagu praegu), siis saab vastavat seost kujutada tingimusliku tihedusfunktsiooni joonise abil. Selle saame funktsiooni *cdplot* kaudu.
-
-```{r}
-cdplot(volunteer ~ extraversion, data=cowles)
-```
-
-Joonisel on näha, milline on jaatavate ja eitavate vastuste osakaal valimis erinevate ekstravertsuse tasemete puhul. Heledam hall toon tähistab jaatava vastuse tõenäosust ja tumedam eitava vastuse oma.
 
 ## Standardiseeritud skooride kasutamine
 
@@ -141,28 +137,6 @@ exp(coef(cowles.mudel1))
 ```
 
 Võime järeldada, et ekstravertsuse suurenedes ühe standardhälbe võrra suureneb uurimustes osalemise valmidus 1.29 korda ehk 29\% võrra.  
-
-
-## LISA.  Vastuse tõnäosus prediktori konkreetse väärtuse korral  
-Mudeli parameetrite abil saame välja arvutada ka, milline on jaatava vastuse tõenäosus mingil ekstravertsuse tasemel. Logistilise regressioonimudeli parameetrid on logaritmiliselt teisendatud \v{s}ansside kujul ehk keerulisemalt öeldes, vastavad tõenäosused on teisendatud logit-funktsiooni abil. Defineerime kõigepealt logit-funktsiooni pöördfunktsiooni expit, mille abil saame logaritmilised \v{s}anssid tagasi tõenäosusteks.
-
-```{r}
-expit <- function(x) exp(x) / (1+exp(x))
-```
-
-Seejärel küsime funktsiooni *coef* abil oma mudelist parameetrite väärtused.
-```{r}
-coef(cowles.mudel1)
-```
-
-Nüüd saame parameetrite väärtused anda funktsioonile *expit*. Seda tuleks teha sellisel kujul: kõigepealt vabaliikme väärtus, millele liidame otsa prediktori regressioonikordaja väärtuse korrutatuna meid huvitava prediktori taseme väärtusega. Kui sooviksime arvutada, milline on jaatava vastuse tõenäosus, kui ekstravertsuse skoor on 2 standardhälvet üle keskmise, näeks see välja nii.
-
-```{r}
-expit(-0.3275901 + 2*0.2554766)
-```
-
-
-Nagu näha, ennustab meie mudel sellisel juhul jaatava vastuse tõenäosuseks umbes 55\%.
 
 
 # Binaarne logistiline regressioon - kahe prediktoriga mudel  
@@ -197,53 +171,42 @@ NagelkerkeR2(cowles.mudel2)
 See on jäänud enam-vähem samaks, nii et soo lisamine mudeli kirjeldusvõimet väga palju paremaks ei teinud. 
 
 
-## LISA. Vastuse tõnäosus prediktori konkreetse väärtuse korral  
-Vaatame lõpetuseks veel mudeli-järgsete tõenäosuste arvutamist *expit* funktsiooni abil. Selleks pidime kõigepealt saama kätte mudeli parameetrite väärtused.
-```{r}
-coef(cowles.mudel2)
-```
-
-Arvutame jaatava vastuse tõenäosuse kui vastaja ekstravertsus on 2 standardhälvet üle keskmise ja sooks naine. Kuna female oli antud mudelis baaskategooriaks, siis jääb soo regressioonikordaja arvutusest välja.
-```{r}
-expit(-0.2176518 + 2 * 0.2549416)
-```
-
-Arvutame jaatava vastuse tõenäosuse kui vastaja ektravertsus on 2 standardhälvet üle keskmise ja sooks mees. Sellisel juhul lisame arvutusse ka soo regressioonikordaja.
-```{r}
-expit(-0.2176518 + 2 * 0.2549416 - 0.2466181)
-```
-
-Nagu näha on sellise ekstravertsuse taseme puhul naistel jaatava vastuse tõenäosus 57\% ja meestel 51\%.
-
 # Multinomiaalne logistiline regressioon   
-Vaatame põgusalt ka logistilist regressiooni sõltuva muutuja korral, millel on rohkem kui kaks taset. Multinomiaalset logistilist regressiooni on R-is võimalik teha lisamooduli *mlogit* samanimelise funktsiooni abil. Installime ja laadime selle mooduli.
+Vaatame põgusalt ka logistilist regressiooni sõltuva muutuja korral, millel on rohkem kui kaks taset. Kasutame selleks paketi *nnet* funktsiooni *multinom()*. 
 
 ```{r, eval = F}
-install.packages("mlogit")
+install.packages("nnet") # installeerime paketi
 ```
 
 ```{r, warning= F, message=F}
-library(mlogit)
+library(nnet) 
 ```
 
-Andmetabelis ESS on 4 muutujat 2008. aasta Euroopa Sotsiaaluuringu Eesti vastajaid puudutavatest andmetest. üks tunnustest puudutab seda, millise erakonna poolt hääletas vastaja viimastel valimistel (tunnus *partei*). Näitlikustamise lihtsuse huvides olen antud tabelisse alles jätnud ainult 3 valimis kõige suuremat toetust omavat parteid (IRL, Kesk ja Reform). Teeme mudeli, milles ennustame erakondlikku eelistust vastaja vanuse kaudu. Selleks kasutame funktsiooni *mlogit*, millele tuleb ette anda mudelit kirjeldav valem natuke teisel kujul kui funktsioonile *glm*: tilde järel oleva valemi parempoolse osa alguses on (1 |) ja alles seejärel prediktorid. (Keerulisem valem tuleb sellest, et funktsiooniga *mlogit* saab vajadusel teha keerulisemaid mudeleid kui funktsiooniga *glm*. Praegu jätame need võimalused lihtsalt kasutamata.) Lisaks peame lisama ka argumendi shape="wide", mis ütleb funktsioonile, millisel kujul meie andmed on. Funktsioon *mlogit* valib ühe sõltuva muutuja kategooria baaskategooriaks, millega ülejäänud kategooriaid võrreldakse. Vaikimisi võetakse baaskategooriaks tähestiku järjekorras kõige esimene kategooria, antud juhul oleks selleks IRL. Kui tahame baaskategooriat muuta, saab seda teha argumendi *reflevel* lisamise abil nt nii: reflevel="Kesk".
+Andmetabelis ESS on 4 muutujat 2008. aasta Euroopa Sotsiaaluuringu Eesti vastajaid puudutavatest andmetest. üks tunnustest puudutab seda, millise erakonna poolt hääletas vastaja viimastel valimistel (tunnus *partei*). Näitlikustamise lihtsuse huvides olen antud tabelisse alles jätnud ainult 3 valimis kõige suuremat toetust omavat parteid (IRL, Kesk ja Reform). Teeme mudeli, milles ennustame erakondlikku eelistust vastaja vanuse kaudu.  Vaikimisi võetakse baaskategooriaks tähestiku järjekorras kõige esimene kategooria, antud juhul oleks selleks IRL. (Baaskategooria saab muuta funktsiooni *relevel* abil.)  
 
 ```{r}
-ess.mudel1 <- mlogit(partei ~ 1 | vanus, data=ESS, shape="wide")
+ess.mudel1 <- multinom(partei ~ vanus, data = ESS)
 ```
 
-Uurime mudeli väljundit.
+Uurime tulemusi:
 ```{r}
 summary(ess.mudel1)
 ```
-
-
-Väljundist on näha, et mudeli sobitusaste näitajad hii-ruut (Likelihood ratio test) ja pseudo- determinatsioonikordaja (McFadden R2) on juba välja arvutatud. Hii-ruut-statistiku p-väärtuse väiksuse põhjal võime öelda, et mudel on parem kui nullmudel. Regressioonikordajad on toodud kummagi partei jaoks eraldi. Nende põhjal on näha, et võrreldes IRL-iga suurendab kasvav vanus Keskerakonna poolt hääletamise tõenäosust, samas kui Reformierakonna toetamise tõenäosust see olulisel määral ei mõjuta. Vanuse mõju suurust saab hinnata riskisuhete abil.
-```{r}
-
-data.frame(exp(coef(ess.mudel1)))
+Väljund on jaotatud kaheks osaks: regressioonikordajad ja standardvead. Regressioonikordajad on toodud kummagi partei jaoks eraldi. Nende põhjal on näha, et võrreldes IRL-iga suurendab kasvav vanus Keskerakonna poolt hääletamise tõenäosust, samas kui Reformierakonna toetamise tõenäosusega ei tundu seost olevat. 
+Kahjuks ei anna multinom funktsioon meile p-väärtusi. Nende välja arvutamiseks on erinevaid viise, aga kõige lihtsam on kasutada paketi *stargazer* samanimelist funktsiooni, mis annab meile regressioonimudeli tulemused ja lisab sinna p-väärtused.
+```{r, eval = F}
+install.packages("stargazer")
 ```
 
+```{r, warning= F, message=F}
+library(stargazer)
+stargazer(ess.mudel1, type="text", out="multi1.htm")
+```
+
+Vanuse mõju suurust saab hinnata riskisuhete abil:
+```{r}
+exp(coef(ess.mudel1))
+```
 Keskerakonna regressioonikordaja riskisuhte alusel võime järeldada, et lisanduv eluaasta suurendab Keskerakonna toetamise suhtelist tõenäosust võrreldes IRL-i toetamise tõenäosusega 1.02 korda ehk 2\%.
 
 
@@ -251,14 +214,14 @@ Keskerakonna regressioonikordaja riskisuhte alusel võime järeldada, et lisandu
 
 1. Andmetabelist nimega neeme on Marko Neeme magistritöö (Neeme, 2012) andmed, milles uuriti 50-70-aastaste meeste suhtumist eesnäärmevähi skriiningtesti. Tunnus ""valmidus", näitab testis osalemise valmidust (tasemed pigem jah, ja pigem ei). Lisaks on tabelis ära toodud Suure Viisiku isiksuseomadused: neurootilisus (tunnus N), ekstravertsus (E), avatus kogemusele (O), sotsiaalsus (A) ja meelekindlus (C). Koostage binaarse logistilise regressiooni mudel, mis ennustab skriiningtestis osalemise valmidust Suure Viisiku isiksuseomaduste kaudu.   
 
-a. Esialgu tuleks saada ülevaade andmetest. Kasutage funktsiooni *summary*, argumendiks saab sisestada terve andmestiku või lihtsalt ühe veeru. Milline on oslejate keskmine vanus? Missugune on valmiduse tulemuste jaotus?  
-```{r, eval = F}
+a. Esialgu tuleks saada ülevaade andmetest. Kasutage funktsiooni *summary*. Milline on oslejate keskmine vanus? Missugune on "valmiduse" jaotus?  
+```{r, eval = F, echo =F}
 summary(neeme)
 prop.table(table(neeme$valmidus))*100#jaotus protsentides
 ```
 
-b. Tehke ühe tunnuse tulemustest histogramm (vt. praktikum 2).  
-```{r, eval = F}
+b. Tehke ekstravertsuse tulemustest histogramm.
+```{r, eval = F, echo =F}
 library(ggplot2)
 ggplot(neeme, aes(E))+
         geom_histogram()+
@@ -267,19 +230,19 @@ ggplot(neeme, aes(E))+
 ```
 
 c.  Millised isiksusomadused omavad olulist seost valmidusega? Kas need omadused suurendavad või vähendavad testis osalemise valmidust?  
-```{r, eval = F}
+```{r, eval = F, echo =F}
 mudel.yl2 <- glm(valmidus~N+E+O+A+C, data = neeme, family = binomial())
 summary(mudel.yl2)
 ```
 
 d.  Arvutage välja riskisuhted ja nende 95\%-usaldusvahemikud? Milline omadus mõjutab osalemisvalmidust kõige tugevamini?  
-```{r, eval = F}
+```{r, eval = F, echo =F}
 round(exp(coef(mudel.yl2)),3)
 round(exp(confint(mudel.yl2)),3)
 ```
 
 e.  Arvutage mudeli sobitusastet näitav hii-ruut-statistik ja selle p-väärtus.  
-```{r, eval = F}
+```{r, eval = F, echo =F}
 #Siin võis tekkid osadel probleem hii-ruudu arvutamisega. 
 # Kui kustutate andmetest puuduvad andmed, siis peaks nende kahe mudeli võrdlus töötama:
 neeme2 <- na.omit(neeme)#see rida loob uue andmestiku, kus ei ole NA'sid
@@ -290,21 +253,38 @@ anova(mudel.yl2, mudel.yl2.null, test = "Chisq")
 ```
 
 f.  Leidke mudeli pseudo-determinatsioonikordja.  
-```{r, eval = F}
+```{r, eval = F, echo =F}
 NagelkerkeR2(mudel.yl2)
 ```
 
 
-2. Tabelis ESS on lisaks tunnustele partei ja vanus veel tunnused *sugu* ja *aastaid_koolis* (vastaja kooliskäidud aastate arv). Koostage uus multinomiaalne logistiline mudel, milles on lisaks vastaja vanusele täiendavateks prediktoriteks ka sugu ja kooliskäidud aastate arv. Leidke ka riskisuhted ja nende usaldusvahemikud. Kas need muutujad seostuvad erakondlike eelistustega? Kui jah, siis millise partei puhul ja millises suunas?
+#LISAD
+##Tingimuslik tihedusfunktsiooni joonis (conditional density plot)  
+Kui meil on ühe numbrilise prediktoriga logistiline mudel (nagu praegu), siis saab vastavat seost kujutada tingimusliku tihedusfunktsiooni joonise abil. Selle saame funktsiooni *cdplot* kaudu.
 
-```{r, eval = F}
-ess.mudel2 <- mlogit(partei ~ 1 | vanus + sugu + aastaid_koolis, data=ESS, shape="wide")
-summary(ess.mudel2 )
-# Riskisuhted
-data.frame(exp(coef(ess.mudel2)))
-# Riskisuhete usaldusvahemikud
-data.frame(exp(confint(ess.mudel2)))
+```{r}
+cdplot(volunteer ~ extraversion, data=cowles)
+```
+
+Joonisel on näha, milline on jaatavate ja eitavate vastuste osakaal valimis erinevate ekstravertsuse tasemete puhul. Heledam hall toon tähistab jaatava vastuse tõenäosust ja tumedam eitava vastuse oma.
+
+## Vastuse tõnäosus prediktori konkreetse väärtuse korral  
+Mudeli parameetrite abil saame välja arvutada ka, milline on jaatava vastuse tõenäosus mingil ekstravertsuse tasemel. Logistilise regressioonimudeli parameetrid on logaritmiliselt teisendatud \v{s}ansside kujul ehk keerulisemalt öeldes, vastavad tõenäosused on teisendatud logit-funktsiooni abil. Defineerime kõigepealt logit-funktsiooni pöördfunktsiooni expit, mille abil saame logaritmilised \v{s}anssid tagasi tõenäosusteks.
+
+```{r}
+expit <- function(x) exp(x) / (1+exp(x))
+```
+
+Seejärel küsime funktsiooni *coef* abil oma mudelist parameetrite väärtused.
+```{r}
+coef(cowles.mudel1)
+```
+
+Nüüd saame parameetrite väärtused anda funktsioonile *expit*. Seda tuleks teha sellisel kujul: kõigepealt vabaliikme väärtus, millele liidame otsa prediktori regressioonikordaja väärtuse korrutatuna meid huvitava prediktori taseme väärtusega. Kui sooviksime arvutada, milline on jaatava vastuse tõenäosus, kui ekstravertsuse skoor on 2 standardhälvet üle keskmise, näeks see välja nii.
+
+```{r}
+expit(-0.3275901 + 2*0.2554766)
 ```
 
 
-
+Nagu näha, ennustab meie mudel sellisel juhul jaatava vastuse tõenäosuseks umbes 55\%.

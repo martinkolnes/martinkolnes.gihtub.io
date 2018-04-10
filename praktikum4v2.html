@@ -371,12 +371,70 @@ div.tocify {
 <h1>Kordamine</h1>
 <p>Kasutage andemstikku nimega “pisa”.</p>
 <ol style="list-style-type: decimal">
-<li><p>Vaadake kirjeldavaid statistikuid matemaatik (PV1MATH), lugemise (PV1READ) ja loodusteaduste (PV1SCIE) alatestide tulemuste kohta.</p></li>
-<li><p>Tehke eraldi histogrammid soo alusel loodusteaduste testi tulemuste kohta.</p></li>
-<li><p>Missugused on korrelatsioonid nende kolme testi (PV1MATH, PV1READ, PV1SCIE) vahel?</p></li>
+<li>Vaadake kirjeldavaid statistikuid matemaatik (PV1MATH), lugemise (PV1READ) ja loodusteaduste (PV1SCIE) alatestide tulemuste kohta.</li>
 </ol>
+<pre class="r"><code>summary(pisa)</code></pre>
+<pre><code>##        X            PVMATH          PVREAD          PVSCIE     
+##  Min.   :   1   Min.   :217.3   Min.   :171.3   Min.   :250.8  
+##  1st Qu.:1193   1st Qu.:467.9   1st Qu.:452.9   1st Qu.:480.8  
+##  Median :2384   Median :517.8   Median :507.8   Median :535.6  
+##  Mean   :2384   Mean   :518.2   Mean   :504.4   Mean   :535.0  
+##  3rd Qu.:3576   3rd Qu.:570.7   3rd Qu.:561.4   3rd Qu.:591.1  
+##  Max.   :4768   Max.   :747.6   Max.   :721.3   Max.   :778.1  
+##     GENSCIE           INSTSCIE          INTSCIE           JOYSCIE        
+##  Min.   :-3.6618   Min.   :-2.1025   Min.   :-3.1448   Min.   :-2.15170  
+##  1st Qu.:-0.3580   1st Qu.:-0.4167   1st Qu.:-0.2320   1st Qu.:-0.58250  
+##  Median : 0.0792   Median : 0.0195   Median : 0.2143   Median :-0.10280  
+##  Mean   : 0.1521   Mean   : 0.0609   Mean   : 0.1956   Mean   : 0.01382  
+##  3rd Qu.: 0.8962   3rd Qu.: 0.3719   3rd Qu.: 0.6732   3rd Qu.: 0.53910  
+##  Max.   : 2.1867   Max.   : 1.8212   Max.   : 3.2888   Max.   : 2.05620  
+##     PERSCIE           SCIEEFF            SCIEFUT             SCSCIE       
+##  Min.   :-3.0797   Min.   :-3.76820   Min.   :-1.41860   Min.   :-2.3632  
+##  1st Qu.:-0.5345   1st Qu.:-0.56540   1st Qu.:-0.69380   1st Qu.:-0.3218  
+##  Median : 0.0553   Median :-0.05300   Median :-0.04920   Median : 0.0752  
+##  Mean   : 0.1460   Mean   : 0.04218   Mean   :-0.08318   Mean   : 0.1147  
+##  3rd Qu.: 0.7259   3rd Qu.: 0.51790   3rd Qu.: 0.58830   3rd Qu.: 0.6520  
+##  Max.   : 2.5264   Max.   : 3.22300   Max.   : 2.27140   Max.   : 2.2442  
+##        GR         GENDER  
+##  Min.   : 7.000   F:2352  
+##  1st Qu.: 8.000   M:2416  
+##  Median : 9.000           
+##  Mean   : 8.725           
+##  3rd Qu.: 9.000           
+##  Max.   :10.000</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Tehke eraldi histogrammid soo alusel loodusteaduste testi tulemuste kohta.</li>
+</ol>
+<pre class="r"><code>library(ggplot2)
+ggplot(data=pisa, aes(x= PVSCIE))+
+        geom_histogram()+
+        facet_wrap(~GENDER)</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="praktikum4v2_files/figure-html/unnamed-chunk-3-1.png" width="672" /> 3. Missugused on korrelatsioonid nende kolme testi (PV1MATH, PV1READ, PV1SCIE) vahel?</p>
 <pre class="r"><code>library(&quot;psych&quot;)
 corr.test()#argumendiks saate panna mitu veergu</code></pre>
+<pre class="r"><code>library(psych)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;psych&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:ggplot2&#39;:
+## 
+##     %+%, alpha</code></pre>
+<pre class="r"><code>corr.test(pisa[,c(&quot;PVMATH&quot;, &quot;PVREAD&quot;, &quot;PVSCIE&quot;)])</code></pre>
+<pre><code>## Call:corr.test(x = pisa[, c(&quot;PVMATH&quot;, &quot;PVREAD&quot;, &quot;PVSCIE&quot;)])
+## Correlation matrix 
+##        PVMATH PVREAD PVSCIE
+## PVMATH   1.00   0.84   0.92
+## PVREAD   0.84   1.00   0.86
+## PVSCIE   0.92   0.86   1.00
+## Sample Size 
+## [1] 4768
+## Probability values (Entries above the diagonal are adjusted for multiple tests.) 
+##        PVMATH PVREAD PVSCIE
+## PVMATH      0      0      0
+## PVREAD      0      0      0
+## PVSCIE      0      0      0
+## 
+##  To see confidence intervals of the correlations, print with the short=FALSE option</code></pre>
 <p>Regressioonanalüüs on üks kõige sagedamini kasutatavaid statistilisi meetodeid. Selle eesmärgiks on tuletada valem, mis seostab omavahel sõltuva muutuja ja ühe või mitu sõltumatut muutujat ehk prediktorit. Tuletatud valemit võib kasutada sõltuva muutuja väärtuste ennustamiseks prediktorite väärtuste põhjal. Aga enamasti kasutatakse seda määramaks kindlaks, kas ja millised sõltumatud muutujad omavad olulist seost sõltumatu muutujaga. Oletame, et oleme inimeste kohta mõõtnud kahte näitajat, nimetagem neid X ja Y. Me tahame ennustada Y väärtusi (sõltuv muutuja) X-i väärtuste kaudu (sõltumatu muutuja). Sellisel juhul saame nendevahelise regressioonseose valemi kirjutada nii: <span class="math display">\[Y = b_{0} + b_{1}X + e\]</span><br />
 Y ja X tähistavad selles vastavalt inimeste sõltuva ja sõltumatu tunnuse väärtusi. <span class="math inline">\(b_0\)</span> on vabaliige, mis ütleb, milline on sõltuva muutuja Y väärtus, kui sõltumatu muutuja X väärtus on 0. <span class="math inline">\(b_1\)</span> on regressioonikordaja, mis ütleb, kui palju muutub sõltuv muutuja Y juhul kui sõltumatu muutuja X väärtus muutub ühe ühiku võrra. <span class="math inline">\(b_0\)</span> ja <span class="math inline">\(b_1\)</span> nimetame mudeli parameetriteks, need on inimeste jaoks ühised. <span class="math inline">\(e\)</span> on mudeli viga (nimetatakse ka jääkideks või hälveteks). Mudel ei suuda reeglina andmeid seletada täielikult ja <span class="math inline">\(e\)</span> ongi mudeli ja tegelike andmete vaheline erinevus mingi konkreetse inimese puhul. Regressioonianalüüsi puhul anname statistikaprogrammile ette inimeste X ja Y väärtuse ning saame tagasi b-de väärtuse ja iga inimese kohta ka <span class="math inline">\(e\)</span> väärtuse. Kui oleme mõõtnud kolme muutujat (nimetagem neid Y , X1 ja X2) ja tahame teada kas X1 ja X2 mõlemad mõjutavad Y -it, omandaks valem sellise kuju: <span class="math display">\[Y = b_{0} + b_{1}X_{1} + b_{2}X_{2} + e\]</span></p>
 <p>Ehk siis üks bX korrutis on valemisse juurde tulnud ja sellest tulenevalt on vaja kindlaks määrata väärtus ühe täiendava <span class="math inline">\(b\)</span> jaoks. üldistatult võibki öelda, et iga täiendav sõltumatu muutuja lisab valemisse veel ühe <span class="math inline">\(bX\)</span> korrutise ja kindlaks määramist vajab üks täiendav parameeter.</p>
@@ -446,6 +504,28 @@ hist(pisa.mudel1$residuals)</code></pre>
 <ol style="list-style-type: decimal">
 <li>Tehke paarisregressiooni mudel, mis ennustab loodusteaduse alatesti skoori (tunnus PVSCIE) teaduse nautimise kaudu (JOYSCIE). Kas seos on oluline? Kui suure osa matemaatika testi skooride hajuvusest mudel ära seletab? Mitme punkti võrra muutub matemaatika skoor kui sõltumatu muutuja muutub ühe punkti võrra?</li>
 </ol>
+<pre class="r"><code>plot(y = pisa$PVSCIE, x = pisa$JOYSCIE) </code></pre>
+<p><img src="praktikum4v2_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<pre class="r"><code>pisa.mudel.yl1 = lm(PVSCIE ~ JOYSCIE, data = pisa)
+summary(pisa.mudel.yl1)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = PVSCIE ~ JOYSCIE, data = pisa)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -287.656  -51.782    1.224   55.309  239.658 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  534.748      1.123  475.99   &lt;2e-16 ***
+## JOYSCIE       21.342      1.321   16.16   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 77.56 on 4766 degrees of freedom
+## Multiple R-squared:  0.05193,    Adjusted R-squared:  0.05173 
+## F-statistic: 261.1 on 1 and 4766 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
 <div id="mitmene-regressioon" class="section level1">
@@ -538,6 +618,38 @@ lm.beta(pisa.mudel2)</code></pre>
 <ol style="list-style-type: decimal">
 <li>Koostage uus mudel, milles sõltuvaks tunnuseks on matemaatika testi skoor (PVMATH) ja prediktoriteks samad tunnused, millega ülal ennustasime loodusteaduste testi skoori: teaduse oluliseks pidamine (JOYSCIE), huvi teaduse vastu (INTSCIE) ja motivatsioon loodusteadusi õppida (INSTSCIE). Missugused prediktorid on statistiliselt olulised? Arvutage ka standardiseeritud regressioonikordajad ja mudeli parameetrite usalduspiirid.</li>
 </ol>
+<pre class="r"><code>pisa.mudel4 = lm(PVMATH ~ JOYSCIE + INTSCIE + INSTSCIE, data = pisa)
+summary(pisa.mudel4) #vaatame tulemusi</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = PVMATH ~ JOYSCIE + INTSCIE + INSTSCIE, data = pisa)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -294.553  -48.430   -0.031   50.209  215.068 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  516.405      1.104 467.678  &lt; 2e-16 ***
+## JOYSCIE       15.741      1.572  10.011  &lt; 2e-16 ***
+## INTSCIE       12.397      1.734   7.149 1.01e-12 ***
+## INSTSCIE     -14.138      1.568  -9.019  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 72.93 on 4764 degrees of freedom
+## Multiple R-squared:  0.05301,    Adjusted R-squared:  0.05242 
+## F-statistic:  88.9 on 3 and 4764 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>library(QuantPsyc)
+lm.beta(pisa.mudel4) #vaatame standardiseeritud regressioonikordajaid</code></pre>
+<pre><code>##    JOYSCIE    INTSCIE   INSTSCIE 
+##  0.1786851  0.1229927 -0.1475509</code></pre>
+<pre class="r"><code>confint(pisa.mudel4) # arvutame regressioonikordajatele usalduspiirid</code></pre>
+<pre><code>##                  2.5 %    97.5 %
+## (Intercept) 514.240738 518.57018
+## JOYSCIE      12.658190  18.82291
+## INTSCIE       8.997099  15.79669
+## INSTSCIE    -17.211161 -11.06495</code></pre>
 </div>
 </div>
 <div id="hierarhiliste-mudelite-vordlemine" class="section level1">
@@ -554,7 +666,7 @@ pisa.mudel2 &lt;- lm(PVSCIE ~ GENSCIE + INTSCIE, data=pisa)</code></pre>
 ##   Res.Df      RSS Df Sum of Sq F Pr(&gt;F)
 ## 1   4766  4746192                      
 ## 2   4764 28321232  2 -23575040</code></pre>
-<p>Eelkõige peaksime vaatama väljundis oleva tabeli viimase rea kahte parempoolset tulpa, milles on ära toodud mudelite erinevuse <strong>F-suhe</strong> ja selle <strong>p-väärtus</strong>. P-väärtus on praegusel juhul 2.791e-13 ehk 2.79 * <span class="math inline">\(10^{-13}\)</span> ehk p &lt; 0.001. Seega on tõenäosus, et nii suur F-suhte väärtus on saadud ainult tänu juhusele alla 0.1%-i ja võime tõdeda, et teine mudel on esimesest oluliselt parem. Kuigi ilmselt suuresti tänu meie väga suurele valimile, mille puhul ka üsnagi väikesed erinevused on statistiliselt olulised.</p>
+<p>Eelkõige peaksime vaatama väljundis oleva tabeli viimase rea kahte parempoolset tulpa, milles on ära toodud mudelite erinevuse <strong>F-suhe</strong> ja selle <strong>p-väärtus</strong>. P-väärtus on praegusel juhul 4.128e-06 ehk 4.12 * <span class="math inline">\(10^{-6}\)</span> ehk p &lt; 0.001. Seega on tõenäosus, et nii suur F-suhte väärtus on saadud ainult tänu juhusele alla 0.1%-i ja võime tõdeda, et teine mudel on esimesest oluliselt parem. Kuigi ilmselt suuresti tänu meie väga suurele valimile, mille puhul ka üsnagi väikesed erinevused on statistiliselt olulised.</p>
 </div>
 <div id="kovariatsioonanaluus-ancova" class="section level1">
 <h1>Kovariatsioonanalüüs (ANCOVA)</h1>
@@ -576,10 +688,56 @@ Anova(model.1, type = &quot;III&quot;) </code></pre>
 <div id="ulesanded" class="section level1">
 <h1>Ülesanded</h1>
 <ol style="list-style-type: decimal">
-<li><p>Tehke mudel, kus sõltuvaks tunnuseks on matemaatika testi skoor (PVMATH) ja prediktoriteks teaduse oluliseks pidamine (GENSCIE), huvi teaduse vastu (INTSCIE) ja motivatsioon loodusteadusi õppida (INSTSCIE). Missugused prediktorid on statistiliselt olulised?</p></li>
-<li><p>Arvutage ka standardiseeritud regressioonikordajad ja mudeli parameetrite usalduspiirid.</p></li>
-<li><p>Kas mudelil on probleeme multikollineaarsuseega? Kas mudeli jäägid on normaaljaotuslikud?</p></li>
+<li>Tehke mudel, kus sõltuvaks tunnuseks on matemaatika testi skoor (PVMATH) ja prediktoriteks teaduse oluliseks pidamine (GENSCIE), huvi teaduse vastu (INTSCIE) ja motivatsioon loodusteadusi õppida (INSTSCIE). Missugused prediktorid on statistiliselt olulised?</li>
 </ol>
+<pre class="r"><code>pisa.mudel4 = lm(PVMATH ~ JOYSCIE + INTSCIE + INSTSCIE, data = pisa)
+summary(pisa.mudel4) #vaatame tulemusi</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = PVMATH ~ JOYSCIE + INTSCIE + INSTSCIE, data = pisa)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -294.553  -48.430   -0.031   50.209  215.068 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  516.405      1.104 467.678  &lt; 2e-16 ***
+## JOYSCIE       15.741      1.572  10.011  &lt; 2e-16 ***
+## INTSCIE       12.397      1.734   7.149 1.01e-12 ***
+## INSTSCIE     -14.138      1.568  -9.019  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 72.93 on 4764 degrees of freedom
+## Multiple R-squared:  0.05301,    Adjusted R-squared:  0.05242 
+## F-statistic:  88.9 on 3 and 4764 DF,  p-value: &lt; 2.2e-16</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Arvutage ka standardiseeritud regressioonikordajad ja mudeli parameetrite usalduspiirid.</li>
+</ol>
+<pre class="r"><code>library(QuantPsyc)
+lm.beta(pisa.mudel4) #vaatame standardiseeritud regressioonikordajaid</code></pre>
+<pre><code>##    JOYSCIE    INTSCIE   INSTSCIE 
+##  0.1786851  0.1229927 -0.1475509</code></pre>
+<pre class="r"><code>confint(pisa.mudel4) # arvutame regressioonikordajatele usalduspiirid</code></pre>
+<pre><code>##                  2.5 %    97.5 %
+## (Intercept) 514.240738 518.57018
+## JOYSCIE      12.658190  18.82291
+## INTSCIE       8.997099  15.79669
+## INSTSCIE    -17.211161 -11.06495</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Kas mudelil on probleeme multikollineaarsuseega? Kas mudeli jäägid on normaaljaotuslikud?</li>
+</ol>
+<pre class="r"><code>cor(pisa[,c(&quot;JOYSCIE&quot;, &quot;INTSCIE&quot;, &quot;INSTSCIE&quot;)])</code></pre>
+<pre><code>##            JOYSCIE   INTSCIE  INSTSCIE
+## JOYSCIE  1.0000000 0.5478250 0.4752691
+## INTSCIE  0.5478250 1.0000000 0.4085926
+## INSTSCIE 0.4752691 0.4085926 1.0000000</code></pre>
+<pre class="r"><code>describe(pisa.mudel4$residuals)</code></pre>
+<pre><code>##    vars    n mean    sd median trimmed   mad     min    max  range  skew
+## X1    1 4768    0 72.91  -0.03    0.41 72.98 -294.55 215.07 509.62 -0.09
+##    kurtosis   se
+## X1    -0.06 1.06</code></pre>
 </div>
 <div id="lisad" class="section level1">
 <h1>LISAD</h1>
@@ -661,14 +819,9 @@ vif(pisa.mudel2)</code></pre>
 <div id="heteroskedaktilisus" class="section level2">
 <h2>Heteroskedaktilisus</h2>
 <p>Teine keerulise nimega probleem, mis võib takistada mudeli järelduste üldistamist on heteroskedaktilisus ehk olukord kui mudeli jääkide hajuvus on prediktorite eri tasemetel liiga erinev. Nähtuse esinemist saame uurida hajuvusdiagrammi abil, mille ühel teljel on mudeli jäägid (saame funtksioon resid abil) ja teisel teljel mudeli poolt ennustatud väärtused (need saame funktsiooni fitted.values abil).</p>
-<pre class="r"><code>library(ggplot2)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;ggplot2&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:psych&#39;:
-## 
-##     %+%, alpha</code></pre>
-<pre class="r"><code>plot(fitted.values(pisa.mudel2), resid(pisa.mudel2))</code></pre>
-<p><img src="praktikum4v2_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
+<pre class="r"><code>library(ggplot2)
+plot(fitted.values(pisa.mudel2), resid(pisa.mudel2))</code></pre>
+<p><img src="praktikum4v2_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
 <p>Joonisel olev punktikogum peaks olema ühtlane, see ei tohiks olla lehtrikujuline ehk ühes servast märkimisv äärselt kitsam kui teises servas. Antud juhul see enam-vähem nii ongi. Silma hakkavad üksikud eristuvad andmepunktid (see on suure valimi puhul oodatav), aga mitte midagi süstemaatilist. (Lisaks sellele: kui antud joonisel ilmneb U-kujuline muster, viitab see, et muutujate vaheline seos pole päris lineaarne.)</p>
 </div>
 <div id="jaakide-normaaljaotus" class="section level2">
@@ -676,11 +829,11 @@ vif(pisa.mudel2)</code></pre>
 <p>Kolmas üldistamise eeldus, mida alguses põgusalt mainitud sai, on, et mudeli jäägid peavad olema normaaljaotusega.</p>
 <p>Sellest annab aimu mudeli jääkide histogramm.</p>
 <pre class="r"><code>hist(mud2.standardized.residuals)</code></pre>
-<p><img src="praktikum4v2_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
+<p><img src="praktikum4v2_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
 <p>Teist tüüpi joonis, mille abil jääkide normaaljaotusele vastavust uurida on niinimetatud tõenäosuspaber ehk kvantiil-kvantiil diagramm (ingl. k. <em>Q-Q plot</em>). Selle saame kasutades funktsioone <em>qqnorm</em> ja <em>qqline</em> ja andes neile ette mudeli jäägid.</p>
 <pre class="r"><code>qqnorm(mud2.standardized.residuals)
 qqline(mud2.standardized.residuals, col=&quot;red&quot;, lwd=2)</code></pre>
-<p><img src="praktikum4v2_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
+<p><img src="praktikum4v2_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
 <p>Sirge joon esindab normaaljaotust ja punktid jääke. Täiusliku normaaljaotuse korral oleksid kõik punktid joone peal. Kõrvalekalded joonest on tavalised otstes, kuid keskel ei tohiks tohiks neid esineda. Praegu me midagi sellist näemegi; otstes on väikesed kõrvalekalded, aga mitte midagi hullu silma ei hakka.</p>
 </div>
 <div id="jaakide-soltumatus" class="section level2">
