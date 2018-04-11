@@ -1,13 +1,15 @@
 ---
-title: 'Logistiline regressioon'
+title: "Logistiline regressioon"
 author: "Martin Kolnes, Karin Täht"
 output:
   html_document:
     css: style.css
-    toc: true
+    toc: yes
     toc_float:
-      collapsed: false
-      smooth_scroll: false
+      collapsed: no
+      smooth_scroll: no
+  word_document:
+    toc: yes
 ---
 
 Laadige alla [praktikumi andmed](https://drive.google.com/open?id=1JlHhXSz-B8wejK43wo231dK--WUv6WgJ).  
@@ -57,7 +59,7 @@ summary(cowles)
 ```
 
 
-Teeme kõigepealt logistilise regressioonimudeli, milles sõltuvaks tunnuseks valmidus osaleda uurimistöös (tunnus *volunteer*) ja ennustame seda ekstravertsuse kaudu. Logistilise mudeli tegemiseks kasutame funktsiooni *glm* (nimetus sõnadest *generalized linear model*). Selle kasutamine on üsna sarnane funktsiooniga *lm*, mille abil koostasime lineaarseid regressioonimudeleid: kõigepealt mudelisse kaastavate muutujate nimed kujul sõltuv tunnus ~ sõltumatu tunnus ning seejärel argumendi *data* abil tabeli nimi, millest tunnused võetakse. Funktsiooni *glm* puhul lisandub argument *family*, mille abil määrame, millist tüüpi mudelit teha tahame. Logistilise mudeli puhul paneme argumendi *family* väärtuseks *binomial()*. (Kui meil juhtub esinema puuduvaid andmeid, saame need välja jätta lisades argumendi *na.action=na.omit*. Samuti saaksime argumendi *subset* abil määrata valimit kitsendava tingimuse.)
+Teeme kõigepealt logistilise regressioonmudeli, milles sõltuvaks tunnuseks on valmidus osaleda uurimistöös (tunnus *volunteer*) ja ennustame seda ekstravertsuse skoori kaudu. Logistilise mudeli tegemiseks kasutame funktsiooni *glm* (*generalized linear model*). Selle funktsiooni kasutamine on sarnane eelmises praktikumis kasutatud *lm* funktsiooniga. Kõigepealt peame sisestama mudelisse kaasatavate muutujate nimed ("sõltuv tunnus ~ sõltumatu tunnus") ning seejärel andmestiku nime ("data = andmestik"). Funktsiooni *glm* puhul lisandub argument *family*, mille abil määrame, millist tüüpi mudelit teha tahame. Logistilise mudeli puhul paneme argumendi *family* väärtuseks *binomial()*. (Kui meil juhtub esinema puuduvaid andmeid, saame need välja jätta lisades argumendi *na.action=na.omit*. Samuti saaksime argumendi *subset* abil määrata valimit kitsendava tingimuse.)
 
 
 ```{r}
@@ -71,53 +73,54 @@ summary(cowles.mudel1)
 ```
   
   
-Vaatame väljundi alaosa nimega **Coefficients**, mille tulbas **Estimate** on ära toodud mudeli parameetrite - vabaliikme (*Intercept*) ja regressioonikordaja - väärtused. Tulbas **Std. Error** on ära toodud standardviga (näitas kui suurt kordaja kõikumist võib oodata erinevates valimites). Tulbas **z value** on toodud z-statistiku väärtus, mis on tuntud ka *Waldi* statistiku nime all. See on saadud jagades regressioonikordaja väärtuse ja standardvea omaga. **Tulbas Pr(>|z|)** on ära toodud z-statistiku kaudu arvutatud p-väärtus, mille abil saame hinnata, kas prediktor omab olulist seost sõltuva muutujaga. Praegusel juhul on ekstravertsuse regressioonikordajale vastav p-väärtus $3.49e-06$ ehk $3.49 * 10^{-6}$. Antud
+Vaatame väljundi alaosa nimega **Coefficients**. Tulbas **Estimate** on ära toodud mudeli parameetrite - vabaliikme (*Intercept*) ja regressioonikordaja - väärtused. Tulbas **Std. Error** on ära toodud standardviga (kui suurt kordaja kõikumist võib oodata erinevates valimites). Tulbas **z value** on toodud z-statistiku väärtus, mis on tuntud ka *Waldi* statistiku nime all. See on saadud jagades regressioonikordaja väärtuse ja standardvea omaga. **Tulbas Pr(>|z|)** on märgitud z-statistiku kaudu arvutatud p-väärtus, mille abil saame hinnata, kas prediktor omab olulist seost sõltuva muutujaga. Praegusel juhul on ekstravertsuse regressioonikordajale vastav p-väärtus $3.49e-06$ ehk $3.49 * 10^{-6}$. Antud
 prediktori olulisusele nivool p < .001 viitavad ka rea lõpus olevad 3 tärni.  
 
 ## Riskisuhte arvutamine
-Logistilise regressiooni puhul on regressioonikordajad logaritmskaalal ja sellisel kujul on nende tõlgendamine üsna keeruline. Olukord läheb paremaks, kui teisendame regressioonikordaja eksponent-funktsiooni abil, mis on logaritmimise pöördfunktsioon. Selle tulemusel saadud arve nimetatakse **riskisuheteks** või ka **\v{s}ansside suheteks**. Riskisuhete saamiseks kasutame funktsioone *coef* ja *exp*. Funktsioonile *coef* anname argumendiks mudeli nime, see funktsioon eraldab mudelist ainult mudeli parameetrite väärtused. Funktsioonile *exp* anname argumendiks funktsioonist *coef* saadud väärtused. R-is saame teha seda hierahriliselt:  
+Logistilise regressiooni puhul on regressioonikordajad logaritmskaalal ja sellisel kujul on nende tõlgendamine üsna keeruline. Olukord läheb paremaks, kui teisendame regressioonikordaja eksponent-funktsiooni abil (logaritmimise pöördfunktsioon). Selle tulemusel saadud arve nimetatakse **riskisuheteks** või ka **šansside suheteks**. Riskisuhete saamiseks kasutame funktsioone *coef* ja *exp*. Funktsioonile *coef* anname argumendiks mudeli nime. See funktsioon eraldab mudelist ainult mudeli parameetrite väärtused. Funktsioonile *exp* anname argumendiks funktsioonist *coef* saadud väärtused. R-is saame teha seda hierahriliselt:  
 
 ```{r}
 exp(coef(cowles.mudel1))
 ```
 
-**Kuidas riskisuhteid tõlgendada?** 1-st suurem riskisuhte väärtus näitab, et prediktori väärtuse suurenedes ühe ühiku võrra suurenevad sündmuse esinemise  šansid nii mitu korda kui on riskisuhte väärtus. 1-st väiksem riskisuhte väärtus näitab, et prediktori väärtuse suurendes ühe ühiku võrra sündmuse esinemise  šansid vähenevad 1/riskisuhe arv kordi. Antud juhul on ekstravertsuse riskisuhte väärtuseks ümmardatuna 1.068. See tähendab, et kui ekstravertsuse skoor suureneb ühe punkti võrra suureneb jaatava vastuse tõenäosus 1.068 korda ehk 6.8\% võrra. Kuidas me teame, et need on just jaatava (ja mitte eitava) vastuse  šansid, mida numbrid näitavad? Vaikimisi käivad numbrid selle sõltuva muutuja taseme kohta, mille nimetus paikneb tähestikulises järjekorras tagapool (eespool paiknev kategooria on valitud taustakategooriaks). Antud juhul oli meie sõltuval muutujal *volunteer* 2 taset: *no* ja *yes*. Kuna *yes* algustäht paikneb tähestikus tagapool on praegusel juhul just see, mille  šansse numbrid näitavad.
+**Kuidas riskisuhteid tõlgendada?** 1-st suurem riskisuhte väärtus näitab, et prediktori väärtuse suurenedes ühe ühiku võrra suurenevad sündmuse esinemise  šansid nii mitu korda kui on riskisuhte väärtus. 1-st väiksem riskisuhte väärtus näitab, et prediktori väärtuse suurendes ühe ühiku võrra sündmuse esinemise  šansid vähenevad 1/riskisuhe korda. Antud juhul on ekstravertsuse riskisuhte väärtuseks ümmardatuna 1.068. See tähendab, et kui ekstravertsuse skoor suureneb ühe punkti võrra suureneb jaatava vastuse tõenäosus 1.068 korda ehk 6.8\% võrra.  
+Kuidas me teame, et need on just jaatava (ja mitte eitava) vastuse  šansid? Vaikimisi käivad numbrid selle sõltuva muutuja taseme kohta, mille nimetus paikneb tähestikulises järjekorras tagapool (eespool paiknev kategooria on valitud taustkategooriaks). Antud juhul oli meie sõltuval muutujal "volunteer" 2 taset: *no* ja *yes*. Kuna *yes* algustäht paikneb tähestikus tagapool on praegusel juhul just see, mille  šansse numbrid näitavad.
 
 ## Riskisuhte usaldusvahemikud  
-Lineaarse regressiooni puhul nägime, et üheks täiendavaks võimaluseks hinnata prediktorite mõju usaldusväärsust olid regressioonikordajate 95\% -usaldusvahemikud. Sedasama lähenemist saame kasutada ka logistilise regressiooni puhul arvutades usaldusvahemikud riskisuhete jaoks. Usaldusvahemikud saime funktsiooni *confint* abil. Logistilise regressiooni puhul paneme selle ümber veel funktsiooni *exp*.
+Lineaarse regressiooni puhul nägime, et üheks täiendavaks võimaluseks hinnata prediktorite mõju usaldusväärsust olid regressioonikordajate 95\% -usaldusvahemikud. Sedasama lähenemist saame kasutada ka logistilise regressiooni puhul, arvutades usaldusvahemikud riskisuhete jaoks. Usaldusvahemikud saime funktsiooni *confint* abil. Logistilise regressiooni puhul lisame veel funktsiooni *exp* (logaritmimise pöördfunktsioon).
 
 ```{r}
 exp(confint(cowles.mudel1))
 ```
 
-Riskisuhte usaldusintervallide puhul on oluline vaadata, kas väärtus 1 jääb usaldusintervalli sisse. Kui nii juhtub, viitab see, et prediktori mõju pole usaldusväärne: mõnedes valimites oleks mõju suund ühesugune ja teistes valimites teistsugune. Antud juhul on ekstravertsuse mõlemad usalduspiirid ühest suuremad. Seega võime olla üsna kindlad, et ekstravertsus mõjutab uurimustes osalemise valmidust positiivselt. 
+Riskisuhte usaldusintervallide puhul on oluline vaadata, kas väärtus 1 jääb usaldusintervalli sisse. Kui nii juhtub, viitab see sellele, et prediktori mõju pole usaldusväärne: mõnedes valimites oleks mõju suund ühesugune ja teistes valimites teistsugune. Antud juhul on ekstravertsuse mõlemad usalduspiirid ühest suuremad. Seega võime olla üsna kindlad, et ekstravertsus mõjutab uurimustes osalemise valmidust positiivselt. 
 
 ## Hii-ruut test
 
-Regressioonikordajad, riskisuhted ja nende usaldusvahemikud iseloomustavad eraldiseisvaid prediktoreid. Lisaks sellele on mudeli väljundis toodud ka mudeli sobitusastme näitajad. Mudeli jääkhälbimus (Residual deviance) iseloomustab meie koostatud mudeli logaritmilise tõepärafunktsiooni väärtust. Viimane põhineb mudeli järgi ennustatud ja tegelike väärtustega seotud tõenäosuste summeerimisel. Mida parem mudel, seda väiksem väärtus. Väljundis samuti toodud **Null Deviance** on sama näitaja ainult vabaliiget sisaldava mudeli jaoks, milles muutujate-vaheline seos puudub ehk niinimetatud nullmudel. Kui **Residual deviance** on väiksem kui **Null deviance**, tähendab see, et koostatud mudel on parem kui nullmudel. Selle üle, kas erinevus nullmudelist on piisavalt suur, saab otsustada  ${\chi}^2 -$testi (hii-ruuttesti) abil. Mingil põhjusel funktsioon *glm* seda välja ei arvuta ja meil tuleb seda ise teha funktsiooni *anova* abil. Defneerime kõigepealt ilma prediktoriteta ainult vabaliiget sisaldava nullmudeli. Selle valem on kujul "sõltuv muutuja ~ 1".
+Regressioonikordajad, riskisuhted ja nende usaldusvahemikud iseloomustavad eraldiseisvaid prediktoreid. Lisaks sellele on mudeli väljundis toodud ka mudeli sobitusastme näitajad. Mudeli jääkhälbimus (*Residual deviance*) iseloomustab meie koostatud mudeli logaritmilise tõepärafunktsiooni väärtust. Viimane põhineb mudeli järgi ennustatud ja tegelike väärtustega seotud tõenäosuste summeerimisel. Mida parem mudel, seda väiksem väärtus. Väljundis toodud **Null Deviance** on sama näitaja ainult vabaliiget sisaldava mudeli jaoks, milles muutujate vaheline seos puudub (nn nullmudel). Kui **Residual deviance** on väiksem kui **Null deviance**, tähendab see, et koostatud mudel on parem kui nullmudel. Selle üle, kas erinevus nullmudelist on piisavalt suur, saab otsustada  ${\chi}^2 -$testi (hii-ruuttesti) abil. Mingil põhjusel funktsioon *glm* seda välja ei arvuta ja meil tuleb seda ise teha funktsiooni *anova* abil. Defneerime kõigepealt ilma prediktoriteta ainult vabaliiget sisaldava nullmudeli.   
+Selle valem on kujul: "sõltuv muutuja ~ 1".
 
 ```{r}
 cowles.nullmudel <- glm(volunteer ~ 1, data=cowles, family=binomial())
 ```
 
 
-Nüüd anname nii nullmudeli kui eelnevalt koostatud mudeli võrdlemiseks funktsioonile *anova*, millele
-ütleme argumendi *test=“Chisq”* abil ka, et tahame kasutada hii-ruut testi.
+Nüüd võrdleme nullmudelit ja eelnevalt koostatud mudelit anname *anova* funktsiooniga. Argumendi *test=“Chisq”* abil anname teada, et tahame kasutada hii-ruut testi.
 ```{r}
 anova(cowles.nullmudel, cowles.mudel1, test="Chisq")
 ```
 
-Peaksime vaatama tabeli teise rea kahte viimast tulpa, milles on toodud hii-ruut statistik (*Deviance*), ja selle p-väärtus. Antud p-väärtuse põhjal võime öelda, et mudeli sobitusaste oli nullmudeli omast oluliselt parem (${\chi}^2$ = 22.02, p < .001). 
+Vaatame tabeli teise rea kahte viimast tulpa, milles on toodud hii-ruut statistik (*Deviance*), ja selle p-väärtus. Antud p-väärtuse põhjal võime öelda, et mudeli sobitusaste oli nullmudeli omast oluliselt parem (${\chi}^2$ = 22.02, p < .001). 
 
 ## Pseudo-determinatsioonikordaja
 
-Lineaarse regressiooni puhul saime välja arvutada mudeli determinatsioonikordaja($R^2$), mis näitas kui suure osa sõltuva tunnuse hajuvusest mudel ära kirjeldas. Logistilise regressiooni puhul saame arvutada näitajaid, mida nimetatakse pseudo-determinatsioonikordajaks. Nad varieeruvad 0-st 1-ni nagu päris determinatsioonikordaja ning näitavad mudeli sobitustusastme headust, mida suurem väärtus seda parem. Aga nagu eesliitest pseudo järeldada võib, pole need päris samasugused. Nimelt ei saa neid tõlgendada sõltuva tunnuse seletusprotsendi mõttes nii nagu lineaarse regressiooni determinatsioonikordajat. Sõltuvalt arvutuskäigust on pseudo-determinatsioonikordajaid mitut tüüpi. Arvutame praegusel juhul ühe sagedamini kasutatava, mida nimetatakse Nagelkerke $R^2$. Selle jaoks peame kõigepealt installima lisamooduli *fmsb*.
+Lineaarse regressiooni puhul saime välja arvutada mudeli determinatsioonikordaja($R^2$), mis näitas kui suure osa sõltuva tunnuse hajuvusest mudel ära kirjeldas. Logistilise regressiooni puhul saame arvutada näitajaid, mida nimetatakse pseudo-determinatsioonikordajaks. Need varieeruvad samuti 0-st 1-ni ja näitavad mudeli sobitustusastme headust (mida suurem väärtus seda parem). Sõltuvalt arvutuskäigust on pseudo-determinatsioonikordajaid mitut tüüpi. Arvutame praegusel juhul ühe sagedamini kasutatava, mida nimetatakse Nagelkerke $R^2$. Selle jaoks peame kõigepealt installima lisamooduli *fmsb*.
 
 ```{r, eval = F, message= F, warning=F}
 install.packages("fmsb")
 ```
 
-Seejärel saame lisamooduli laadida ja kasutada selles olevat funktsiooni *NagelkerkeR2*, millele annamemudeli nime.
+Seejärel saame lisamooduli laadida ja kasutada selles olevat funktsiooni *NagelkerkeR2*:
 ```{r}
 library(fmsb)
 NagelkerkeR2(cowles.mudel1)
@@ -129,8 +132,8 @@ NagelkerkeR2(cowles.mudel1)
 
 ## Standardiseeritud skooride kasutamine
 
-Praegusel juhul oleme ekstravertsuse prediktorina mudelisse kaasanud toorskooride kujul. Need toorskoorid on aga suhteliselt suvalisel skaalal. See tähendab, et me ei oska eriti täpselt hinnata, kas ühe-punktiline muutus ekstravertsuse skooris on suur või väike. Seetõttu tahame vahel mõne numbrilise prediktori mudelisse kaasata standardiseerituna ehk standarhälbe ühikutesse teisendatuna. Siis saame riskisuhteid tõlgendades öelda, et prediktori muutudes ühe standardhälbe võrra muutuvad huvipakkuva sündmuse esinemise \v{s}anssid nii mitu korda. Prediktori saame standardiseerida pannes funtksioonile *glm* antavas mudeli valemis prediktori ümber funktsiooni *scale()*. Teeme oma mudeli vastavalt ringi ja vaatame riskisuhteid.
-
+Eelnevalt kasutasime mudelis ekstravertsuse toorskoore, mis teeb tulemuste tõlgendamise keeruliseks. See tähendab, et me ei oska eriti täpselt hinnata, kas ühe-punktiline muutus ekstravertsuse skooris on suur või väike. Seetõttu on vahepeal mõistlik numbriline prediktor kaasata standardiseerituna ehk standarhälbe ühikutesse teisendatuna. Sel juhul saame riskisuhteid tõlgendades öelda, et prediktori muutudes ühe standardhälbe võrra muutuvad huvipakkuva sündmuse esinemise šanssid nii mitu korda.   
+Prediktori saame standardiseerida funktsiooniga *scale()*:
 ```{r}
 cowles.mudel1 <- glm(volunteer ~ scale(extraversion), data=cowles, family=binomial())
 exp(coef(cowles.mudel1))
@@ -148,12 +151,12 @@ summary(cowles.mudel2)
 ```
 
 
-Tabelist **Coefficients** näeme p-väärtuste abil, et mõlemad prediktorid on olulised. Kategoriaalsete muutujate puhul valitakse üks kategooriatest baaskategooriaks, millega ülejäänud kategooriaid võrreldakse. Praegusel juhul on muutujal *sex* kaks taset (*female* ja *male*). Vaikimisi on baaskategooriaks valitud *female*, tulenevalt sellest, et *female* on tähestukuliselt eespool võrreldes *male*'iga. Seega näitab vastav regressioonikordaja kui erinev on kategooria *male* võrreldes kategooriaga *female*. Miinusmärgist selle kordaja ees võime järeldada, et meeste puhul on jaatava vastuse tõenäosus naistega võrreldes madalam. Kordajate arusaadavamaks tõlgendamiseks arvutame neist jällegi riskisuhted.
+Tabelist **Coefficients** näeme p-väärtuste abil, et mõlemad prediktorid on olulised. Kategoriaalsete muutujate puhul valitakse üks kategooriatest baaskategooriaks, millega ülejäänud kategooriaid võrreldakse. Praegusel juhul on muutujal *sex* kaks taset (*female* ja *male*). Vaikimisi on baaskategooriaks valitud *female*, tulenevalt sellest, et *female* on tähestukuliselt eespool võrreldes *male*'iga. Seega näitab vastav regressioonikordaja, kui erinev on kategooria *male* võrreldes kategooriaga *female*. Miinusmärgist selle kordaja ees võime järeldada, et meeste puhul on jaatava vastuse tõenäosus naistega võrreldes madalam. Kordajate arusaadavamaks tõlgendamiseks arvutame neist jällegi riskisuhted.
 ```{r}
 exp(coef(cowles.mudel2))
 ```
 
-Ekstravertsuse riskisuhe on jäänud samaks. Vastaja soo riskisuhtest võime järeldada, et meeste puhul on jaatava vastamise tõenäosus 78\% naiste jaatava vastuse tõenäosusest. ümberpööratuna väljendudes on naiste puhul jaatava vastuse tõenäosus $1/0.78 = 1.28$ korda suurem kui meeste puhul. 
+Ekstravertsuse riskisuhe on jäänud samaks. Vastaja soo riskisuhtest võime järeldada, et meeste puhul on jaatava vastamise tõenäosus 78\% naiste jaatava vastuse tõenäosusest. Ehk naiste puhul jaatava vastuse tõenäosus $1/0.78 = 1.28$ korda suurem kui meeste puhul. 
 
 Hindame prediktoreid ka 95\%-usaldusvahemike abil.
 ```{r}
