@@ -368,10 +368,64 @@ div.tocify {
 <div id="kordamine" class="section level1">
 <h1>Kordamine</h1>
 <ol style="list-style-type: decimal">
-<li><p>Tehke PISA andmestiku alusel regressioonanalüüs, kus sõltuvaks tunnuseks on matemaatika testi tulemus (PVMATH) ja prediktoriteks enese-tõhusus teaduses (SCIEEFF; <em>science self-efficacy</em>) ja mina-pilt loodusteadustes (SCSCIE; <em>science self-concept</em>).</p></li>
-<li><p>Arvutage ka standardiseeritud regressioonikordajad ja mudeli parameetrite usalduspiirid.</p></li>
-<li><p>Kas mudeli jäägid jaotuvad normaalajaotusel vastavalt?</p></li>
+<li>Tehke PISA andmestiku alusel regressioonanalüüs, kus sõltuvaks tunnuseks on matemaatika testi tulemus (PVMATH) ja prediktoriteks enese-tõhusus teaduses (SCIEEFF; <em>science self-efficacy</em>) ja mina-pilt loodusteadustes (SCSCIE; <em>science self-concept</em>).</li>
 </ol>
+<pre class="r"><code>model.yl1 &lt;- lm(PVMATH ~ SCIEEFF + SCSCIE, data = pisa)
+summary(model.yl1)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = PVMATH ~ SCIEEFF + SCSCIE, data = pisa)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -297.18  -46.42    1.04   47.64  206.98 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  516.189      1.008 512.306  &lt; 2e-16 ***
+## SCIEEFF       31.917      1.287  24.803  &lt; 2e-16 ***
+## SCSCIE         5.679      1.366   4.158 3.26e-05 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 68.88 on 4765 degrees of freedom
+## Multiple R-squared:  0.1552, Adjusted R-squared:  0.1549 
+## F-statistic: 437.8 on 2 and 4765 DF,  p-value: &lt; 2.2e-16</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Arvutage ka standardiseeritud regressioonikordajad ja mudeli parameetrite usalduspiirid.</li>
+</ol>
+<pre class="r"><code>library(QuantPsyc)</code></pre>
+<pre><code>## Loading required package: boot</code></pre>
+<pre><code>## Loading required package: MASS</code></pre>
+<pre><code>## 
+## Attaching package: &#39;QuantPsyc&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:base&#39;:
+## 
+##     norm</code></pre>
+<pre class="r"><code>lm.beta(model.yl1)</code></pre>
+<pre><code>##    SCIEEFF     SCSCIE 
+## 0.36429462 0.06107507</code></pre>
+<pre class="r"><code>confint(model.yl1)</code></pre>
+<pre><code>##                 2.5 %     97.5 %
+## (Intercept) 514.21364 518.164284
+## SCIEEFF      29.39434  34.439847
+## SCSCIE        3.00163   8.356452</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Kas mudeli jäägid jaotuvad normaalajaotusel vastavalt?</li>
+</ol>
+<pre class="r"><code>hist(model.yl1$residuals)
+library(psych)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;psych&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:boot&#39;:
+## 
+##     logit</code></pre>
+<p><img src="praktikum5_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>describe(model.yl1$residuals)</code></pre>
+<pre><code>##    vars    n mean    sd median trimmed   mad     min    max  range  skew
+## X1    1 4768    0 68.86   1.04    0.85 69.91 -297.18 206.98 504.17 -0.17
+##    kurtosis se
+## X1     0.11  1</code></pre>
 </div>
 <div id="logistiline-regressioon" class="section level1">
 <h1>Logistiline regressioon</h1>
@@ -598,13 +652,121 @@ stargazer(ess.mudel1, type=&quot;text&quot;, out=&quot;multi1.htm&quot;)</code><
 <li>Andmetabelist nimega neeme on Marko Neeme magistritöö (Neeme, 2012) andmed, milles uuriti 50-70-aastaste meeste suhtumist eesnäärmevähi skriiningtesti. Tunnus “”valmidus“, näitab testis osalemise valmidust (tasemed pigem jah, ja pigem ei). Lisaks on tabelis ära toodud Suure Viisiku isiksuseomadused: neurootilisus (tunnus N), ekstravertsus (E), avatus kogemusele (O), sotsiaalsus (A) ja meelekindlus (C). Koostage binaarse logistilise regressiooni mudel, mis ennustab skriiningtestis osalemise valmidust Suure Viisiku isiksuseomaduste kaudu.</li>
 </ol>
 <ol style="list-style-type: lower-alpha">
-<li><p>Esialgu tuleks saada ülevaade andmetest. Kasutage funktsiooni <em>summary</em>. Milline on oslejate keskmine vanus? Missugune on “valmiduse” jaotus?</p></li>
-<li><p>Tehke ekstravertsuse tulemustest histogramm.</p></li>
-<li><p>Millised isiksusomadused omavad olulist seost valmidusega? Kas need omadused suurendavad või vähendavad testis osalemise valmidust?</p></li>
-<li><p>Arvutage välja riskisuhted ja nende 95%-usaldusvahemikud? Milline omadus mõjutab osalemisvalmidust kõige tugevamini?</p></li>
-<li><p>Arvutage mudeli sobitusastet näitav hii-ruut-statistik ja selle p-väärtus.</p></li>
-<li><p>Leidke mudeli pseudo-determinatsioonikordja.</p></li>
+<li>Esialgu tuleks saada ülevaade andmetest. Kasutage funktsiooni <em>summary</em>. Milline on oslejate keskmine vanus? Missugune on “valmiduse” jaotus?</li>
 </ol>
+<pre class="r"><code>summary(neeme)</code></pre>
+<pre><code>##      vanus             N               E               O        
+##  Min.   :49.40   Min.   :1.000   Min.   :1.000   Min.   :1.000  
+##  1st Qu.:56.00   1st Qu.:2.500   1st Qu.:2.750   1st Qu.:2.833  
+##  Median :60.00   Median :3.000   Median :2.917   Median :3.000  
+##  Mean   :61.17   Mean   :2.869   Mean   :2.909   Mean   :3.077  
+##  3rd Qu.:67.00   3rd Qu.:3.250   3rd Qu.:3.167   3rd Qu.:3.333  
+##  Max.   :74.48   Max.   :4.167   Max.   :4.417   Max.   :4.917  
+##  NA&#39;s   :8       NA&#39;s   :3       NA&#39;s   :5       NA&#39;s   :7      
+##        A               C              valmidus  
+##  Min.   :1.000   Min.   :1.000   pigem ei :288  
+##  1st Qu.:2.917   1st Qu.:3.083   pigem jah: 74  
+##  Median :3.167   Median :3.333   NA&#39;s     :  9  
+##  Mean   :3.252   Mean   :3.468                  
+##  3rd Qu.:3.667   3rd Qu.:3.917                  
+##  Max.   :4.750   Max.   :5.000                  
+##  NA&#39;s   :5       NA&#39;s   :7</code></pre>
+<pre class="r"><code>prop.table(table(neeme$valmidus))*100#jaotus protsentides</code></pre>
+<pre><code>## 
+##  pigem ei pigem jah 
+##  79.55801  20.44199</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Tehke ekstravertsuse tulemustest histogramm.</li>
+</ol>
+<pre class="r"><code>library(ggplot2)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;ggplot2&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:psych&#39;:
+## 
+##     %+%, alpha</code></pre>
+<pre class="r"><code>ggplot(neeme, aes(E))+
+        geom_histogram()+
+        theme_classic()+
+        labs(x = &quot;Ekstravertsus&quot;, y = &quot;Kogus&quot;)</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>## Warning: Removed 5 rows containing non-finite values (stat_bin).</code></pre>
+<p><img src="praktikum5_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Millised isiksusomadused omavad olulist seost valmidusega? Kas need omadused suurendavad või vähendavad testis osalemise valmidust?</li>
+</ol>
+<pre class="r"><code>mudel.yl2 &lt;- glm(valmidus~N+E+O+A+C, data = neeme, family = binomial())
+summary(mudel.yl2)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = valmidus ~ N + E + O + A + C, family = binomial(), 
+##     data = neeme)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.6568  -0.5857  -0.4087  -0.2175   2.9127  
+## 
+## Coefficients:
+##              Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -11.90042    2.35155  -5.061 4.18e-07 ***
+## N             2.46604    0.38288   6.441 1.19e-10 ***
+## E            -1.26322    0.35198  -3.589 0.000332 ***
+## O             0.20487    0.42135   0.486 0.626813    
+## A            -0.04501    0.30816  -0.146 0.883867    
+## C             1.78794    0.38265   4.673 2.97e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 346.61  on 347  degrees of freedom
+## Residual deviance: 263.41  on 342  degrees of freedom
+##   (23 observations deleted due to missingness)
+## AIC: 275.41
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>Arvutage välja riskisuhted ja nende 95%-usaldusvahemikud? Milline omadus mõjutab osalemisvalmidust kõige tugevamini?</li>
+</ol>
+<pre class="r"><code>round(exp(coef(mudel.yl2)),3)</code></pre>
+<pre><code>## (Intercept)           N           E           O           A           C 
+##       0.000      11.776       0.283       1.227       0.956       5.977</code></pre>
+<pre class="r"><code>round(exp(confint(mudel.yl2)),3)</code></pre>
+<pre><code>## Waiting for profiling to be done...</code></pre>
+<pre><code>##             2.5 % 97.5 %
+## (Intercept) 0.000  0.001
+## N           5.793 26.097
+## E           0.140  0.563
+## O           0.553  2.889
+## A           0.527  1.788
+## C           2.893 13.046</code></pre>
+<ol start="5" style="list-style-type: lower-alpha">
+<li>Arvutage mudeli sobitusastet näitav hii-ruut-statistik ja selle p-väärtus.</li>
+</ol>
+<pre class="r"><code>#Siin võis tekkid osadel probleem hii-ruudu arvutamisega. 
+# Kui kustutate andmetest puuduvad andmed, siis peaks nende kahe mudeli võrdlus töötama:
+neeme2 &lt;- na.omit(neeme)#see rida loob uue andmestiku, kus ei ole NA&#39;sid
+#Nüüd teen mõlemad mudedlid selle uue andmestikuga:
+mudel.yl2 &lt;- glm(valmidus~N+E+O+A+C, data = neeme2, family = binomial())
+mudel.yl2.null &lt;- glm(valmidus~1, data = neeme2, family = binomial())
+anova(mudel.yl2, mudel.yl2.null, test = &quot;Chisq&quot;)</code></pre>
+<pre><code>## Analysis of Deviance Table
+## 
+## Model 1: valmidus ~ N + E + O + A + C
+## Model 2: valmidus ~ 1
+##   Resid. Df Resid. Dev Df Deviance  Pr(&gt;Chi)    
+## 1       337     260.14                          
+## 2       342     338.79 -5  -78.656 1.603e-15 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<ol start="6" style="list-style-type: lower-alpha">
+<li>Leidke mudeli pseudo-determinatsioonikordja.</li>
+</ol>
+<pre class="r"><code>NagelkerkeR2(mudel.yl2)</code></pre>
+<pre><code>## $N
+## [1] 343
+## 
+## $R2
+## [1] 0.3265317</code></pre>
 </div>
 <div id="lisad" class="section level1">
 <h1>LISAD</h1>
