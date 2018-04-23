@@ -119,6 +119,22 @@ fa.mudel1$values
 ```{r}
 plot(fa.mudel1$values, type="b")
 ```
+  
+## Faktorskoorid   
+Kui me ülalpool tegime mudeli nimega *fa.mudel1*, tellisime funktsioonilt *fa* ka faktorskooride arvutamise. Need skoorid näitavad, kus iga vastaja teatud faktoril paikneb. Skooride arvutamiseks kasutatakse inimeste vastuseid väidetele ja faktorlaadungeid. Lihtsustades võib öelda, et inimese faktorskoor saadakse korrutades iga väite vastuse selle väite laadungiga ning need korrutised liidetakse kokku. (Tegelikkuses on arvutused natuke keerulisemad. Kõigepealt arvutatakse välja faktorskoori koefitsiendid, mis saadakse laadungite maatriski korrutamisel algse korrelatsioonimaatriksi pöördmaatriksiga ning neid koefitsiente hakatakse siis korrutama ja kokku liitma.)
+
+
+Faktorskoore saab kasutada edasistes arvutustes, nt võime uurida, kas faktor seostub mingite teiste muutujatega. Skoorid saame mudelist kätte lisades mudeli nime lõppu dollari märgi ja "*scores*". Salvestame skoorid eraldi tabelisse ja vaatame esimesi ridu.
+```{r}
+skoorid <- data.frame(fa.mudel1$scores)
+head(skoorid)
+```
+
+R on pannud faktoritele mittemidagiütlevad nimed "ML2" ja "ML1". Eelnevalt nägime faktorlaadungite tabelist, et esimesele faktorile laadusid tugevamalt meelekindluse väited ja teisele sotsiaalsuse väited. Nimetame selguse huvides faktorid ümber: paneme meelekindluse faktorile nimeks C (nagu *Conscientiousness*) ja sotsiaalsuse faktorile A (nagu *Agreeableness*).
+```{r}
+colnames(skoorid) <- c("C", "A")
+```
+
 
 # Cronbachi alfa
 Faktoranalüüsi kasutatakse eriti sageli küsimustikuandmete analüüsimiseks. Kui oleme kindlaks teinud, millised väited mingile faktorile laaduvad, tahame vahel arvutada küsimustiku alaskaalade kohta ka reliaablusnäitajaid nagu Cronbachi alfa. Selle jaoks on *psych* moodulis olemas funktsioon *alpha*, millele tuleks ette anda alaskaala väidete toorandmed. Antud juhul teame, et sotsiaalsuse väited paiknevad tabeli bfi2 tulpades 1-5. Seega saaksime sotsiaalsuse alaskaala alfa kätte nii:
@@ -150,7 +166,7 @@ pc.mudel1 #tulemuste vaatamine
 ```
 Tehke see analüüs enda arvutis läbi ja võrrelega tulemusi eelneva analüüsiga. Kas leiate tulemustes erinevusi?  
 
-# Kordamisülesanded   
+# Ülesanded     
 Kastuage andmestikku **WV6_EST2011**.
    
 Ülesanne 1. Kirjeldav statistika. Lahendage järgnevad ülesanded:     
@@ -174,7 +190,8 @@ Kastuage andmestikku **WV6_EST2011**.
 3.3. Kas kõik prediktorid olid olulised?   
 3.4. Milline prediktor ennustas kõige paremini vanust?    
     
-Kasutage andmestikku nimega **bfi**.   
+Kasutage andmestikku nimega **bfi**.  
+  
 Ülesanne 4. Tehke läbi faktoranalüüs ka teiste tunnustega. Kasutage korraga kõiki alaskaalasid ja vaadake, kas saate 5-faktorilise mudeli. 
 
 

@@ -507,6 +507,22 @@ Kui me eeldame, et faktorid peaksid olema üksteisest sõltumatud, tuleks eelist
 <pre class="r"><code>plot(fa.mudel1$values, type=&quot;b&quot;)</code></pre>
 <p><img src="praktikum6_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
+<div id="faktorskoorid" class="section level2">
+<h2>Faktorskoorid</h2>
+<p>Kui me ülalpool tegime mudeli nimega <em>fa.mudel1</em>, tellisime funktsioonilt <em>fa</em> ka faktorskooride arvutamise. Need skoorid näitavad, kus iga vastaja teatud faktoril paikneb. Skooride arvutamiseks kasutatakse inimeste vastuseid väidetele ja faktorlaadungeid. Lihtsustades võib öelda, et inimese faktorskoor saadakse korrutades iga väite vastuse selle väite laadungiga ning need korrutised liidetakse kokku. (Tegelikkuses on arvutused natuke keerulisemad. Kõigepealt arvutatakse välja faktorskoori koefitsiendid, mis saadakse laadungite maatriski korrutamisel algse korrelatsioonimaatriksi pöördmaatriksiga ning neid koefitsiente hakatakse siis korrutama ja kokku liitma.)</p>
+<p>Faktorskoore saab kasutada edasistes arvutustes, nt võime uurida, kas faktor seostub mingite teiste muutujatega. Skoorid saame mudelist kätte lisades mudeli nime lõppu dollari märgi ja “<em>scores</em>”. Salvestame skoorid eraldi tabelisse ja vaatame esimesi ridu.</p>
+<pre class="r"><code>skoorid &lt;- data.frame(fa.mudel1$scores)
+head(skoorid)</code></pre>
+<pre><code>##           ML2        ML1
+## 1 -1.37782435 -0.9093545
+## 2 -0.35169413 -0.2304038
+## 3 -0.15698432 -0.4492556
+## 4 -1.09123808  0.1586491
+## 5 -0.04892757 -0.8470346
+## 6  1.33536224  0.4145664</code></pre>
+<p>R on pannud faktoritele mittemidagiütlevad nimed “ML2” ja “ML1”. Eelnevalt nägime faktorlaadungite tabelist, et esimesele faktorile laadusid tugevamalt meelekindluse väited ja teisele sotsiaalsuse väited. Nimetame selguse huvides faktorid ümber: paneme meelekindluse faktorile nimeks C (nagu <em>Conscientiousness</em>) ja sotsiaalsuse faktorile A (nagu <em>Agreeableness</em>).</p>
+<pre class="r"><code>colnames(skoorid) &lt;- c(&quot;C&quot;, &quot;A&quot;)</code></pre>
+</div>
 </div>
 <div id="cronbachi-alfa" class="section level1">
 <h1>Cronbachi alfa</h1>
@@ -596,8 +612,8 @@ Kui me eeldame, et faktorid peaksid olema üksteisest sõltumatud, tuleks eelist
 <pre class="r"><code>pc.mudel1 #tulemuste vaatamine</code></pre>
 <p>Tehke see analüüs enda arvutis läbi ja võrrelega tulemusi eelneva analüüsiga. Kas leiate tulemustes erinevusi?</p>
 </div>
-<div id="kordamisulesanded" class="section level1">
-<h1>Kordamisülesanded</h1>
+<div id="ulesanded" class="section level1">
+<h1>Ülesanded</h1>
 <p>Kastuage andmestikku <strong>WV6_EST2011</strong>.</p>
 <p>Ülesanne 1. Kirjeldav statistika. Lahendage järgnevad ülesanded:<br />
 1.1. valimi suurus:<br />
@@ -617,8 +633,8 @@ Kui me eeldame, et faktorid peaksid olema üksteisest sõltumatud, tuleks eelist
 3.2. Kui suure osa seletas ära mudel sõltuva muutuja variatiivsusest?<br />
 3.3. Kas kõik prediktorid olid olulised?<br />
 3.4. Milline prediktor ennustas kõige paremini vanust?</p>
-<p>Kasutage andmestikku nimega <strong>bfi</strong>.<br />
-Ülesanne 4. Tehke läbi faktoranalüüs ka teiste tunnustega. Kasutage korraga kõiki alaskaalasid ja vaadake, kas saate 5-faktorilise mudeli.</p>
+<p>Kasutage andmestikku nimega <strong>bfi</strong>.</p>
+<p>Ülesanne 4. Tehke läbi faktoranalüüs ka teiste tunnustega. Kasutage korraga kõiki alaskaalasid ja vaadake, kas saate 5-faktorilise mudeli.</p>
 </div>
 
 
