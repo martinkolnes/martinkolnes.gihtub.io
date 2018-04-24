@@ -13,14 +13,13 @@ output:
 ```{r, echo = F, eval = T}
 load("KMKT/6praktikum/6praktikumAndmed.Rdata")
 ```
-Laadige alla [praktikumi andmed](https://drive.google.com/open?id=1B7grF4qTJCmHU2QrKGaNrnxMurJb1Xce).  
+Laadige alla [praktikumi andmed](https://drive.google.com/open?id=1GJCsrAJ6bymf6Vyduv1z3PlyXVhsGQ7A).  
 
 # Faktoranalüüs ja peakomponentide analüüs
-Nagu ilmselt teate, on olemas 2 lähedast meetodit: **faktoranalüüs** ja **peakomponentide analüüs**. Mõlema eesmärgiks on taandada suurem muutujatekogum väikseks arvuks liitmuutujateks. Sageli annavad mõlemad sarnase lõpptulemuse, kuid vahel võivad meetodite tulemused ka erineda. 
 
 **Faktoranalüüsi** eesmärk on kirjeldada mingit suuremat hulka tunnuseid väiksema arvu hüpoteetiliste tunnuste ehk faktorite kaudu.  
 **Peakomponentide analüüsi** eesmärk on välja selgitada väiksem hulk komponente, mis vastutavad esialgsete muutujate varieeruvuse  eest.   
-Faktoranalüüs ja peakomponentide analüüs on matemaatilises mõttes erinevad. Faktoranalüüsi käigus eeldatakse, et mõõdetud muutujate varieeruvuse eest vastutavad tekkivad ühisfaktorid ja unikaalsed faktorid. Peakomponentide analüüsi käigus tekitatakse uued muutujad lihtsalt kui lineaarkombinatsioonid mõõdetud muutujatest (vaadake loengu konspektist jooniseid).
+Faktoranalüüs ja peakomponentide analüüs on matemaatilises mõttes erinevad. Faktoranalüüsi käigus eeldatakse, et mõõdetud muutujate varieeruvuse eest vastutavad tekkivad ühisfaktorid ja unikaalsed faktorid. Peakomponentide analüüsi käigus tekitatakse uued muutujad lihtsalt kui lineaarkombinatsioonid mõõdetud muutujatest.
 Faktoranalüüsi on mõistlik kasutada, kui uurija on huvitatud faktoritest, mis vastutavad teatud hulga mõõdetud muutujate varieeruvuse eest. Peakomponentide analüüsi tuleks kasutada, kui uurija soovib lihtsalt andmeid taandada.
 
 
@@ -46,7 +45,7 @@ library(psych)
 library(GPArotation)
 ```
 
-Vaatame alustuseks suheliselt lihtsat faktormudelit, mille puhul teame, et sellel on 2-faktoriline struktuur. Laadige R’i andmestik nimega bfi.
+Vaatame alustuseks suheliselt lihtsat faktormudelit, mille puhul teame, et sellel on 2-faktoriline struktuur. 
 
 ## Eelduse kontroll - nõrgad ja tugevad seosed tunnuste vahel
 Faktoranalüüsi alguspunktiks on analüüsi kaasatavate muuutjate vaheliste korrelatsioonide maatriks. Mõistliku faktorlahendi eelduseks on paraja tugevusega korrelatsioonide kogumid maatriksis. See tähendab, et muutujad, mis seostuvad teistega liiga nõrgalt või liiga tugevalt, võivad osutuda probleemseks. 
@@ -55,7 +54,7 @@ Teeme alguses tavalise korrelatsioonimaatriksi vastavate tunnustega. Hetkel kasu
 ```{r}
 bfi2 <- bfi[,1:10]
 ```
-Korrelatsioonimaatriksi saab funktsiooni *cor* abil (mille argument *use=“complete”* jätab arvutustest välja puuduvate väärtustega andmeread). Funktsioon *round* selle ümber aitab ümmardada korrelatsioonikordajad kahe komakohani. 
+Korrelatsioonimaatriksi saab funktsiooni *cor* abil (argument *use=“complete”* jätab arvutustest välja puuduvate väärtustega andmeread). Funktsioon *round* selle ümber aitab ümmardada korrelatsioonikordajad kahe komakohani. 
 ```{r}
 bfi2matrix <- round(cor(bfi2, use="complete"), 2)
 bfi2matrix
@@ -73,10 +72,10 @@ Praegusel juhul on p-väärtus alla 0.05. P-väärtus üle 0.05 näitab probleem
 ```{r}
 det(bfi2matrix)
 ```
-Probleeme multikollineaarsusega (ehk liiga tugevate muuutjate vaheliste seostega) näitab determinandi väärtus alla $0.00001−e0.00001−e$ (ehk $10− 10^−5$). Kui probleemne multikollineaarsus siiski kinnitust leiab, tuleks korrelatsioonimaatriksist üles otsida kordajad üle 0.9 ja üks vastavatest muutujatest välja jätta. Vahel võib probleeme valmistada ka olukord, kus 3 muutujat korreleeruvad kõik omavahel 0.6 kanti.
+Probleeme multikollineaarsusega (ehk liiga tugevate seostega) näitab determinandi väärtus alla $0.00001$ (ehk $10^−5$). Kui probleemne multikollineaarsus siiski kinnitust leiab, tuleks korrelatsioonimaatriksist üles otsida kordajad üle 0.9 ja üks vastavatest muutujatest välja jätta. Vahel võib probleeme valmistada ka olukord, kus 3 muutujat korreleeruvad kõik omavahel 0.6 kanti.
 
 ## Faktormudeli koostamine
-Faktoranalüüsi siseselt on olemas erinevaid faktorite leidmise meetode. Üheks peamiseks valikukriteeriumiks võiks olla, kas me soovime üldistada leitavat faktorstruktuuri suuremale populatsioonile (eeldusel, et meie valim koosneb populatsioonist juhuslikult valitud inimestest) või piirduda ainult selle valimiga, mille peal arvutusi tegema hakkame. Populatsioonile üldistamist võimaldavatest on tuntuim **suurima tõepära (maximum likelihood) meetod**. Kui üldistamise vajadust pole, võib kasutada **peatelgede meetodi (principal axis)**. Peatelgede meetodi soovitatakse eelistada ka siis, kui analüüsi kaasatavates andmetes esineb normaaljaotusest kõrvalekalduvaid muutujaid.
+Faktoranalüüsi siseselt on olemas erinevaid faktorite leidmise meetodeid. Üheks peamiseks valikukriteeriumiks võiks olla, kas me soovime üldistada leitavat faktorstruktuuri suuremale populatsioonile (eeldusel, et meie valim koosneb populatsioonist juhuslikult valitud inimestest) või piirduda ainult selle valimiga, mille peal arvutusi tegema hakkame. Populatsioonile üldistamist võimaldavatest on tuntuim **suurima tõepära (maximum likelihood) meetod**. Kui üldistamise vajadust pole, võib kasutada **peatelgede meetodi (principal axis)**. Peatelgede meetodi soovitatakse eelistada ka siis, kui analüüsi kaasatavates andmetes esineb normaaljaotusest kõrvalekalduvaid muutujaid.
 
 Teeme *psych* mooduli funktsiooni *fa* abil 2-faktorilise mudeli kasutades faktorite leidmiseks suurima tõepära meetodi ja faktorite pööramiseks oblimin-meetodit. Salvestame mudeli nimega fa.mudel1.
 
@@ -87,39 +86,48 @@ Vaatame natuke lähemalt funktsiooni *fa* argumente:
 **Andmestiku nimi** - esimesel kohal on alati andmestiku nimi.   
 **nfactors** - faktorite arv. Antud juhul eeldame, et andmestikus on kaks latentset faktorit. Tehke analüüs läbi ka suurema arvuga. Kuidas tulemused erinevad esialgsest analüüsist?       
 **fm** - faktorite leidmise meetod. *fm = ml* - kasutame suurima tõepära meetod (mõistlik kui soovida üldistada faktorstruktuuri antud valimilt tervele populatsioonile); *fm=pa* - peatelgede meetod (järeldused piiratud antud valimiga).  
-**rotate** - kas pöörata faktorlahendit ja millise meetodiga. *rotate = none* - jätab pööramata; *rotate=varimax* - pöörab faktoreid ortogonaalselt; *rotate= oblimin* - pöörab faktoreid kaldnurkselt (see on vaikimisi väärtus).  
-Pööramise eesmärgiks on saavutada võimalikult lihtne faktorstruktuur, kus iga muutuja laaduks tugevalt ainult ühele faktorile ja teistele nõrgalt. Matemaatiliselt pööramine faktorlahendi põhiolemust ei muuda: summaarne seletusprotsent ja tunnuste kommunaliteedid jäävad samaks. Kuid faktorlahend muutub lihtsamini tõlgendatavaks ja omaväärtused jaotuvad faktorite vahel ühtlasemalt. Teeme faktormudeli, kus kasutame direct oblimin meetodit.  
+**rotate** - kas pöörata faktorlahendit ja millise meetodiga. *rotate = none* - jätab pööramata; *rotate=varimax* - pöörab faktoreid ortogonaalselt; *rotate= oblimin* - pöörab faktoreid kaldnurkselt.  
+Pööramise eesmärgiks on saavutada võimalikult lihtne faktorstruktuur, kus iga muutuja laaduks tugevalt ainult ühele faktorile ja teistele nõrgalt. Matemaatiliselt pööramine faktorlahendi põhiolemust ei muuda: summaarne seletusprotsent ja tunnuste kommunaliteedid jäävad samaks. Kuid faktorlahend muutub lihtsamini tõlgendatavaks ja omaväärtused jaotuvad faktorite vahel ühtlasemalt. Teeme faktormudeli, kus kasutame *direct oblimin* meetodit.  
+  
 Eristatakse kahte tüüpi pööramist: **ortogonaalset ehk täisnurkset** ja **mitteortogonaalset ehk kaldnurkset**. Enne pööramist on faktorid sõltumatud, nad ei ole omavahel korreleeritud. Ortogonaalne pööramine jätabki olukorra selliseks; faktorite vahelised korrelatsioonid ei ole lubatud ja kõiki faktoreid pööratakse ühepalju. Kaldnurkse pööramise puhul on faktorite-vahelised korrelatsioonid lubatud ja iga faktorit võib pöörata erineval määral. Otsus kumba pööramist eelistada, peaks tuginema eelkõige teoreetilistele kaalutlustele.  
 Kui me eeldame, et faktorid peaksid olema üksteisest sõltumatud, tuleks eelistada ortogonaalset pööramist (*varimax*). Kui aga teooria ütleb, et faktorid on omavahel korreleeritud, on mõistlik valida kaldnurkne pööramine (*oblimin*).     
 
 ## Faktormudeli väljund
-Faktormudeli fa.mudel1 väljundi saame kätte sellesama nime abil. Samas on ehk natuke kavalam kasutada funktsiooni print.psych, millele saame argumendi *cut* abil anda piirväärtuse, millest väiksemad faktorlaadungid ära peidetakse. Mitteoluliste laadungite peitmine teeb faktormudeli tõlgendamise reeglina lihtsamaks. Peidame ära 0.3-st väiksemad laadungid. Samuti saame argumendi *sort=TRUE* abil reastada laadungid faktorite siseselt suuruse järgi.
+Faktormudeli "fa.mudel1" väljundi saame kätte sellesama nime abil. Samas on ehk natuke kavalam kasutada funktsiooni *print.psych*, millele saame argumendi *cut* abil anda piirväärtuse, millest väiksemad faktorlaadungid ära peidetakse. Mitteoluliste laadungite peitmine teeb faktormudeli tõlgendamise reeglina lihtsamaks. Peidame ära 0.3-st väiksemad laadungid. Samuti saame argumendi *sort=TRUE* abil reastada laadungid faktorite siseselt suuruse järgi.
 
 ```{r}
 print.psych(fa.mudel1, cut=0.3, sort=TRUE)
 ```
 
-Väljundis on esimesena näha **faktorlaadungite tabel** (Standardized loadings…). **Laadung** näitab väite ja faktori vahelise korrelatsioonikordaja väärtust (kaldnurkse pööramise korral regressioonikordaja). Iga väite/muutuja puhul tuleks vaadata, millisele faktorile see tugevalt laadub. Rusikareegilina võib oluliseks pidada laadungit absoluutväärtusega $0.3 − 0.4$ (sõltuvalt valimi suurusest). Seejärel tuleks faktoreid tõlgendada. Faktorite tähendus moodustub neile tugevalt laaduvatest muutujatest. Mis on ühele faktorile tugevalt laaduvate muutujate ühisosa? Antud juhul näeme, et sotsiaalsusega seotud väidete (tunnused A1-A5) suuremad laadungid ongi koondunud ühte faktorisse ja meelekindluse väited (C1-C5) teise faktorisse. Mida suurem laadungi absoluutväärtus, seda olulisem on muutuja faktori tõlgendamisel. Arvesse tuleks võtta ka faktorlaadungi märki. Nt väide A1 seostub faktoriga negatiivselt (tabelist bfi.dictionary võib näha, et väite sisu on *Am indifferent to the feelings of others*), samas kui nt A2 (*Inquire about others’ well-being*) seostub faktoriga positiivselt. Sarnane on lugu ka meelekindluse väidete puhul. Väited C4 (*Do things in a half-way manner*) ja C5 (*Waste my time*) seostuvad faktoriga negatiivselt, samas kui ülejäänud väited positiivselt.
+Väljundis on esimesena näha **faktorlaadungite tabel** (Standardized loadings…). **Laadung** näitab väite ja faktori vahelise korrelatsioonikordaja väärtust (kaldnurkse pööramise korral regressioonikordaja). Iga väite/muutuja puhul tuleks vaadata, millisele faktorile see tugevalt laadub. Rusikareegilina võib oluliseks pidada laadungit absoluutväärtusega $0.3 − 0.4$ (sõltuvalt valimi suurusest). Seejärel tuleks faktoreid tõlgendada. Faktorite tähendus moodustub neile tugevalt laaduvatest muutujatest. Mis on ühele faktorile tugevalt laaduvate muutujate ühisosa? Antud juhul näeme, et sotsiaalsusega seotud väidete (tunnused A1-A5) suuremad laadungid ongi koondunud ühte faktorisse ja meelekindluse väited (C1-C5) teise faktorisse. Mida suurem on laadungi absoluutväärtus, seda olulisem on vastav muutuja faktori tõlgendamisel. Arvesse tuleks võtta ka faktorlaadungi märki. Nt väide A1 seostub faktoriga negatiivselt (tabelist bfi.dictionary võib näha, et väite sisu on "*Am indifferent to the feelings of others*"), samas kui nt A2 ("*Inquire about others’ well-being*") seostub faktoriga positiivselt. Sarnane on lugu ka meelekindluse väidete puhul. Väited C4 ("*Do things in a half-way manner*") ja C5 ("*Waste my time*") seostuvad faktoriga negatiivselt, samas kui ülejäänud väited positiivselt.
   
-Lisaks laadungitele on tabeli paremas servas veel paar tulpa. **Tulbas nimega h2** paiknevad **kommunaliteedid**, mis näitavad kui suure osa muutuja variatiivususest faktorid summaarselt ära kirjeldavad. Kui mõne väite kommunaliteet on teistest oluliselt väiksem, tasub kaaluda selle analüüsist välja jätmist, kuna pole teistega lineaarselt seotud. **Tulbas u2** olevad arvud näitavad iga muutuja unikaalse variatiivsuse hulka (st nad on see osa tunnuse varitiivsusest, mis kommunaliteedist üle jääb). Funktsiooni *fa* väljundis on laadungite tabelil veel üks **tulp com** (ehk *complexity*, keerukus). See näitaja iseloomustab faktorite arvu, mida antud faktorlahendis muutuja kirjeldamiseks vaja läheb. Allpool on ära toodud ka keskmine keerukus, mida saab kasutada erinevate faktormudelite võrdlemiseks. Kuna me tahame, et faktorstruktuur oleks võimalikult lihtne (st iga muutuja seostuks ainult ühe faktoriga), siis mida lähemal on keskmine keerukus 1-le, seda parem faktormudel.
+Lisaks laadungitele on tabeli paremas servas veel paar tulpa. **Tulbas nimega h2** paiknevad **kommunaliteedid**, mis näitavad kui suure osa muutuja variatiivususest faktorid summaarselt ära kirjeldavad. Kui mõne väite kommunaliteet on teistest oluliselt väiksem, tasub kaaluda selle analüüsist välja jätmist, kuna pole teistega lineaarselt seotud. **Tulbas u2** olevad arvud näitavad iga muutuja unikaalse variatiivsuse hulka (see osa tunnuse varitiivsusest, mis kommunaliteedist üle jääb). Viimane veerg nimega **com** (ehk *complexity*, keerukus) näitab faktorite arvu, mida antud faktorlahendis muutuja kirjeldamiseks vaja läheb. Allpool on ära toodud ka keskmine keerukus (*Mean item complexity*), mida saab kasutada erinevate faktormudelite võrdlemiseks. Üldjuhul tahame, et faktorstruktuur oleks võimalikult lihtne (st iga muutuja seostuks ainult ühe faktoriga). Mida lähemal on keskmine keerukus 1-le, seda parem faktormudel.
 
 Faktorlaadungite tabeli all näeme **faktorite omaväärtusi** (*SS loadings ehk sum of squared loadings*). Samuti näeme, kui suure osa andmete hajuvusest iga faktor seletab (*Proportion Var*) ja kui suure osa faktorite poolt seletatavast hajuvusest mingi faktor seletab(*Proportion Explained*). Lisaks on kaks viimast näitajat ära toodud ka kumulatiivselt. Kui tahame teada, kui suure osa andmete hajuvusest antud mudeli faktorid ära kirjeldavad, tuleks vaadata rea *Cumulative var* kõige parempoolsemat väärtust.
 
 Omaväärtuste ja seletusprotsentide tabelist allapoole on ära toodud veel **mudeli sobitusastme näitajad**. Näitaja *Fit based upon off diagonal values* põhineb mudeli jääkide ja tegelike korrelatsioonide suhtelise suuruse võrlemisel. Jäägid kujutavad endast mudeli järgi taastatud korrelatsioonimaatriksi ja tegeliku korrelatsioonimaatriksi vahelisi erinevusi. Antud näitaja on saadud jagades jääkide ruutsumma tegelike korrelatsioonide ruutsummaga ja lahutades saadud arvu 1-st. Väärtused üle 0.95-e näitavad mudeli head sobitusastet.
 
-## Faktorite arvu määramine
-Faktoranalüüsi väljundist saame kätte faktorite omaväärtused.
-**Kaiseri kriteerium** - kõigi faktorlahendisse võetavate faktorite omaväärtused peavad olema vähemalt 1, R rakendab seda kriteeriumit automaatselt. R'i väljundis ongi ainult näidatud sellele kirteeriumile vastavate faktorite omaväärtused. Saame vaadata ka kõikide faktorite omaväärtusi:
+## Faktorite arvu määramine  
+**Kaiseri kriteerium** - kõigi faktorlahendisse võetavate faktorite omaväärtused peavad olema vähemalt 1. R rakendab seda kriteeriumit automaatselt. R'i väljundis ongi ainult näidatud sellele kirteeriumile vastavate faktorite omaväärtused. Saame vaadata ka kõikide faktorite omaväärtusi:
 ```{r}
 fa.mudel1$values
 ```
 
-**Catelli kriteerium** - omaväärtuste joonise põhjal otsustamine. Alles tuleks jätta faktorid, mis jäävad omaväärtuste graafikul nn jõnksupunktist ülespoole. Kriteeriumi hindamiseks vajaliku faktormudeli omaväärtuste graafiku saame teha andes omaväärtused ette funktsioonile plot. Funktsiooni argument type = b (b nagu both) ütleb, et tahame joonisele nii omaväärtusi tähistavaid punkte, kui ka neid ühendavaid jooni.
+**Catelli kriteerium** - omaväärtuste joonise põhjal otsustamine. Alles tuleks jätta faktorid, mis jäävad omaväärtuste graafikul nn jõnksust ülespoole. Kriteeriumi hindamiseks vajaliku faktormudeli omaväärtuste graafiku saame teha näiteks *plot* funktsiooniga. Funktsiooni argument "type = b" (b nagu *both*) ütleb, et tahame joonisele nii omaväärtusi tähistavaid punkte kui ka neid ühendavaid jooni.
 
 ```{r}
 plot(fa.mudel1$values, type="b")
 ```
-  
+
+**Paralleelanalüüsi** - seda meetodi peetakse üldiselt paremaks kui Kaiseri ja Cattelli kriteeriumit. See meetod genereerib juhuslikult teatud hulga sama suuri andmestikke ja võrdleb nende omaväärtusi meie poolt analüüsitava andmestiku omaväärtustega. Alles jäetakse faktorid, mille omaväärtused on suuremad, kui juhuslikult genereeritud andmestike omaväärtused.
+```{r}
+fa.parallel(bfi2, fm = "ml", fa = "fa")
+# fm = ... - määrab faktorite leidmise meetodi
+# fa = ... - "fa" - ainult faktoranalüüs, "pc" - ainult PCA, "both" - mõlemad
+```
+
+Nagu näha, soovitab paralleelanalüüs meile faktorite arvuks 4. Paralleelanalüüsi joonise pealt näeme, et 3. ja 4. faktori omaväärtused ületavad kriitilist punktiirjoont vaid üsna napilt. Seega nende lisamine annaks mudelile seletusjõudu juurde üsna vähe. Faktorite arvu määramisel tuleks arvestada ka faktorite tõlgendatavusega. Halvasti tõlgendatavatest faktoritest pole reeglina hiljem palju kasu.
+
 ## Faktorskoorid   
 Kui me ülalpool tegime mudeli nimega *fa.mudel1*, tellisime funktsioonilt *fa* ka faktorskooride arvutamise. Need skoorid näitavad, kus iga vastaja teatud faktoril paikneb. Skooride arvutamiseks kasutatakse inimeste vastuseid väidetele ja faktorlaadungeid. Lihtsustades võib öelda, et inimese faktorskoor saadakse korrutades iga väite vastuse selle väite laadungiga ning need korrutised liidetakse kokku. (Tegelikkuses on arvutused natuke keerulisemad. Kõigepealt arvutatakse välja faktorskoori koefitsiendid, mis saadakse laadungite maatriski korrutamisel algse korrelatsioonimaatriksi pöördmaatriksiga ning neid koefitsiente hakatakse siis korrutama ja kokku liitma.)
 
@@ -137,9 +145,9 @@ colnames(skoorid) <- c("C", "A")
 
 
 # Cronbachi alfa
-Faktoranalüüsi kasutatakse eriti sageli küsimustikuandmete analüüsimiseks. Kui oleme kindlaks teinud, millised väited mingile faktorile laaduvad, tahame vahel arvutada küsimustiku alaskaalade kohta ka reliaablusnäitajaid nagu Cronbachi alfa. Selle jaoks on *psych* moodulis olemas funktsioon *alpha*, millele tuleks ette anda alaskaala väidete toorandmed. Antud juhul teame, et sotsiaalsuse väited paiknevad tabeli bfi2 tulpades 1-5. Seega saaksime sotsiaalsuse alaskaala alfa kätte nii:
+Faktoranalüüsi kasutatakse eriti sageli küsimustikuandmete analüüsimiseks. Kui oleme kindlaks teinud, millised väited mingile faktorile laaduvad, tahame vahel arvutada küsimustiku alaskaalade kohta ka reliaablusnäitajaid nagu Cronbachi alfa. Selle jaoks on *psych* moodulis olemas funktsioon *alpha*, millele tuleks ette anda alaskaala väidete toorandmed. Antud juhul teame, et sotsiaalsuse väited paiknevad andmestiku bfi2 tulpades 1-5. Seega saaksime sotsiaalsuse alaskaala alfa kätte nii:
 
-```{r}
+```{r, echo = T, eval =F}
 alpha(bfi2[,1:5])
 ```
 
@@ -153,10 +161,8 @@ Väljundi ülaosas olev *raw alpha* ongi sotsiaalsuse alaskaala Cronbachi alfa. 
 
 
 # Peakomponentide analüüs
-Peakomponentide analüüsi eesmärk on välja selgitada väiksem hulk komponente, mis vastutavad esialgsete muutujate varieeruvuse eest. Faktoranalüüs ja peakomponentide analüüs on matemaatilises mõttes erinevad. Faktoranalüüsi käigus eeldatakse, et mõõdetud muutujate varieeruvuse eest vastutavad tekkivad ühisfaktorid ja unikaalsed faktorid. Peakomponentide analüüsi käigus tekitatakse uued muutujad lihtsalt kui lineaarkombinatsioonid mõõdetud muutujatest.
-Faktoranalüüsi on mõistlik kasutada, kui uurija on huvitatud faktoritest, mis vastutavad teatud hulga mõõdetud muutujate varieeruvuse eest. Peakomponentide analüüsi tuleks kasutada, kui uurija soovib lihtsalt andmeid taandada.
-
-Peakomponentide analüüsi saab teha funktsiooni principal abil. Selle argumendid on samad mis funktsioonil fa (välja arvatud puuduv faktorite leidmise meetodi argument fm). Ülaltoodud faktoranalüüsi mudelile analoogse peakomponentide mudeli saaksime teha nii:
+Peakomponentide analüüsi eesmärk on välja selgitada väiksem hulk komponente, mis vastutavad esialgsete muutujate varieeruvuse eest. 
+Peakomponentide analüüsi saab teha funktsiooni *principal* abil. Ülaltoodud faktoranalüüsi mudelile analoogse peakomponentide mudeli saaksime teha nii:
 
 ```{r}
 pc.mudel1 <- principal(bfi2, nfactors=2, rotate="varimax")
@@ -171,24 +177,54 @@ Kastuage andmestikku **WV6_EST2011**.
    
 Ülesanne 1. Kirjeldav statistika. Lahendage järgnevad ülesanded:     
 1.1. valimi suurus:   
+```{r, eval = F, echo = F}
+nrow(WV6_EST2011)
+```
+
 1.2. milline on sooline jaotus:  
+```{r, eval =F, echo =F}
+table(WV6_EST2011$Sex)
+```
+
 1.3. vastajate keskmine vanus:  
+```{r, eval =F, echo =F}
+mean(WV6_EST2011$Age)
+aggregate(Age~Sex, data = WV6_EST2011, FUN = mean)
+```
 1.4. kõige noorem vastaja:  
-1.5. kõige vanem vastaja:  
+```{r, eval =F, echo =F}
+aggregate(Age~Sex, data = WV6_EST2011, FUN = min)
+```
+1.5. kõige vanem vastaja: 
+```{r, eval =F, echo =F}
+aggregate(Age~Sex, data = WV6_EST2011, FUN = max)
+```
 1.6. naiste vanuse keskmine ja standardhälve:  
+```{r, eval =F, echo =F}
+aggregate(Age~Sex, data = WV6_EST2011, FUN = mean)
+aggregate(Age~Sex, data = WV6_EST2011, FUN = sd)
+```
 1.7. meeste keskmine vanus ja standardhälve:  
+```{r, eval =F, echo =F}
+
+```
    
-Ülesanne 2. Regressioon. Kas eluga rahulolu (muutuja "*SatisfactionWithLife*") ennustab vanust?    
+Ülesanne 2. Regressioon. Vaadake andemstiku WV6_EST2011 muutujaid ja mõelge välja mingi hüpotees, mida saaks testida regressioonanalüüsiga. Tehke see analüüs läbi.
+```{r, eval =F, echo =F}
+m.yl2 = lm(Marital ~ SatisfactionWithLife, data = WV6_EST2011)
+summary(m.yl2)
+
+# Ülesanne 3. Mitmene regressioon. Kas vanust ennustavad terviseseisund (muutuja "*StateOfHealth*"), õnnelikkus (muutuja "*FeelingOfHappiness*") ning finantsseisuga rahulolu (muutuja "*Sat_w_financial*")?    
+# 3.1 Kas mudel on statistiliselt oluline?  
+# 3.2. Kui suure osa seletas ära mudel sõltuva muutuja variatiivsusest?   
+# 3.3. Kas kõik prediktorid olid olulised?   
+# 3.4. Milline prediktor ennustas kõige paremini vanust?  
+```
 2.1 Kas mudel on statistiliselt oluline?  
 2.2 Mis on selle väite olulisuse tõenäosus?    
 2.3 Kui suure osa sõltuva muutuja variatiivsusest kirjeldab ära mudel?  
-2.4 Missugune on mudeli standardiseerimata võrrand?    
    
-Ülesanne 3. Mitmene regressioon. Kas vanust ennustavad terviseseisund (muutuja "*StateOfHealth*"), õnnelikkus (muutuja "*FeelingOfHappiness*") ning finantsseisuga rahulolu (muutuja "*Sat_w_financial*")?    
-3.1 Kas mudel on statistiliselt oluline?  
-3.2. Kui suure osa seletas ära mudel sõltuva muutuja variatiivsusest?   
-3.3. Kas kõik prediktorid olid olulised?   
-3.4. Milline prediktor ennustas kõige paremini vanust?    
+  
     
 Kasutage andmestikku nimega **bfi**.  
   
