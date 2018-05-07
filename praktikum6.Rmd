@@ -183,7 +183,7 @@ nrow(WV6_EST2011)
 
 1.2. milline on sooline jaotus:  
 ```{r, eval =F, echo =F}
-table(WV6_EST2011$Sex)
+prop.table(table(WV6_EST2011$Sex))*100
 ```
 
 1.3. vastajate keskmine vanus:  
