@@ -264,12 +264,16 @@ modindices(fit2)
 
 Kõige suurem mi väärtus on real 60, mis ütleb, et lisades mudelisse muutujate *x3* ja *x5* jääkdispersioonide vahelise korrelatsiooni, võiksime oodata hii-ruudu kahanemist umbes 8.6-e võrra. Lisame jälle uue parameetri mudelisse.
 
-```{r, eval = F}
+```{r}
 HS.model3 <- "visual =~ x1 + x2 + x3 + x9
 textual =~ x4 + x5 + x6
 speed =~ x7 + x8 + x9
 x3 ~~ x5"
 fit3 <- cfa(HS.model3, data=HolzingerSwineford1939)
+
+```
+
+```{r, eval =F}
 summary(fit3, fit.measures=TRUE)
 ```
 
@@ -288,6 +292,9 @@ speed =~ x7 + x8 + x9
 x3 ~~ x5
 x4 ~~ x7"
 fit4 <- cfa(HS.model4, data=HolzingerSwineford1939)
+```
+
+```{r, eval=F}
 summary(fit4, fit.measures=TRUE)
 ```
 
