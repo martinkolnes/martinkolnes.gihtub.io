@@ -12,10 +12,10 @@ output:
 ```{r, echo = F}
 HolzingerSwineford1939 <- read.csv2("KMKT/7praktikum/HolzingerSwineford1939.csv")
 suur.viisik <- read.csv2("KMKT/7praktikum/suur.viisik.csv")
-illness.cov <- read.csv2("KMKT/7praktikum/illness.cov.csv")
+#illness.cov <- read.csv2("KMKT/7praktikum/illness.cov.csv")
 PoliticalDemocracy <- read.csv2("KMKT/7praktikum/PoliticalDemocracy.csv", sep =",")
 ```
-Laadige alla [praktikumi andmed](https://drive.google.com/open?id=1XIt2yk97D5ndzdnK5l8fJGtU5iN6nEfp).  
+Laadige alla [praktikumi andmed](https://drive.google.com/open?id=1DGg0aHr9_lVfCdbhrDEZQpxUFGj4UvS7).  
 
 **Struktuurivõrrandite mudelid** (SEM) on üsna mitmekesine meetodite rühm, mis omab sarnasusi nii faktor- kui regressioonanalüüsiga. Nagu uurivas faktoranalüüsis saame vaadeldud muutujate kaudu defineerida liitmuutujaid ehk faktoreid. Struktuurivõrrandite mudelite kontekstis nimetatakse neid **latentseteks muutujateks**. Mudelisse saab aga lisada veel muid vaadeldud muutujaid (mis ei osale latentsete muutujate defineerimises) ja uurida muutujatevahelisi regressioonseoseid.   
 Sisuliselt on kinnitav faktoranalüüs selline struktuurivõrrandite mudel, mis sisaldab ainult latentsete muutujate osa ja milles puuduvad regressioonseosed. Samas saab teha ka sellise mudeli (nn teeanalüüs, ingl k *path analysis*), mis sisaldab ainult vaadeldud muutujaid ja nende vahelisi regressioonseoseid ilma igasuguste latentsete muutujateta.   
@@ -59,7 +59,7 @@ Muutujate nimed:
 Lavaani mooduliga tutvumiseks teeme alustuseks suhteliselt lihtsa kinnitava faktoranalüüsi mudeli, milles üheksa vaadeldud muutuja abil defineerime kolm latentset muutujat (faktorit). Sageli on mõistlik teha enne andmete analüüsimist skeem muutujate vaheliste seoste kohta. Praegusel juhul näeks mudeli diagramm välja järgmine:
 
 <div style="width:400px; height=400px">
-![Joonis 1. ](KMKT/7praktikum/plot1.png)
+![Joonis 1. ](7praktikum_plot1.png)
 </div>
 
 Jooniselt on näha, et vaadeldud muutujad x1-x3 mõõdavad latentset muutujat nimega *visual*, x4-x6 latentset muutujat nimega *textual* ja x7-x9 latentset muutujat nimega *speed*. Vastavalt tavale tähistavad SEM-i diagrammidel nelinurgad **vaadeldud muutujaid** ja ringid või ellipsid **latentseid muutujaid**. Latentsete muutujate vahelised kaared tähistavad nendevahelisi korrelatsioone ja väikesed noolekesed muutujate juures tähistavad dispersioone. Vaadeldud muutujate puhul on tegemist jääkdispersiooniga ehk selle osaga muutuja variatiivsusest, mis ei ole määratud latentse faktori poolt. Latentsetele muutujatele on vaja anda ka skaala, selleks fikseeritakse iga faktori puhul ühe sellele laaduva vaadeldud muutuja laadung. Seda tähistavad number 1-d mõne noole juures.
@@ -186,7 +186,7 @@ Tunnused x1 kuni x3 mõõdavad latentset muutujat *maj60* (st majanduslik arengu
 
 
 <div style="width:400px; height=400px">
-![Joonis 2.](KMKT/7praktikum/plot2.png)
+![Joonis 2.](7praktikum_plot2.png)
 </div>
 
 ```{r}
@@ -309,10 +309,9 @@ anova(fit3, fit4)
 Antud juhul näeme tabeli kõige parempoolsemast tulbast, et p-väärtus on väike (0.004 ehk <0.01), mis tähendab, et neljas mudel on kolmandast parem. Mudelite indeksite alusel modifitseerimisele tuleks üldiselt läheneda väga ettevaatlikult. Mudeli märkimisväärse muutmisega kaasneb oht, et me ülesobitame mudeli just sellele konkreetsele andmestikule ja leitud mudelit ei ole hiljem võimalik üldistada teistele valimitele. Igal valimi juures on mõningad omapärasused ja kui me oma mudelit mingi valimi andmete põhjal muudame, on oht, et muutused kajastavad just neid omapärasusi ning mitte üldiselt esinevaid seoseid meid huvitavate muutujate vahel.
 
 
-# Ülesanded
+# Ülesanne
 
-
-1. Andmefailis "suur.viisik" on 30 Suure Viisiku kitsama alaomaduse skoori ehk iga isiksuseomaduse kohta 6 alaomadust. Tehke selle andmestiku kohta 5-faktoriline kinnitava faktoranalüüusi mudel, nii nagu Suure Viisiku teooria seda ette näeb. Hinnake sellise mudeli sobivust antud andmetele. Mudeli koostamiseks on vaja teda tabelis olevate muutujate nimesid. Need saab kätte funktsiooni* names* abil.
+1. Andmefailis "suur.viisik" on 30 Suure Viisiku kitsama alaomaduse skoori ehk iga isiksuseomaduse kohta 6 alaomadust. Tehke selle andmestiku kohta 5-faktoriline kinnitava faktoranalüüusi mudel, nii nagu Suure Viisiku teooria seda ette näeb. Hinnake sellise mudeli sobivust antud andmetele. Mudeli koostamiseks on vaja teada tabelis olevate muutujate nimesid. Need saab kätte funktsiooni* names* abil.
 ```{r, eval = F, echo = T}
 names(suur.viisik)
 ```
@@ -330,43 +329,7 @@ fitBig5 <- cfa(mudelBig5, data=suur.viisik)
 summary(fitBig5)
 ```
 
-2. Teine ülesanne on laenatud Rex Kline'i raamatust "Principles and Practice of Structural Equation Modeling" ja kasutatavad andmed pärinevad algselt uurimusest, mille autoriteks on Roth jt (1989). Maatriks nimega *illness.cov* sisaldab 5 muutuja vahelisi kovariatsioonikordajaid. Muutujad vastavad
-viie küsimustiku skoorile ja nende sisu on järgmine:
-  
-- *exercise* - kui palju vastaja spordiga tegeleb;  
-- *fitness* - kui heaks hindab vastaja oma füüsilist vormi;  
-- *hardiness* - milliseks hindab vastaja oma vaimset sitkust;  
-- *stress* - milliseks hindab vastaja oma stressitaset viimase kuu jooksul;  
-- *illness* - mil määral on vastajal viimasel ajal esinenud erinevate haiguste füüsilisi sümptome;  
 
-
-Struktuurvõrrandite mudeli koostamiseks võib toorandmete asemel kasutada ka kovariatsioonimaatriksit.  Maatriksi põhjal mudeli sobitamise koodirida on koodifailis juba olemas. Teie ülesandeks  on koostada selle ette alloleva joonise põhjal mudeli kirjeldus. Kas antud mudel sobib andmetega?
-
-<div style="width:400px; height=400px">
-![Joonis 3.](KMKT/7praktikum/plot3.png)
-</div>
-
-Kas kõik mudelis esinevad seosed on statistiliselt olulised? Lisage mudelisse täiendav regressioonseos, milles sõltumatuks muutujaks on *fitness* ja sõltuvaks muutujaks *stress*. Mis juhtub mudeli sobitusastmega?
- 
- 
-```{r, eval = F, echo =F}
-illness.cov <- read.csv("illness.cov.csv", header = TRUE, sep = ";",row.names=1, stringsAsFactors = FALSE)
-mudel5 <- "
-# regressioonseosed latentsete tunnuste vahel
-exercise ~ hardiness
-fitness ~ exercise + stress
-illness ~ fitness + stress
-stress ~ fitness + hardiness
-# jääkdispersioonide vahelised korrelatsioonid
-hardiness ~~ exercise
-"
-
-# Kuna praegu tugineb analüüs kovariatsioonimaatriksile, mitte toorandmetele
-# ja sellisel juhul kasutab mudeli sobitamise käsk natuke teisi argumente, 
-# siis on sobitamine siin praegu ära tehtud
-fit5 <- sem(mudel5, sample.cov=illness.cov, sample.nobs=373, fixed.x=FALSE)
-summary(fit5)
-```
 
 #LISAD 
 ##Parameetrite hindamise (arvutamise) meetoditest

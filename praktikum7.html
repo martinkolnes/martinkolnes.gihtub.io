@@ -364,7 +364,7 @@ div.tocify {
 </div>
 
 
-<p>Laadige alla <a href="https://drive.google.com/open?id=1XIt2yk97D5ndzdnK5l8fJGtU5iN6nEfp">praktikumi andmed</a>.</p>
+<p>Laadige alla <a href="https://drive.google.com/open?id=1DGg0aHr9_lVfCdbhrDEZQpxUFGj4UvS7">praktikumi andmed</a>.</p>
 <p><strong>Struktuurivõrrandite mudelid</strong> (SEM) on üsna mitmekesine meetodite rühm, mis omab sarnasusi nii faktor- kui regressioonanalüüsiga. Nagu uurivas faktoranalüüsis saame vaadeldud muutujate kaudu defineerida liitmuutujaid ehk faktoreid. Struktuurivõrrandite mudelite kontekstis nimetatakse neid <strong>latentseteks muutujateks</strong>. Mudelisse saab aga lisada veel muid vaadeldud muutujaid (mis ei osale latentsete muutujate defineerimises) ja uurida muutujatevahelisi regressioonseoseid.<br />
 Sisuliselt on kinnitav faktoranalüüs selline struktuurivõrrandite mudel, mis sisaldab ainult latentsete muutujate osa ja milles puuduvad regressioonseosed. Samas saab teha ka sellise mudeli (nn teeanalüüs, ingl k <em>path analysis</em>), mis sisaldab ainult vaadeldud muutujaid ja nende vahelisi regressioonseoseid ilma igasuguste latentsete muutujateta.<br />
 Selles praktikumis kasutame R-i lisamoodulit <em>lavaan</em> (nimetus tuleb sõnadest <em>latent variable analysis</em>).</p>
@@ -425,7 +425,7 @@ head(HolzingerSwineford1939)</code></pre>
 <p>Lavaani mooduliga tutvumiseks teeme alustuseks suhteliselt lihtsa kinnitava faktoranalüüsi mudeli, milles üheksa vaadeldud muutuja abil defineerime kolm latentset muutujat (faktorit). Sageli on mõistlik teha enne andmete analüüsimist skeem muutujate vaheliste seoste kohta. Praegusel juhul näeks mudeli diagramm välja järgmine:</p>
 <div style="width:400px; height=400px">
 <div class="figure">
-<img src="KMKT/7praktikum/plot1.png" alt="Joonis 1." />
+<img src="7praktikum_plot1.png" alt="Joonis 1." />
 <p class="caption">Joonis 1.</p>
 </div>
 </div>
@@ -683,7 +683,7 @@ summary(fit2, fit.measures=TRUE, standardized=TRUE)</code></pre>
 <p>Üritame andmetele sobitada alljärgneval joonisel kujutatud mudelit. Defineerime kolm latentset muutujat. Tunnused x1 kuni x3 mõõdavad latentset muutujat <em>maj60</em> (st majanduslik arengutase aastal 1960), tunnused <em>y1</em> kuni <em>y4</em> mõõdavad latentset muutujat <em>dem60</em> (st demokraatia aastal 1960) ning tunnused <em>y5</em> kuni <em>y8</em> mõõdavad latentset muutujat <em>dem65</em> (st demokraatia aastal 1965). Latentsete muutujate vahel on regressioonseosed. Demokraatiat aastal 1960 mõjutab majanduse arengutase aastal 1960. Demokraatiat aastal 1965 mõjutavad nii majandus kui demokraatia aastal 1960. Latentsed muutujad ei suuda antud juhul seletada kõiki demokraatia indikaatorite vahelisi seoseid. Seetõttu on mudelisse lisatud ka nende jääkdispersioonide vahelised korrelatsioonid. Muutuja <em>y1</em> korreleerub <em>y5</em>-ga, <em>y2</em> korreleerub <em>y4</em>-ga ja <em>y6</em>-ga, <em>y3</em> korreleerub <em>y7</em>-ga, <em>y8</em> korreleerub <em>y4</em>-ga ja <em>y6</em>-ga. Mudelisse lisatud 11 vaadeldud muutujat võimaldavad hinnata <span class="math inline">\(11(11+1)/2 = 66\)</span> vaba parameetrit. Meil on vaja hinnata 31 parameetrit: 8 faktorlaadungit, 14 dispersiooni, 3 regressiooni- ja 6 korrelatsioonikordajat. (Nagu esimese näite puhul fikseeritakse ka praegu iga latentse muutuja puhul esimese indikaatori standardiseerimata laadung, selleks et omistada latentsele muutujale skaala. Seetõttu ei olegi meil vaja hinnata 11 vaid ainult 8 faktorlaadungit). Lavaanis näeks selline mudel välja järgnevalt:</p>
 <div style="width:400px; height=400px">
 <div class="figure">
-<img src="KMKT/7praktikum/plot2.png" alt="Joonis 2." />
+<img src="7praktikum_plot2.png" alt="Joonis 2." />
 <p class="caption">Joonis 2.</p>
 </div>
 </div>
@@ -995,35 +995,13 @@ fit4 &lt;- cfa(HS.model4, data=HolzingerSwineford1939)</code></pre>
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>Antud juhul näeme tabeli kõige parempoolsemast tulbast, et p-väärtus on väike (0.004 ehk &lt;0.01), mis tähendab, et neljas mudel on kolmandast parem. Mudelite indeksite alusel modifitseerimisele tuleks üldiselt läheneda väga ettevaatlikult. Mudeli märkimisväärse muutmisega kaasneb oht, et me ülesobitame mudeli just sellele konkreetsele andmestikule ja leitud mudelit ei ole hiljem võimalik üldistada teistele valimitele. Igal valimi juures on mõningad omapärasused ja kui me oma mudelit mingi valimi andmete põhjal muudame, on oht, et muutused kajastavad just neid omapärasusi ning mitte üldiselt esinevaid seoseid meid huvitavate muutujate vahel.</p>
 </div>
-<div id="ulesanded" class="section level1">
-<h1>Ülesanded</h1>
+<div id="ulesanne" class="section level1">
+<h1>Ülesanne</h1>
 <ol style="list-style-type: decimal">
-<li>Andmefailis “suur.viisik” on 30 Suure Viisiku kitsama alaomaduse skoori ehk iga isiksuseomaduse kohta 6 alaomadust. Tehke selle andmestiku kohta 5-faktoriline kinnitava faktoranalüüusi mudel, nii nagu Suure Viisiku teooria seda ette näeb. Hinnake sellise mudeli sobivust antud andmetele. Mudeli koostamiseks on vaja teda tabelis olevate muutujate nimesid. Need saab kätte funktsiooni* names* abil.</li>
+<li>Andmefailis “suur.viisik” on 30 Suure Viisiku kitsama alaomaduse skoori ehk iga isiksuseomaduse kohta 6 alaomadust. Tehke selle andmestiku kohta 5-faktoriline kinnitava faktoranalüüusi mudel, nii nagu Suure Viisiku teooria seda ette näeb. Hinnake sellise mudeli sobivust antud andmetele. Mudeli koostamiseks on vaja teada tabelis olevate muutujate nimesid. Need saab kätte funktsiooni* names* abil.</li>
 </ol>
 <pre class="r"><code>names(suur.viisik)</code></pre>
 <p>Uurige ka mudeli parameetrite tabelit. Vaadake iga faktori puhul, millised vaadeldud muutujatest laaduvad faktorile kõige tugevamalt ja millised kõige nõrgemalt? Millised faktorid on omavahel kõige tugevamalt ja millised kõige nõrgemalt korreleeritud? Uurige jääkdispersioonide abil, milliseid vaadeldud muutujad seletab antud mudel kõige halvemini?</p>
-<ol start="2" style="list-style-type: decimal">
-<li>Teine ülesanne on laenatud Rex Kline’i raamatust “Principles and Practice of Structural Equation Modeling” ja kasutatavad andmed pärinevad algselt uurimusest, mille autoriteks on Roth jt (1989). Maatriks nimega <em>illness.cov</em> sisaldab 5 muutuja vahelisi kovariatsioonikordajaid. Muutujad vastavad viie küsimustiku skoorile ja nende sisu on järgmine:</li>
-</ol>
-<ul>
-<li><em>exercise</em> - kui palju vastaja spordiga tegeleb;<br />
-</li>
-<li><em>fitness</em> - kui heaks hindab vastaja oma füüsilist vormi;<br />
-</li>
-<li><em>hardiness</em> - milliseks hindab vastaja oma vaimset sitkust;<br />
-</li>
-<li><em>stress</em> - milliseks hindab vastaja oma stressitaset viimase kuu jooksul;<br />
-</li>
-<li><em>illness</em> - mil määral on vastajal viimasel ajal esinenud erinevate haiguste füüsilisi sümptome;</li>
-</ul>
-<p>Struktuurvõrrandite mudeli koostamiseks võib toorandmete asemel kasutada ka kovariatsioonimaatriksit. Maatriksi põhjal mudeli sobitamise koodirida on koodifailis juba olemas. Teie ülesandeks on koostada selle ette alloleva joonise põhjal mudeli kirjeldus. Kas antud mudel sobib andmetega?</p>
-<div style="width:400px; height=400px">
-<div class="figure">
-<img src="KMKT/7praktikum/plot3.png" alt="Joonis 3." />
-<p class="caption">Joonis 3.</p>
-</div>
-</div>
-<p>Kas kõik mudelis esinevad seosed on statistiliselt olulised? Lisage mudelisse täiendav regressioonseos, milles sõltumatuks muutujaks on <em>fitness</em> ja sõltuvaks muutujaks <em>stress</em>. Mis juhtub mudeli sobitusastmega?</p>
 </div>
 <div id="lisad" class="section level1">
 <h1>LISAD</h1>
