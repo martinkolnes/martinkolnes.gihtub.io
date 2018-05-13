@@ -229,6 +229,14 @@ library(car)
 Anova(model.1, type = "III") 
 ```
 
+```{r}
+library(ggplot2)
+ggplot(pisaV2, aes(x=ESCS, y=PV1READ, color=factor(Gender)))+ 
+        geom_point()+ 
+        geom_smooth(method=lm, aes(fill=factor(Gender))) + 
+        ylab("Index of econocmy, cultural and social status") + xlab("Value in reading") +
+        theme_classic()
+```
 
 
 # Ülesanded  

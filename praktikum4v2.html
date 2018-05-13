@@ -684,6 +684,15 @@ Anova(model.1, type = &quot;III&quot;) </code></pre>
 ## Residuals    3959415 735                       
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>library(ggplot2)
+ggplot(pisaV2, aes(x=ESCS, y=PV1READ, color=factor(Gender)))+ 
+        geom_point()+ 
+        geom_smooth(method=lm, aes(fill=factor(Gender))) + 
+        ylab(&quot;Index of econocmy, cultural and social status&quot;) + xlab(&quot;Value in reading&quot;) +
+        theme_classic()</code></pre>
+<pre><code>## Warning: Removed 8 rows containing non-finite values (stat_smooth).</code></pre>
+<pre><code>## Warning: Removed 8 rows containing missing values (geom_point).</code></pre>
+<p><img src="praktikum4v2_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 </div>
 <div id="ulesanded" class="section level1">
 <h1>Ülesanded</h1>
@@ -821,7 +830,7 @@ vif(pisa.mudel2)</code></pre>
 <p>Teine keerulise nimega probleem, mis võib takistada mudeli järelduste üldistamist on heteroskedaktilisus ehk olukord kui mudeli jääkide hajuvus on prediktorite eri tasemetel liiga erinev. Nähtuse esinemist saame uurida hajuvusdiagrammi abil, mille ühel teljel on mudeli jäägid (saame funtksioon resid abil) ja teisel teljel mudeli poolt ennustatud väärtused (need saame funktsiooni fitted.values abil).</p>
 <pre class="r"><code>library(ggplot2)
 plot(fitted.values(pisa.mudel2), resid(pisa.mudel2))</code></pre>
-<p><img src="praktikum4v2_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
+<p><img src="praktikum4v2_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
 <p>Joonisel olev punktikogum peaks olema ühtlane, see ei tohiks olla lehtrikujuline ehk ühes servast märkimisv äärselt kitsam kui teises servas. Antud juhul see enam-vähem nii ongi. Silma hakkavad üksikud eristuvad andmepunktid (see on suure valimi puhul oodatav), aga mitte midagi süstemaatilist. (Lisaks sellele: kui antud joonisel ilmneb U-kujuline muster, viitab see, et muutujate vaheline seos pole päris lineaarne.)</p>
 </div>
 <div id="jaakide-normaaljaotus" class="section level2">
@@ -829,11 +838,11 @@ plot(fitted.values(pisa.mudel2), resid(pisa.mudel2))</code></pre>
 <p>Kolmas üldistamise eeldus, mida alguses põgusalt mainitud sai, on, et mudeli jäägid peavad olema normaaljaotusega.</p>
 <p>Sellest annab aimu mudeli jääkide histogramm.</p>
 <pre class="r"><code>hist(mud2.standardized.residuals)</code></pre>
-<p><img src="praktikum4v2_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+<p><img src="praktikum4v2_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
 <p>Teist tüüpi joonis, mille abil jääkide normaaljaotusele vastavust uurida on niinimetatud tõenäosuspaber ehk kvantiil-kvantiil diagramm (ingl. k. <em>Q-Q plot</em>). Selle saame kasutades funktsioone <em>qqnorm</em> ja <em>qqline</em> ja andes neile ette mudeli jäägid.</p>
 <pre class="r"><code>qqnorm(mud2.standardized.residuals)
 qqline(mud2.standardized.residuals, col=&quot;red&quot;, lwd=2)</code></pre>
-<p><img src="praktikum4v2_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
+<p><img src="praktikum4v2_files/figure-html/unnamed-chunk-40-1.png" width="672" /></p>
 <p>Sirge joon esindab normaaljaotust ja punktid jääke. Täiusliku normaaljaotuse korral oleksid kõik punktid joone peal. Kõrvalekalded joonest on tavalised otstes, kuid keskel ei tohiks tohiks neid esineda. Praegu me midagi sellist näemegi; otstes on väikesed kõrvalekalded, aga mitte midagi hullu silma ei hakka.</p>
 </div>
 <div id="jaakide-soltumatus" class="section level2">
