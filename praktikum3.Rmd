@@ -32,7 +32,7 @@ Laadige alla [praktikumi andmed](https://drive.google.com/open?id=1zOkd5pDsCSStt
 Andmefail "iqdata". Tegemist on simuleeritud andmestikuga, kus muutujateks on eriala, IQ skoor ning vanus. Andmestiku allikas: http://staff.bath.ac.uk/pssiw/stats2/page16/page16.html  
 
 1. Kuidas jaotuvad IQ skoorid? Tehke histogramm ja arvutage asümmeetriakordaja ning ekstsess. 
-```{r, echo =T, eval =T}
+```{r, eval = F, echo = F}
 library(ggplot2)
 ggplot(data=iqdata, aes(x= iq))+
         geom_histogram()
@@ -41,12 +41,12 @@ describe(iqdata$iq)
 ```
 
 2. Kui palju andmeid/vastajaid on igas grupis (muutuja nimega "group")?  
-```{r, echo =T, eval =T}
+```{r, eval = F, echo = F}
 table(iqdata$group)
 ```
 
 3. Arvutage iga grupi keskmine IQ tulemus.  
-```{r, echo =T, eval =T}
+```{r, eval = F, echo = F}
 mean(iqdata[iqdata$group == "Physics student", "iq"])
 mean(iqdata[iqdata$group == "Maths student", "iq"])
 mean(iqdata[iqdata$group == "Chemistry student", "iq"])
@@ -275,7 +275,7 @@ maad$SKP_grupid[maad$SKP > 31.1124] = "3"
 ```
 
 2. Võrrelge PISA testi tulemusi saadud gruppide lõikes. Tehke ka post-hoc testid ja joonis.
-```{r, echo =T, eval =T}
+```{r, eval = F, echo = F}
 rt_anova <- ezANOVA(data = maad,
                     dv  = pisa,
                     wid = riik,
@@ -287,7 +287,7 @@ pairwise.t.test(maad$pisa, maad$SKP_grupid, p.adj = "holm")
 plotmeans(pisa~SKP_grupid, data=maad)
 ```
 3. Lisage andmetesse uus muutuja, mis jaotab maad demokraatia indeksi põhjal kahte gruppi: alla keskmise, üle keskmise. Kasutage selleks allolevat koodi:
-```{r}
+```{r, eval = F, echo = F}
 maad$dem_grupid = NA # loome andmetesse uue veeru
 #lisame loodud veergu väärtusi:
 #kõik riigid, mille demokraatia indeks on alla keskmise kodeeritakse väärtusega "1"
@@ -297,7 +297,7 @@ maad$dem_grupid[maad$demokraatia_indeks >= mean(maad$demokraatia_indeks,na.rm =T
 ```
 
 4. Tehke kahe faktoriga ANOVA, kus sõltuvaks muutujaks on PISA test ja sõltumatuteks muutujaktes regioon ning demokraatia indeksi alusel loodud grupid. 
-```{r, echo =T, eval =T}
+```{r, eval = F, echo = F}
 rt_anova <- ezANOVA(data = maad,
                     dv  = pisa,
                     wid = riik,
@@ -308,7 +308,7 @@ print(rt_anova)
 ```
 
 5. Tehke eelmise ülesande põhjal post-hoc testid ja joonis.
-```{r, eval =T, echo =T}
+```{r, eval = F, echo = F}
 maad$dummy <- ifelse(is.na(maad$regioon)|is.na(maad$dem_grupid), NA, paste(maad$regioon, maad$dem_grupid))
 
 maad$dummy <- paste(maad$regioon, maad$dem_grupid)
@@ -316,12 +316,12 @@ maad$dummy[maad$dummy == "euroopa NA"] = NA
 maad$dummy[maad$dummy == "muu NA"] = NA
 ```
 
-```{r, echo =T, eval =T}
+```{r, eval = F, echo = F}
 pairwise.t.test(maad$pisa, maad$dummy, p.adjust = "holm")
 ```
 
 
-```{r, echo =T, eval =T}
+```{r, eval = F, echo = F}
 library(gplots) # enne tuleb pakett arvutisse insatalleerida
 plotmeans(pisa~interaction(dem_grupid,regioon), data=maad, connect=list(c(1,3,5),c(2,4,6)))
 ```

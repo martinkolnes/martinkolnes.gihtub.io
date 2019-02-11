@@ -288,11 +288,11 @@ subset(tabel, elukoht == "maa")
    
 ##Ülesanded - andmetega manipuleerimine 
 1. Eraldage andmetest veerg "vanus". Looge uus muutuja, kus on ainult see veerg.  
-```{r}
+```{r, eval = F}
 vanus <- tabel$vanus
 ```
 2. Tehke kaks uut andmestikku. Esimesse salvestage maal elavate katseisikute tulemused ja teise salvestage linnas elavate katseisikute tulemused.  
-```{r}
+```{r, eval = F}
 tabel_maa <- subset(tabel, elukoht == "maa")
 tabel_linn <- subset(tabel, elukoht == "linn")
 ```
@@ -354,7 +354,7 @@ prop.table(table(tabel$elukoht))
    
 ## Ülesanded - kirjeldav statistika 
 1. Leidke sotsiaalsuse, meelekindluse, ekstravertsuse, neurootilisuse ja avatuse keskmised tulemused.  
-```{r}
+```{r, eval = F, echo = F}
 mean(tabel$sotsiaalsus, na.rm=TRUE)
 mean(tabel$meelekindlus, na.rm=TRUE)
 mean(tabel$ekstravertsus)
@@ -362,13 +362,13 @@ mean(tabel$neurootilisus)
 ```
 
 2. Kasutage funktsiooni *summary()*. Andke argumendiks üks veerg. Andke argumendiks terve tabel. Mida see funktsioon väljastab?  
-```{r}
+```{r, eval = F, echo = F}
 summary(tabel$meelekindlus)
 summary(tabel)
 ```
 
 3. Millises vahemikus varieeruvad ekstravertsuse skoorid?
-```{r}
+```{r, eval = F, echo = F}
 range(tabel$ekstravertsus)
 
 #või:

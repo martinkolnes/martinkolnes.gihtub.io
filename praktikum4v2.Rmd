@@ -22,12 +22,12 @@ load("KMKT/4praktikum/4praktikumAndmed.Rdata")
 Kasutage andemstikku nimega "pisa".  
 
 1. Vaadake kirjeldavaid statistikuid matemaatik (PV1MATH), lugemise (PV1READ) ja loodusteaduste (PV1SCIE) alatestide tulemuste kohta.
-```{r, eval =T, echo =T}
+```{r, eval = F, echo = F}
 summary(pisa)
 ```
 
 2. Tehke eraldi histogrammid soo alusel loodusteaduste testi tulemuste kohta.  
-```{r, eval =T, echo =T}
+```{r, eval = F, echo = F}
 library(ggplot2)
 ggplot(data=pisa, aes(x= PVSCIE))+
         geom_histogram()+
@@ -39,7 +39,7 @@ library("psych")
 corr.test()#argumendiks saate panna mitu veergu
 ```
 
-```{r, eval =T, echo =T}
+```{r, eval = F, echo = F}
 library(psych)
 corr.test(pisa[,c("PVMATH", "PVREAD", "PVSCIE")])
 ```
@@ -116,7 +116,7 @@ hist(pisa.mudel1$residuals)
 ### Ülesanded - paarisregressioon  
 1. Tehke paarisregressiooni mudel, mis ennustab loodusteaduse alatesti skoori (tunnus PVSCIE) teaduse nautimise kaudu (JOYSCIE). Kas seos on oluline? Kui suure osa matemaatika testi skooride hajuvusest mudel ära seletab? Mitme punkti võrra muutub matemaatika skoor kui sõltumatu muutuja muutub ühe punkti võrra? 
 
-```{r, echo = T, eval = T}
+```{r, eval = F, echo = F}
 plot(y = pisa$PVSCIE, x = pisa$JOYSCIE) 
 pisa.mudel.yl1 = lm(PVSCIE ~ JOYSCIE, data = pisa)
 summary(pisa.mudel.yl1)
@@ -194,7 +194,7 @@ confint(pisa.mudel2)
 ### Ülesanne - mitmene regressioon  
 1. Koostage uus mudel, milles sõltuvaks tunnuseks on matemaatika testi skoor (PVMATH) ja prediktoriteks samad tunnused, millega ülal ennustasime loodusteaduste testi skoori: teaduse oluliseks pidamine (JOYSCIE), huvi teaduse vastu (INTSCIE) ja motivatsioon loodusteadusi õppida (INSTSCIE). Missugused prediktorid on statistiliselt olulised? Arvutage ka standardiseeritud regressioonikordajad ja mudeli parameetrite usalduspiirid.
 
-```{r, echo = T, eval = T}
+```{r, eval = F, echo = F}
 pisa.mudel4 = lm(PVMATH ~ JOYSCIE + INTSCIE + INSTSCIE, data = pisa)
 summary(pisa.mudel4) #vaatame tulemusi
 library(QuantPsyc)
@@ -241,20 +241,20 @@ ggplot(pisaV2, aes(x=ESCS, y=PV1READ, color=factor(Gender)))+
 
 # Ülesanded  
 1. Tehke mudel, kus sõltuvaks tunnuseks on matemaatika testi skoor (PVMATH) ja prediktoriteks teaduse oluliseks pidamine (GENSCIE), huvi teaduse vastu (INTSCIE) ja motivatsioon loodusteadusi õppida (INSTSCIE). Missugused prediktorid on statistiliselt olulised?  
-```{r, echo = T, eval = T}
+```{r, eval = F, echo = F}
 pisa.mudel4 = lm(PVMATH ~ JOYSCIE + INTSCIE + INSTSCIE, data = pisa)
 summary(pisa.mudel4) #vaatame tulemusi
 ```
 
 2. Arvutage ka standardiseeritud regressioonikordajad ja mudeli parameetrite usalduspiirid.
-```{r}
+```{r, eval = F, echo = F}
 library(QuantPsyc)
 lm.beta(pisa.mudel4) #vaatame standardiseeritud regressioonikordajaid
 confint(pisa.mudel4) # arvutame regressioonikordajatele usalduspiirid
 ```
 
 2. Kas mudelil on probleeme multikollineaarsuseega? Kas mudeli jäägid on normaaljaotuslikud?
-```{r}
+```{r, eval = F, echo = F}
 cor(pisa[,c("JOYSCIE", "INTSCIE", "INSTSCIE")])
 describe(pisa.mudel4$residuals)
 ```

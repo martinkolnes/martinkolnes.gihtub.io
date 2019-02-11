@@ -95,8 +95,14 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
@@ -112,7 +118,6 @@ body {
   padding-top: 65px;
   margin-top: -65px;
 }
-
 .section h2 {
   padding-top: 65px;
   margin-top: -65px;
@@ -132,6 +137,43 @@ body {
 .section h6 {
   padding-top: 65px;
   margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -153,18 +195,77 @@ $(document).ready(function () {
 });
 </script>
 
-
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
 });
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
 </script>
 
 <!-- code folding -->
-
 
 
 
@@ -668,57 +769,10 @@ Kui veerus esineb puuduvaid väärtusi, siis annab R meile statistiku väärtuse
 <div id="ulesanded---kirjeldav-statistika" class="section level2">
 <h2>Ülesanded - kirjeldav statistika</h2>
 <ol style="list-style-type: decimal">
-<li>Leidke sotsiaalsuse, meelekindluse, ekstravertsuse, neurootilisuse ja avatuse keskmised tulemused.</li>
+<li><p>Leidke sotsiaalsuse, meelekindluse, ekstravertsuse, neurootilisuse ja avatuse keskmised tulemused.</p></li>
+<li><p>Kasutage funktsiooni <em>summary()</em>. Andke argumendiks üks veerg. Andke argumendiks terve tabel. Mida see funktsioon väljastab?</p></li>
+<li><p>Millises vahemikus varieeruvad ekstravertsuse skoorid?</p></li>
 </ol>
-<pre class="r"><code>mean(tabel$sotsiaalsus, na.rm=TRUE)</code></pre>
-<pre><code>## [1] 126.0201</code></pre>
-<pre class="r"><code>mean(tabel$meelekindlus, na.rm=TRUE)</code></pre>
-<pre><code>## [1] 113.5707</code></pre>
-<pre class="r"><code>mean(tabel$ekstravertsus)</code></pre>
-<pre><code>## [1] 102.88</code></pre>
-<pre class="r"><code>mean(tabel$neurootilisus)</code></pre>
-<pre><code>## [1] 87.89</code></pre>
-<ol start="2" style="list-style-type: decimal">
-<li>Kasutage funktsiooni <em>summary()</em>. Andke argumendiks üks veerg. Andke argumendiks terve tabel. Mida see funktsioon väljastab?</li>
-</ol>
-<pre class="r"><code>summary(tabel$meelekindlus)</code></pre>
-<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
-##   53.00   99.25  114.00  113.57  127.75  178.00       2</code></pre>
-<pre class="r"><code>summary(tabel)</code></pre>
-<pre><code>##      vanus       elukoht     sotsiaalsus     meelekindlus   
-##  Min.   :18.00   maa : 87   Min.   : 74.0   Min.   : 53.00  
-##  1st Qu.:32.00   linn:113   1st Qu.:114.5   1st Qu.: 99.25  
-##  Median :46.00              Median :126.0   Median :114.00  
-##  Mean   :44.19              Mean   :126.0   Mean   :113.57  
-##  3rd Qu.:56.25              3rd Qu.:136.0   3rd Qu.:127.75  
-##  Max.   :70.00              Max.   :167.0   Max.   :178.00  
-##                             NA&#39;s   :1       NA&#39;s   :2       
-##  ekstravertsus    neurootilisus        avatus       depressioon    
-##  Min.   :  8.00   Min.   : 34.00   Min.   : 73.0   Min.   : 0.000  
-##  1st Qu.: 88.75   1st Qu.: 70.00   1st Qu.:110.0   1st Qu.: 3.000  
-##  Median :105.00   Median : 89.50   Median :124.5   Median : 6.000  
-##  Mean   :102.88   Mean   : 87.89   Mean   :123.1   Mean   : 7.015  
-##  3rd Qu.:118.25   3rd Qu.:104.00   3rd Qu.:136.2   3rd Qu.: 9.000  
-##  Max.   :168.00   Max.   :152.00   Max.   :173.0   Max.   :27.000  
-##                                                                    
-##     traitanx        stateanx 
-##  Min.   :22.00   Min.   :21  
-##  1st Qu.:31.00   1st Qu.:32  
-##  Median :38.00   Median :38  
-##  Mean   :39.08   Mean   :40  
-##  3rd Qu.:45.00   3rd Qu.:48  
-##  Max.   :71.00   Max.   :79  
-##                  NA&#39;s   :1</code></pre>
-<ol start="3" style="list-style-type: decimal">
-<li>Millises vahemikus varieeruvad ekstravertsuse skoorid?</li>
-</ol>
-<pre class="r"><code>range(tabel$ekstravertsus)</code></pre>
-<pre><code>## [1]   8 168</code></pre>
-<pre class="r"><code>#või:
-min(tabel$ekstravertsus)</code></pre>
-<pre><code>## [1] 8</code></pre>
-<pre class="r"><code>max(tabel$ekstravertsus)</code></pre>
-<pre><code>## [1] 168</code></pre>
 </div>
 </div>
 

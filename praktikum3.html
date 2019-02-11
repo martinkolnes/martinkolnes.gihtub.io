@@ -95,8 +95,14 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
@@ -112,7 +118,6 @@ body {
   padding-top: 65px;
   margin-top: -65px;
 }
-
 .section h2 {
   padding-top: 65px;
   margin-top: -65px;
@@ -132,6 +137,43 @@ body {
 .section h6 {
   padding-top: 65px;
   margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -153,18 +195,77 @@ $(document).ready(function () {
 });
 </script>
 
-
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
 });
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
 </script>
 
 <!-- code folding -->
-
 
 
 
@@ -378,43 +479,10 @@ div.tocify {
 <h1>Kordamine</h1>
 <p>Andmefail “iqdata”. Tegemist on simuleeritud andmestikuga, kus muutujateks on eriala, IQ skoor ning vanus. Andmestiku allikas: <a href="http://staff.bath.ac.uk/pssiw/stats2/page16/page16.html" class="uri">http://staff.bath.ac.uk/pssiw/stats2/page16/page16.html</a></p>
 <ol style="list-style-type: decimal">
-<li>Kuidas jaotuvad IQ skoorid? Tehke histogramm ja arvutage asümmeetriakordaja ning ekstsess.</li>
-</ol>
-<pre class="r"><code>library(ggplot2)
-ggplot(data=iqdata, aes(x= iq))+
-        geom_histogram()</code></pre>
-<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="praktikum3_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
-<pre class="r"><code>library(psych)
-describe(iqdata$iq)</code></pre>
-<pre><code>##    vars  n  mean   sd median trimmed  mad min max range  skew kurtosis
-## X1    1 45 39.96 8.44     40   40.62 7.41  20  52    32 -0.71    -0.37
-##      se
-## X1 1.26</code></pre>
-<ol start="2" style="list-style-type: decimal">
-<li>Kui palju andmeid/vastajaid on igas grupis (muutuja nimega “group”)?</li>
-</ol>
-<pre class="r"><code>table(iqdata$group)</code></pre>
-<pre><code>## 
-##   Physics student     Maths student Chemistry student 
-##                15                15                15</code></pre>
-<ol start="3" style="list-style-type: decimal">
-<li>Arvutage iga grupi keskmine IQ tulemus.</li>
-</ol>
-<pre class="r"><code>mean(iqdata[iqdata$group == &quot;Physics student&quot;, &quot;iq&quot;])</code></pre>
-<pre><code>## [1] 35.8</code></pre>
-<pre class="r"><code>mean(iqdata[iqdata$group == &quot;Maths student&quot;, &quot;iq&quot;])</code></pre>
-<pre><code>## [1] 35.86667</code></pre>
-<pre class="r"><code>mean(iqdata[iqdata$group == &quot;Chemistry student&quot;, &quot;iq&quot;])</code></pre>
-<pre><code>## [1] 48.2</code></pre>
-<pre class="r"><code>#Korraga:
-aggregate(iq~group, data = iqdata, mean)</code></pre>
-<pre><code>##               group       iq
-## 1   Physics student 35.80000
-## 2     Maths student 35.86667
-## 3 Chemistry student 48.20000</code></pre>
-<ol start="4" style="list-style-type: decimal">
-<li>Tehke histogramm, kus on gruppide tulemused kuvatud eraldi.</li>
+<li><p>Kuidas jaotuvad IQ skoorid? Tehke histogramm ja arvutage asümmeetriakordaja ning ekstsess.</p></li>
+<li><p>Kui palju andmeid/vastajaid on igas grupis (muutuja nimega “group”)?</p></li>
+<li><p>Arvutage iga grupi keskmine IQ tulemus.</p></li>
+<li><p>Tehke histogramm, kus on gruppide tulemused kuvatud eraldi.</p></li>
 </ol>
 <pre class="r"><code>library(ggplot2)
 ggplot(data=iqdata, aes(x= iq))+
@@ -469,9 +537,9 @@ Tavalise ühesuunalise ANOVA puhul kasutatakse järgmisi argumente:</p>
                     wid = subject,
                     between = group,
                     type = 3,
-                    detailed = TRUE)
-
-print(iq_anova)</code></pre>
+                    detailed = TRUE)</code></pre>
+<pre><code>## Coefficient covariances computed by hccm()</code></pre>
+<pre class="r"><code>print(iq_anova)</code></pre>
 <pre><code>## $ANOVA
 ##        Effect DFn DFd       SSn      SSd          F            p p&lt;.05
 ## 1 (Intercept)   1  42 71840.089 1604.533 1880.47432 1.657565e-36     *
@@ -552,9 +620,9 @@ Faktoriaalse lahenduse puhul saab rääkida peaefekti(de)st ja interaktsioonist 
                     dv  = score,
                     wid = subject,
                     between = c(gender, dose),
-                    type = 3)
-
-print(drug_anova)</code></pre>
+                    type = 3)</code></pre>
+<pre><code>## Coefficient covariances computed by hccm()</code></pre>
+<pre class="r"><code>print(drug_anova)</code></pre>
 <pre><code>## $ANOVA
 ##        Effect DFn DFd         F            p p&lt;.05        ges
 ## 2      gender   1  44 37.493546 2.223837e-07     * 0.46007994
@@ -650,91 +718,11 @@ maad$SKP_grupid[maad$SKP &gt; 14.9364 &amp; maad$SKP &lt; 31.1124] = &quot;2&quo
 # kõik riigid, mille SKP on üle 0,66 kvantiili kodeeritakse väärtusega &quot;3&quot;
 maad$SKP_grupid[maad$SKP &gt; 31.1124] = &quot;3&quot;</code></pre>
 <ol start="2" style="list-style-type: decimal">
-<li>Võrrelge PISA testi tulemusi saadud gruppide lõikes. Tehke ka post-hoc testid ja joonis.</li>
+<li><p>Võrrelge PISA testi tulemusi saadud gruppide lõikes. Tehke ka post-hoc testid ja joonis.</p></li>
+<li><p>Lisage andmetesse uus muutuja, mis jaotab maad demokraatia indeksi põhjal kahte gruppi: alla keskmise, üle keskmise. Kasutage selleks allolevat koodi:</p></li>
+<li><p>Tehke kahe faktoriga ANOVA, kus sõltuvaks muutujaks on PISA test ja sõltumatuteks muutujaktes regioon ning demokraatia indeksi alusel loodud grupid.</p></li>
+<li><p>Tehke eelmise ülesande põhjal post-hoc testid ja joonis.</p></li>
 </ol>
-<pre class="r"><code>rt_anova &lt;- ezANOVA(data = maad,
-                    dv  = pisa,
-                    wid = riik,
-                    between = c(SKP_grupid),
-                    type = 3)</code></pre>
-<pre><code>## Warning: Converting &quot;SKP_grupid&quot; to factor for ANOVA.</code></pre>
-<pre><code>## Warning: You have removed one or more levels from variable &quot;SKP_grupid&quot;.
-## Refactoring for ANOVA.</code></pre>
-<pre><code>## Warning: Data is unbalanced (unequal N per group). Make sure you specified
-## a well-considered value for the type argument to ezANOVA().</code></pre>
-<pre class="r"><code>print(rt_anova)</code></pre>
-<pre><code>## $ANOVA
-##       Effect DFn DFd        F            p p&lt;.05       ges
-## 2 SKP_grupid   2  51 59.23494 5.025509e-14     * 0.6990616
-## 
-## $`Levene&#39;s Test for Homogeneity of Variance`
-##   DFn DFd      SSn      SSd        F         p p&lt;.05
-## 1   2  51 1052.303 24368.41 1.101169 0.3402564</code></pre>
-<pre class="r"><code>pairwise.t.test(maad$pisa, maad$SKP_grupid, p.adj = &quot;holm&quot;)</code></pre>
-<pre><code>## 
-##  Pairwise comparisons using t tests with pooled SD 
-## 
-## data:  maad$pisa and maad$SKP_grupid 
-## 
-##   1       2    
-## 2 1.5e-10 -    
-## 3 1.4e-13 0.067
-## 
-## P value adjustment method: holm</code></pre>
-<pre class="r"><code>plotmeans(pisa~SKP_grupid, data=maad)</code></pre>
-<p><img src="praktikum3_files/figure-html/unnamed-chunk-25-1.png" width="672" /> 3. Lisage andmetesse uus muutuja, mis jaotab maad demokraatia indeksi põhjal kahte gruppi: alla keskmise, üle keskmise. Kasutage selleks allolevat koodi:</p>
-<pre class="r"><code>maad$dem_grupid = NA # loome andmetesse uue veeru
-#lisame loodud veergu väärtusi:
-#kõik riigid, mille demokraatia indeks on alla keskmise kodeeritakse väärtusega &quot;1&quot;
-maad$dem_grupid[maad$demokraatia_indeks &lt; mean(maad$demokraatia_indeks,na.rm =TRUE)] = &quot;1&quot;
-#kõik riigid, mille demokraatia indeks on võrdne või üle keskmise kodeeritakse väärtusega &quot;2&quot;
-maad$dem_grupid[maad$demokraatia_indeks &gt;= mean(maad$demokraatia_indeks,na.rm =TRUE)] = &quot;2&quot;</code></pre>
-<ol start="4" style="list-style-type: decimal">
-<li>Tehke kahe faktoriga ANOVA, kus sõltuvaks muutujaks on PISA test ja sõltumatuteks muutujaktes regioon ning demokraatia indeksi alusel loodud grupid.</li>
-</ol>
-<pre class="r"><code>rt_anova &lt;- ezANOVA(data = maad,
-                    dv  = pisa,
-                    wid = riik,
-                    between = c(regioon, dem_grupid),
-                    type = 3)</code></pre>
-<pre><code>## Warning: Converting &quot;dem_grupid&quot; to factor for ANOVA.</code></pre>
-<pre><code>## Warning: You have removed one or more levels from variable &quot;dem_grupid&quot;.
-## Refactoring for ANOVA.</code></pre>
-<pre><code>## Warning: Data is unbalanced (unequal N per group). Make sure you specified
-## a well-considered value for the type argument to ezANOVA().</code></pre>
-<pre class="r"><code>print(rt_anova)</code></pre>
-<pre><code>## $ANOVA
-##               Effect DFn DFd         F            p p&lt;.05       ges
-## 2            regioon   1  49  8.225978 6.074718e-03     * 0.1437455
-## 3         dem_grupid   1  49 64.886389 1.573303e-10     * 0.5697467
-## 4 regioon:dem_grupid   1  49 12.145853 1.047007e-03     * 0.1986374
-## 
-## $`Levene&#39;s Test for Homogeneity of Variance`
-##   DFn DFd     SSn      SSd        F         p p&lt;.05
-## 1   3  49 3219.78 31562.16 1.666228 0.1864403</code></pre>
-<ol start="5" style="list-style-type: decimal">
-<li>Tehke eelmise ülesande põhjal post-hoc testid ja joonis.</li>
-</ol>
-<pre class="r"><code>maad$dummy &lt;- ifelse(is.na(maad$regioon)|is.na(maad$dem_grupid), NA, paste(maad$regioon, maad$dem_grupid))
-
-maad$dummy &lt;- paste(maad$regioon, maad$dem_grupid)
-maad$dummy[maad$dummy == &quot;euroopa NA&quot;] = NA
-maad$dummy[maad$dummy == &quot;muu NA&quot;] = NA</code></pre>
-<pre class="r"><code>pairwise.t.test(maad$pisa, maad$dummy, p.adjust = &quot;holm&quot;)</code></pre>
-<pre><code>## 
-##  Pairwise comparisons using t tests with pooled SD 
-## 
-## data:  maad$pisa and maad$dummy 
-## 
-##           euroopa 1 euroopa 2 muu 1  
-## euroopa 2 0.00328   -         -      
-## muu 1     0.00025   9.1e-12   -      
-## muu 2     0.00501   0.65558   3.1e-09
-## 
-## P value adjustment method: holm</code></pre>
-<pre class="r"><code>library(gplots) # enne tuleb pakett arvutisse insatalleerida
-plotmeans(pisa~interaction(dem_grupid,regioon), data=maad, connect=list(c(1,3,5),c(2,4,6)))</code></pre>
-<p><img src="praktikum3_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
 </div>
 
 

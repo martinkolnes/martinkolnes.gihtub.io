@@ -39,13 +39,13 @@ Kasutame andmestikku PISA.
 
 1. Tehke praktikumi materjalide jaoks arvutis eraldi kaust. Tõstke materjalid sinna kausta ja laadige need RStudiosse.   
 2. Leidke uuringus osalenute keskmine vanus.  
-```{r, eval = T, echo = T}
+```{r, eval = F, echo = F}
 mean(pisa$AGE)# keskmise arvutamiseks sai kasutada funktsiooni mean()
 #summary(pisa)#annab ülevaate tervest andmestikust
 ```
 
 3. Leidke tüdrukute ja poiste keskmine vanus.  
-```{r, eval = T, echo = T}
+```{r, eval = F, echo = F}
 mean(pisa[pisa$Gender==1, "AGE"])
 mean(pisa$AGE[pisa$Gender == 1])
 mean(pisa[pisa$Gender==2, "AGE"])
@@ -54,13 +54,13 @@ sd(pisa[pisa$Gender==2, "AGE"])
 ```
 
 4. Kui palju tüdrukuid ja poisse oli uuringus (1 = tüdruk, 2 = poiss)?   
-```{r, eval = T, echo = T}
+```{r, eval = F, echo = F}
 table(pisa$Gender)
 mean(pisa[pisa$Gender==2, "AGE"])
 ```
 
 5. Kui palju õpilasi oli erinevates klassides (GR - klassid)?  
-```{r, eval = T, echo = T}
+```{r, eval = F, echo = F}
 table(pisa$GR)
 ```
 
@@ -320,14 +320,14 @@ plotmeans(PV1MATH ~ Gender, data = pisa, frame = FALSE)
 
 # Ülesanded - Joonised
 1. Histogramm matemaatika alatesti tulemuste kohta (lisage joonisele pealkiri):
-```{r, eval = T,echo = T}
+```{r, eval = F, echo = F}
 ggplot(pisa, aes(PV1MATH))+
         geom_histogram(col = "blue", fill = "gray")+
         labs(title = "Mamtemaatika tulemused")
 ```
 
 2. Tehke karpdiagramm, mis illustreerib poiste ja tüdrukute matemaatika alatestide skoore
-```{r, eval =T, echo =T }
+```{r, eval = F, echo = F}
 ggplot(pisa, aes(x = as.factor(Gender), y = PV1MATH))+ #kui joonis ei tee eraldi tulpasi, siis tuleb lisada kategoriseerivale tunnusele funtksioon as.factor()
         geom_boxplot(fill = "grey80", colour = "#3366FF")+ #värvisin karpide sisu hallikaks ja karpide ääre siniseks
         scale_x_discrete(labels = c("tüdrukud", "poisid"))+
@@ -336,7 +336,7 @@ ggplot(pisa, aes(x = as.factor(Gender), y = PV1MATH))+ #kui joonis ei tee eraldi
 ```
 
 3. Näidake matemaatika ja lugemise alatestide tulemuste seost (lisage joonisele regressioonisirge). Arvutage ka korrelatsioonikordaja.
-```{r, eval =T, echo = T}
+```{r, eval = F, echo = F}
 ggplot(pisa, aes(x= PV1MATH, y = PV1READ))+
     geom_point(shape=1) +    # shape = 1 - tühjad ringid
     geom_smooth(method=lm, se=TRUE)    # lisab regressioonisirge, se = TRUE - lisab usalduspiire
@@ -344,7 +344,7 @@ ggplot(pisa, aes(x= PV1MATH, y = PV1READ))+
 ```
 
 4. Näidake lugemise ja loodusteaduste alatestide tulemuste seos (lisage joonisele regressioonisirge). Arvutage ka korrelatsioonikordaja.
-```{r, eval =T, echo = T}
+```{r, eval = F, echo = F}
 ggplot(pisa, aes(x= PV1READ, y = PV1SCIE))+
         geom_point(shape=1) +    # shape = 1 - tühjad ringid
         geom_smooth(method=lm, se=TRUE) +   # lisab regressioonisirge, se = TRUE - lisab usalduspiire
@@ -352,19 +352,19 @@ ggplot(pisa, aes(x= PV1READ, y = PV1SCIE))+
 ```
 
 * 5. Tehke tulpdiagramm lugemise alatesti keskmiste tulemuste kohta erinevate klasside lõikes.
-```{r, eval =T , echo =T}
+```{r, eval = F, echo = F}
 ggplot(pisa, aes(y=PV1READ, x = GR))+
         geom_bar(aes(group = GR), stat = "summary", fun.y = "mean") +
         labs(x ="klass" , y = "lugemise alatesti keskmine skoor")
 ```
-```{r, eval =T, echo =T}
+```{r, eval = F, echo = F}
 #kontrollime funktsiooniga tapply() kas saime joonisele õiged tulemused:
 tapply(pisa$PV1READ, pisa$GR, mean, na.rm =TRUE)
 ```
 
 6. Tehke eraldi histogramm tüdrukute ja poiste matemaatika alatesti tulemuste kohta:
 
-```{r, eval = T, echo =T}
+```{r, eval = F, echo = F}
 #Selle ülesande lahendamiseks on mitu võimalust. 
 # Esiteks saate teha uued andmestikud funktsiooniga subset ja kasutada neid andmestikke jooniste koostamisel:
 pisa_tydrukud <- subset(pisa, Gender == 1)
